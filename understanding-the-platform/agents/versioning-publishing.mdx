@@ -1,0 +1,94 @@
+---
+title: "Versioning & Publishing"
+description: "Managing agent versions and safe deployment"
+---
+
+## Agent Versioning
+
+Agents support a versioning workflow that enables safe iteration and deployment:
+
+**Draft → Versioned → Published**
+
+## Version States
+
+### Draft
+
+Work-in-progress changes that don't affect production. Drafts allow you to:
+- Experiment with changes
+- Test new configurations
+- Iterate without risk
+- Collaborate on improvements
+
+Drafts are not accessible to end users and don't impact production agents.
+
+### Versioned
+
+A snapshot of agent configuration at a point in time. Versioned agents:
+- Are immutable snapshots
+- Can be tested with evals
+- Can be compared to other versions
+- Can be rolled back to if needed
+
+Creating a version captures the current state of the agent for testing and deployment.
+
+### Published
+
+The active version running in production. Published agents:
+- Are live and handling real interactions
+- Can be monitored and analyzed
+- Can be replaced by publishing a new version
+- Maintain version history for rollback
+
+Only one version can be published at a time per agent.
+
+## Versioning Workflow
+
+1. **Make changes** in draft mode
+2. **Test changes** with evals
+3. **Create version** to snapshot the configuration
+4. **Run evals** on the versioned agent
+5. **Compare** performance to previous versions
+6. **Publish** when ready for production
+7. **Monitor** the published version
+8. **Rollback** if needed to a previous version
+
+## Evals and Versioning
+
+Evals are tied to versions, enabling you to:
+- Test specific versions before publishing
+- Compare performance across versions
+- Track improvements over time
+- Validate changes before deployment
+
+Each version can have its own set of evals to validate behavior.
+
+## Version Comparison
+
+Compare versions to understand:
+- Configuration differences
+- Performance metrics
+- Eval results
+- Tag application patterns
+- Tool usage statistics
+
+Version comparison helps you make informed decisions about deployment.
+
+## Rollback
+
+If a published version has issues, you can rollback to a previous version:
+- Select a previous versioned state
+- Publish it to replace the current version
+- Restore previous behavior immediately
+
+Rollback ensures you can quickly recover from deployment issues.
+
+## Best Practices
+
+- Always test versions with evals before publishing
+- Keep version history for important changes
+- Document changes in version notes
+- Monitor published versions closely
+- Have a rollback plan ready
+
+Versioning ensures you can iterate safely and maintain production stability.
+

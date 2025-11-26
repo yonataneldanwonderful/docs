@@ -1,0 +1,67 @@
+---
+title: "Tool Types"
+description: "Understanding different types of tools in Wonderful"
+---
+
+## Tool Types
+
+Tools come in different types, each serving a specific purpose and scope.
+
+## System Tools
+
+System tools provide engine-level behavior. These are internal tools that manage conversation flow, handle escalations, and control core agent functionality.
+
+Examples:
+- `skip_turn` — Skip the current turn in conversation
+- `escalate` — Escalate to human agent
+
+System tools are always available and handle fundamental agent operations.
+
+## Agent Tools
+
+Agent tools are always accessible to an agent, regardless of which skills are loaded. These typically include:
+- CRM APIs for customer data
+- Payment processors for transactions
+- RPA actions for automation
+- Core integrations essential to the agent's purpose
+
+Agent tools provide persistent capabilities that are available throughout the conversation.
+
+## Skill Tools
+
+Skill tools are available only when a specific skill is active. They provide domain-specific capabilities that are scoped to the skill's functionality.
+
+When a skill is unloaded, its tools are no longer accessible. This scoping ensures tools are only available when relevant.
+
+## Tenant Tools
+
+Tenant tools are shared across all agents within a tenant. They provide common capabilities that multiple agents can use, promoting:
+- Consistency across agents
+- Reduced duplication
+- Centralized maintenance
+- Shared functionality
+
+Tenant tools enable reuse and standardization across your organization.
+
+## Choosing Tool Types
+
+**Use System Tools for:**
+- Core engine functionality
+- Fundamental operations
+- Platform-level behavior
+
+**Use Agent Tools for:**
+- Core agent capabilities
+- Always-needed integrations
+- Persistent functionality
+
+**Use Skill Tools for:**
+- Domain-specific actions
+- Task-specific capabilities
+- Scoped functionality
+
+**Use Tenant Tools for:**
+- Shared capabilities
+- Common integrations
+- Organization-wide functionality
+

@@ -1,0 +1,50 @@
+---
+title: "Tags"
+description: "Understanding tags - markers for analytics and behavior tracking"
+---
+
+## What Tags Are
+
+Tags are yes/no markers applied to a conversation or turn. They serve multiple purposes:
+
+- **Analytics** — Track patterns and outcomes across interactions
+- **Routing** — Direct conversations based on characteristics
+- **Behavior tracking** — Monitor how agents handle different scenarios
+- **Product logic** — Trigger downstream actions based on conversation characteristics
+
+## Tag Sources
+
+### LLM Tags
+
+LLM tags are generated through prompt-based inference. The agent analyzes conversation context and applies tags based on its understanding. We keep the tag prompt as-is, allowing the LLM to make nuanced decisions about when tags should be applied.
+
+### Deterministic Tags
+
+Deterministic tags are applied based on rules that evaluate events. These rules can trigger tags when:
+
+- A specific skill is loaded
+- A particular tool is called
+- An error code is encountered
+- An escalation occurs
+- Any other system event matches a rule condition
+
+## Why Deterministic Tags
+
+Deterministic tags provide several advantages:
+
+- **100% consistent** — Same events always produce the same tags
+- **Real-time** — Tags are applied immediately as events occur
+- **Cheaper** — No LLM calls required for deterministic tagging
+- **Debuggable** — Clear rules make it easy to understand why tags were applied
+- **Reliable for metrics** — Consistent tagging ensures accurate analytics
+
+## Examples
+
+- Tool `send_sms` succeeds → tag `sms_sent`
+- Skill `cancel_card` loaded → tag `credit_card`
+- Agent escalates → tag `escalation`
+- Error code `PAYMENT_FAILED` → tag `payment_issue`
+- Tool `create_ticket` called → tag `support_ticket_created`
+
+Tags provide a flexible annotation system that enables both human-readable analytics and machine-driven routing and logic.
+

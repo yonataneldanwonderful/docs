@@ -1,0 +1,45 @@
+---
+title: "Dynamic Loading"
+description: "How skills load on demand to keep context small"
+---
+
+## Dynamic Loading
+
+Agents load skills only when needed. This on-demand loading keeps conversations efficient and context-focused.
+
+## When Skills Load
+
+Skills are activated when:
+
+- **Agent prediction** — The agent predicts a skill is needed based on conversation context
+- **Deterministic rule** — A rule triggers skill loading based on events or conditions
+- **Tool requirement** — A tool usage requires a specific skill to be active
+
+## Benefits of Dynamic Loading
+
+Dynamic loading provides several advantages:
+
+- **Small context** — Only relevant skills are loaded, reducing token usage
+- **High accuracy** — Focused context improves agent precision
+- **Cost efficiency** — Fewer tokens mean lower costs
+- **Better performance** — Smaller context windows process faster
+- **Focused behavior** — Agents stay on task without distraction
+
+## Loading Process
+
+1. **Detection** — Agent or system detects need for a skill
+2. **Loading** — Skill is loaded into agent context
+3. **Activation** — Skill tools become available
+4. **Execution** — Skill handles the relevant task
+5. **Unloading** — Skill is unloaded when no longer needed
+
+## Unloading Skills
+
+Skills are automatically unloaded when:
+- The task is complete
+- The conversation moves to a different topic
+- A deterministic rule triggers unloading
+- The interaction ends
+
+Unloading keeps the context clean and focused.
+

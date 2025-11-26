@@ -1,0 +1,70 @@
+---
+title: "Agent Settings"
+description: "Configuring agent behavior across channels and scenarios"
+---
+
+## Agent Settings Overview
+
+Agent settings configure how agents behave across different channels and scenarios. These settings control everything from initial greetings to voice configuration to privacy controls.
+
+## Channels
+
+Configure which channels the agent is available on and how it behaves on each:
+
+- **Voice** — Phone numbers, SIP configuration, call routing
+- **Chat** — Web widget configuration, embed settings
+- **Email** — Inbox configuration, email handling
+- **WhatsApp** — WhatsApp Business API setup
+- **Embed** — Embed widget customization
+
+Each channel can have its own configuration while sharing the same agent logic.
+
+## Voice
+
+Voice-specific settings control how the agent sounds and behaves in voice interactions:
+
+- **Voice selection** — Choose from available voices
+- **Speed** — Control speech rate
+- **Style** — Adjust speaking style and tone
+- **Language** — Set primary language
+- **Barge-in** — Configure interruption handling
+- **Timeout settings** — Set silence detection thresholds
+
+## PII Reduction
+
+Privacy controls for sensitive data:
+
+- **Data masking** — Automatically mask PII in logs and transcripts
+- **Retention policies** — Control how long data is stored
+- **Access controls** — Restrict who can view sensitive information
+- **Compliance settings** — Configure GDPR, HIPAA, and other compliance requirements
+
+## Initial Message
+
+Set custom greetings for each channel:
+
+- **Voice greeting** — What the agent says when answering a call
+- **Chat greeting** — Initial message in chat widget
+- **Email template** — First email response template
+- **WhatsApp greeting** — Initial WhatsApp message
+
+Initial messages can be static or dynamic, using variables for personalization.
+
+## Timeout & Retry Behavior
+
+Configure how the agent handles delays and failures:
+
+- **Response timeout** — How long to wait for user response
+- **Tool timeout** — Maximum time for tool execution
+- **Retry logic** — When and how to retry failed operations
+- **Fallback behavior** — What to do when timeouts occur
+
+## Channel Setup
+
+Configure entry points for each channel:
+
+- **Phone numbers** — Assign phone numbers for voice
+- **Inboxes** — Configure email inboxes
+- **Embed widgets** — Set up embed code and customization
+- **Webhook endpoints** — Configure webhook URLs for integrations
+

@@ -1,0 +1,313 @@
+---
+title: Agents Platform
+subtitle: 'Learn how to build, launch, and scale AI agents with Wonderful.'
+---
+
+Agents accomplish tasks through natural dialogue - from quick requests to complex, open-ended workflows. Wonderful provides a unified platform for building multimodal agents with dynamic skills, deterministic tools, and real-time system events across voice, chat, email, and WhatsApp channels.
+
+<div id="agents-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginTop: '2rem', marginBottom: '3rem' }}>
+
+  <a
+    href="/core-concepts/agents"
+    style={{
+      borderRadius: '1.25rem',
+      overflow: 'hidden',
+      boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+      textDecoration: 'none',
+      display: 'flex',
+      flexDirection: 'column',
+    }}
+    className="agents-card"
+  >
+    <div
+      style={{
+        position: 'relative',
+        height: '240px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        background: 'linear-gradient(135deg, #16A34A 0%, #07C983 100%)',
+      }}
+    >
+      <svg
+        style={{
+          width: '64px',
+          height: '64px',
+          color: 'white',
+          position: 'relative',
+          zIndex: 1,
+          pointerEvents: 'none',
+        }}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"
+        />
+      </svg>
+    </div>
+    <div
+      style={{
+        padding: '1rem 1.25rem 1.5rem',
+        background: 'var(--sidebar-background)',
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        gap: 0,
+      }}
+    >
+      <h3
+        style={{
+          fontSize: '1.125rem',
+          fontWeight: '600',
+          margin: 0,
+          lineHeight: 1,
+          color: 'var(--grayscale-contrast)',
+        }}
+      >
+        Build
+      </h3>
+      <p
+        style={{
+          fontSize: '0.875rem',
+          lineHeight: '1.5',
+          color: 'var(--text-secondary)',
+          margin: 0,
+        }}
+      >
+        Configure agents with dynamic skills, deterministic tools, and system prompts
+      </p>
+    </div>
+  </a>
+
+  <a
+    href="/core-concepts/channels"
+    style={{
+      borderRadius: '1.25rem',
+      overflow: 'hidden',
+      boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+      textDecoration: 'none',
+      display: 'flex',
+      flexDirection: 'column',
+    }}
+    className="agents-card"
+  >
+    <div
+      style={{
+        position: 'relative',
+        height: '240px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        background: 'linear-gradient(135deg, #07C983 0%, #15803D 100%)',
+      }}
+    >
+      <svg
+        style={{
+          width: '64px',
+          height: '64px',
+          color: 'white',
+          position: 'relative',
+          zIndex: 1,
+          pointerEvents: 'none',
+        }}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"
+        />
+      </svg>
+    </div>
+    <div
+      style={{
+        padding: '1rem 1.25rem 1.5rem',
+        background: 'var(--sidebar-background)',
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        gap: 0,
+      }}
+    >
+      <h3
+        style={{
+          fontSize: '1.125rem',
+          fontWeight: '600',
+          margin: 0,
+          lineHeight: 1,
+          color: 'var(--grayscale-contrast)',
+        }}
+      >
+        Deploy
+      </h3>
+      <p
+        style={{
+          fontSize: '0.875rem',
+          lineHeight: '1.5',
+          color: 'var(--text-secondary)',
+          margin: 0,
+        }}
+      >
+        Deploy agents across voice, chat, email, and WhatsApp with unified logic
+      </p>
+    </div>
+  </a>
+
+  <a
+    href="/core-concepts/evals"
+    style={{
+      borderRadius: '1.25rem',
+      overflow: 'hidden',
+      boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+      textDecoration: 'none',
+      display: 'flex',
+      flexDirection: 'column',
+    }}
+    className="agents-card"
+  >
+    <div
+      style={{
+        position: 'relative',
+        height: '240px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        background: 'linear-gradient(135deg, #15803D 0%, #16A34A 100%)',
+      }}
+    >
+      <svg
+        style={{
+          width: '48px',
+          height: '48px',
+          color: 'white',
+          position: 'relative',
+          zIndex: 1,
+          pointerEvents: 'none',
+        }}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"
+        />
+      </svg>
+    </div>
+    <div
+      style={{
+        padding: '1rem 1.25rem 1.5rem',
+        background: 'var(--sidebar-background)',
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        gap: 0,
+      }}
+    >
+      <h3
+        style={{
+          fontSize: '1.125rem',
+          fontWeight: '600',
+          margin: 0,
+          lineHeight: 1,
+          color: 'var(--grayscale-contrast)',
+        }}
+      >
+        Monitor
+      </h3>
+      <p
+        style={{
+          fontSize: '0.875rem',
+          lineHeight: '1.5',
+          color: 'var(--text-secondary)',
+          margin: 0,
+        }}
+      >
+        Evaluate agent performance with evals, deterministic tags, and analytics
+      </p>
+    </div>
+  </a>
+
+</div>
+
+## Platform capabilities
+
+From design to deployment to optimization, Wonderful provides everything you need to build agents at scale.
+
+### Build and configure
+
+| Goal                          | Guide                                                                      | Description                                                            |
+| ----------------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Create agents                 | [Agents](/core-concepts/agents)                                            | Build AI agents with system prompts, tools, and skills                 |
+| Write agent prompts           | [Agents](/core-concepts/agents)                                            | Define persona, goals, and constraints for agent behavior              |
+| Configure dynamic skills      | [Skills](/core-concepts/skills)                                            | Create modular competencies that load on demand                        |
+| Connect tools and APIs        | [Tools](/core-concepts/tools)                                              | Enable agents to call APIs and perform actions                         |
+| Set up deterministic tags     | [Tags](/core-concepts/tags)                                                | Create rules-based tags for consistent behavior tracking               |
+| Configure voice settings      | [Agents](/core-concepts/agents)                                            | Set voice selection, speed, and style for voice interactions           |
+| Manage agent versioning       | [Agents](/core-concepts/agents)                                            | Version agents with draft, versioned, and published states             |
+| Set up base skills            | [Skills](/core-concepts/skills)                                            | Configure always-loaded skills for foundational capabilities           |
+| Configure tenant tools        | [Tools](/core-concepts/tools)                                              | Share tools across multiple agents within a tenant                     |
+| Control PII reduction         | [Agents](/core-concepts/agents)                                            | Configure privacy controls for sensitive data                          |
+
+### Deploy and integrate
+
+| Goal                        | Guide                                                                               | Description                                                        |
+| --------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Deploy voice agents         | [Channels](/core-concepts/channels)                                                 | Connect agents to phone numbers via SIP and telephony              |
+| Embed chat widget           | [Channels](/core-concepts/channels)                                                 | Add web chat widgets to any website                                |
+| Set up email agents         | [Channels](/core-concepts/channels)                                                 | Configure email-based agent interactions                           |
+| Connect WhatsApp            | [Channels](/core-concepts/channels)                                                 | Deploy agents on WhatsApp messaging                                |
+| Configure inbound flows     | [Channels](/core-concepts/channels)                                                 | Set up customer-initiated interactions                             |
+| Configure outbound flows    | [Channels](/core-concepts/channels)                                                 | Set up agent-initiated customer contacts                           |
+| Apply channel-specific prompts | [Channels](/core-concepts/channels)                                               | Customize agent behavior per channel                               |
+| Handle channel metadata     | [Channels](/core-concepts/channels)                                                 | Access channel-specific context like location and device type      |
+
+### Monitor and optimize
+
+| Goal                         | Guide                                                                        | Description                                          |
+| ---------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------- |
+| Create eval scenarios        | [Evals](/core-concepts/evals)                                                | Build structured test scenarios for agent behavior   |
+| Run batch evals              | [Evals](/core-concepts/evals)                                                | Test multiple scenarios with iterations              |
+| Test voice interactions      | [Evals](/core-concepts/evals)                                                | Evaluate voice-specific behavior and timing          |
+| Track deterministic tags     | [Tags](/core-concepts/tags)                                                  | Monitor rule-based tags for analytics and routing    |
+| Analyze LLM-generated tags   | [Tags](/core-concepts/tags)                                                  | Review prompt-based tags for conversation insights   |
+| Compare agent versions       | [Agents](/core-concepts/agents)                                              | Evaluate performance across agent versions           |
+| Monitor tool execution       | [Tools](/core-concepts/tools)                                                | Track tool calls and outcomes for debugging          |
+| Analyze skill loading        | [Skills](/core-concepts/skills)                                              | Monitor which skills are loaded and when             |
+| Collect human feedback       | [Evals](/core-concepts/evals)                                                | Incorporate human judgment to improve agents         |
+
+## Architecture
+
+The Wonderful platform coordinates 6 core components:
+
+1. **Agents** orchestrate conversations and decision-making across all channels
+
+2. **Skills** provide modular competencies that load dynamically based on context
+
+3. **Tools** enable deterministic API actions and capabilities
+
+4. **Events** track all system activity for deterministic behavior and tagging
+
+5. **Tags** annotate conversations for analytics, routing, and product logic
+
+6. **Channels** deliver the experience across voice, chat, email, and WhatsApp with unified agent logic
+
+<Card title="Get Started" href="/core-concepts/agents">
+  Learn how to build your first agent
+</Card>

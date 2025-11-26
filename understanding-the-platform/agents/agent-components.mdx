@@ -1,0 +1,61 @@
+---
+title: "Agent Components"
+description: "The building blocks that make up an agent"
+---
+
+## Agent Components Overview
+
+Agents are composed of several key components that work together to define behavior and capabilities.
+
+## System Prompt
+
+The system prompt is a hidden scaffold that defines the core operating rules. It establishes the fundamental behavior and constraints that govern all agent interactions.
+
+The system prompt is not user-configurable and ensures consistent, safe behavior across all agents on the platform.
+
+## System Tools
+
+System tools are internal tools used for engine-level behavior. Examples include:
+- `skip_turn` — Skip the current turn in conversation
+- `escalate` — Escalate to human agent
+
+These tools enable the agent to manage conversation flow and handle edge cases at the engine level.
+
+## Agent Prompt
+
+The agent prompt defines the persona, goals, and constraints specific to this agent. It shapes:
+- How the agent presents itself
+- What the agent prioritizes in conversations
+- The tone and style of responses
+- Behavioral boundaries and constraints
+
+The agent prompt is where you define the agent's personality and purpose.
+
+## Agent Tools
+
+Agent tools are always-available tools that the agent can call regardless of which skills are loaded. These typically include:
+- CRM APIs for customer data
+- Payment processors for transactions
+- RPA actions for automation
+- Core integrations essential to the agent's purpose
+
+Agent tools are available throughout the conversation, providing persistent capabilities.
+
+## Skills
+
+Skills are domain-specific modules loaded only when needed. They provide focused capabilities for specific scenarios. Skills can be dynamically loaded based on:
+- Conversation context
+- Deterministic rules
+- Tool usage requirements
+
+Skills enable agents to stay focused and efficient by only loading what's needed.
+
+## Skill Tools
+
+Skill tools become available when a specific skill is active. These tools are:
+- Scoped to the skill's domain
+- Only accessible when that skill is loaded
+- Automatically unloaded when the skill is unloaded
+
+Skill tools provide capabilities that are specific to a skill's purpose.
+

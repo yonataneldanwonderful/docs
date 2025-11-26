@@ -1,0 +1,57 @@
+---
+title: "Events, Tags, Metrics"
+description: "Understanding interaction data and analytics"
+---
+
+## Events
+
+Events are system occurrences that happen during an interaction. They track:
+- Skill loading and unloading
+- Tool calls and their outcomes
+- Error conditions
+- Escalations
+- State changes
+- User actions
+
+Events enable deterministic behavior and provide a complete audit trail of what happened during an interaction.
+
+## Tags
+
+Tags are yes/no markers applied to interactions or individual turns. They come from two sources:
+
+### LLM Tags
+
+Generated through prompt-based inference. The agent analyzes conversation context and applies tags based on its understanding.
+
+### Deterministic Tags
+
+Applied based on rules that evaluate events. They provide 100% consistency and real-time application.
+
+Tags enable:
+- **Analytics** — Track patterns and outcomes
+- **Routing** — Direct conversations based on characteristics
+- **Behavior tracking** — Monitor how agents handle scenarios
+- **Product logic** — Trigger downstream actions
+
+## Metrics
+
+Metrics provide quantitative measures of interaction performance:
+
+- **Duration** — How long the interaction lasted
+- **Escalations** — Whether and when escalation occurred
+- **Outcomes** — Success, failure, or other outcomes
+- **Tool usage** — Which tools were called and how often
+- **Skill usage** — Which skills were loaded
+- **Tag distribution** — Which tags were applied
+- **User satisfaction** — Feedback and ratings
+
+## Using Interaction Data
+
+Interaction data enables:
+
+- **Performance analysis** — Understand agent effectiveness
+- **Pattern recognition** — Identify common issues or requests
+- **Optimization** — Improve agent behavior based on data
+- **Reporting** — Generate insights for stakeholders
+- **Debugging** — Troubleshoot specific issues
+

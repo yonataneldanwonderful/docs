@@ -1,0 +1,57 @@
+---
+title: "Skill Prompts & Tools"
+description: "How skills define behavior and capabilities"
+---
+
+## Skill Prompts
+
+The skill prompt defines the skill's specific behavior, constraints, and goals. It guides how the skill interprets context and responds to user requests.
+
+### Prompt Components
+
+Skill prompts typically include:
+- **Purpose** — What the skill does
+- **Scope** — What the skill handles
+- **Constraints** — What the skill doesn't do
+- **Behavior** — How the skill should act
+- **Output format** — How the skill should respond
+
+### Prompt Best Practices
+
+- **Be specific** — Clearly define the skill's purpose and scope
+- **Set boundaries** — Explicitly state what the skill doesn't handle
+- **Provide examples** — Include example interactions
+- **Define success** — Specify what successful completion looks like
+
+## Skill Tools
+
+Skill tools are capabilities that become available only when the skill is active. These tools are:
+- **Scoped to the skill** — Only available when skill is loaded
+- **Domain-specific** — Provide actions needed for the skill's purpose
+- **Automatically managed** — Loaded and unloaded with the skill
+
+### Tool Types in Skills
+
+Skills can include:
+- **API integrations** — Connect to external systems
+- **Data operations** — Read, write, or update data
+- **Notifications** — Send alerts or messages
+- **Workflow actions** — Trigger downstream processes
+
+## Skill Components Together
+
+Skill prompts and tools work together:
+- **Prompt defines behavior** — How the skill thinks and responds
+- **Tools provide capabilities** — What the skill can do
+- **Together they create** — A complete, focused capability
+
+## Deterministic Tag Rules
+
+Skills can trigger deterministic tags based on:
+- **Skill activation** — Tag when skill loads
+- **Tool execution** — Tag when tools are called
+- **Completion** — Tag when skill completes
+- **Errors** — Tag when skill encounters issues
+
+Deterministic tag rules (future V2) will allow skills to automatically apply tags based on their activation or specific events within the skill's execution.
+

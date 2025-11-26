@@ -1,0 +1,39 @@
+---
+title: "Tools"
+description: "Understanding tools - API actions and capabilities for agents"
+---
+
+## What Tools Are
+
+Tools are APIs or internal actions the agent can call. They represent the capabilities available to agents, skills, and the system itself.
+
+## Tool Types
+
+### System Tools
+
+System tools provide engine-level behavior. These are internal tools that manage conversation flow, handle escalations, and control core agent functionality. Examples include `skip_turn` and `escalate`.
+
+### Agent Tools
+
+Agent tools are always accessible to an agent, regardless of which skills are loaded. These typically include core APIs like CRM integrations, payment processors, and RPA actions that are fundamental to the agent's purpose.
+
+### Skill Tools
+
+Skill tools are available only when a specific skill is active. They provide domain-specific capabilities that are scoped to the skill's functionality. When a skill is unloaded, its tools are no longer accessible.
+
+### Tenant Tools
+
+Tenant tools are shared across all agents within a tenant. They provide common capabilities that multiple agents can use, promoting consistency and reducing duplication.
+
+## Capabilities
+
+Tools provide several key capabilities:
+
+- **Arguments & schemas** — Tools define their inputs with structured schemas, ensuring type safety and clear contracts
+- **Auth support** — Tools handle authentication and authorization for external APIs
+- **Low-code tool builder** — Create tools through a visual interface without writing code
+- **Execution logs** — All tool calls are logged for debugging and auditing
+- **Deterministic events** — Tool outcomes generate events that can trigger deterministic behaviors and tags
+
+Tools bridge the gap between agent intelligence and real-world actions, enabling agents to actually do things rather than just talk about them.
+
