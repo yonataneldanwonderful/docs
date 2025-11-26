@@ -1,11 +1,11 @@
 ---
-title: "Alert Conditions"
-description: "How to define trigger conditions for alerts"
+title: "Monitor Conditions"
+description: "How to define trigger conditions for monitors"
 ---
 
-## Alert Conditions Overview
+## Monitor Conditions Overview
 
-Alert conditions define when an alert should trigger. Conditions compare the calculated metric value against thresholds using comparison operators.
+Monitor conditions define when a monitor should trigger. Conditions compare the calculated metric value against thresholds using comparison operators.
 
 ## Condition Structure
 
@@ -58,17 +58,17 @@ Conditions can be combined using logical operators:
 
 ### AND
 
-All child conditions must be true for the alert to trigger.
+All child conditions must be true for the monitor to trigger.
 
 **Example**: 
 ```
 (ForwardPercentage >= 20) AND (TotalInteractions > 10)
 ```
-Triggers when escalation rate is high AND there are many interactions
+Monitor triggers when escalation rate is high AND there are many interactions
 
 ### OR
 
-At least one child condition must be true for the alert to trigger.
+At least one child condition must be true for the monitor to trigger.
 
 **Example**:
 ```
@@ -84,7 +84,7 @@ Triggers when either type of tool failure is high
 ```
 Duration > 600000
 ```
-Alert when average duration exceeds 10 minutes
+Monitor triggers when average duration exceeds 10 minutes
 
 ### Complex Condition with AND
 
@@ -92,7 +92,7 @@ Alert when average duration exceeds 10 minutes
 ```
 (TotalInteractions > 50) AND (ForwardPercentage >= 25)
 ```
-Alert when there are many interactions AND high escalation rate
+Monitor triggers when there are many interactions AND high escalation rate
 
 ### Complex Condition with OR
 
@@ -100,7 +100,7 @@ Alert when there are many interactions AND high escalation rate
 ```
 (ToolFailure > 10) OR (ToolApplicationFailure > 5)
 ```
-Alert when either type of failure is high
+Monitor triggers when either type of failure is high
 
 ### Nested Conditions
 
@@ -108,7 +108,7 @@ Alert when either type of failure is high
 ```
 (TotalInteractions > 100) AND ((ForwardPercentage >= 30) OR (Duration > 900000))
 ```
-Alert when there are many interactions AND (high escalation OR long duration)
+Monitor triggers when there are many interactions AND (high escalation OR long duration)
 
 ## Condition Value Types
 
@@ -123,7 +123,7 @@ Condition values are numeric (float64):
 ### Setting Thresholds
 
 - **Start conservative**: Set thresholds higher than typical values to avoid noise
-- **Monitor and adjust**: Review alert history and adjust thresholds based on actual patterns
+- **Monitor and adjust**: Review monitor history and adjust thresholds based on actual patterns
 - **Consider business hours**: Different thresholds may be needed for different times
 - **Account for seasonality**: Adjust for known patterns (e.g., higher volume on Mondays)
 
@@ -160,7 +160,7 @@ Condition values are numeric (float64):
 
 Conditions are evaluated:
 
-1. **At configured intervals** — Based on alert's `Interval` setting (default: 60 seconds)
+1. **At configured intervals** — Based on monitor's `Interval` setting (default: 60 seconds)
 2. **Over the time window** — Using the specified `WindowValue` and `TimeUnit`
 3. **With the estimator** — Using the selected estimator (Average, Maximum, etc.)
 4. **Against the threshold** — Comparing calculated value to condition value

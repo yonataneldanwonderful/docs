@@ -1,60 +1,73 @@
 ---
-title: "What Alerts Are"
-description: "Understanding alerts - monitoring and notification system for agent performance"
+title: "What Monitors Are"
+description: "Understanding monitors - notification system for agent performance metrics"
 ---
 
-## What Alerts Are
+## What Monitors Are
 
-Alerts are automated monitoring and notification systems that track agent performance metrics and notify you when conditions are met. They help you proactively identify issues, monitor system health, and respond to performance degradation.
+Monitors (also called alerts) are automated notification systems that evaluate agent performance metrics and notify you when conditions are met. They help you proactively identify issues and stay informed about system health.
 
-Alerts continuously monitor metrics from your agents and interactions, evaluate them against trigger conditions, and send notifications when thresholds are exceeded.
+Monitors continuously evaluate metrics from your agents and interactions against trigger conditions, and send notifications when thresholds are exceeded.
 
-## Why Alerts Exist
+## Why Monitors Exist
 
-Alerts provide several key benefits:
+Monitors provide several key benefits:
 
-- **Proactive Monitoring** — Get notified about issues before they impact users
-- **Performance Tracking** — Monitor key metrics automatically
-- **Incident Management** — Track and resolve alert incidents
+- **Proactive Notifications** — Get notified about issues before they impact users
+- **Issue Detection** — Automatically detect when metrics exceed thresholds
+- **Incident Management** — Track and resolve monitor incidents
 - **Team Notifications** — Keep your team informed via email and SMS
 - **Scheduled Monitoring** — Monitor only during business hours if needed
-- **Automated Response** — Trigger actions when alerts fire
 
-## Alert Components
+## Monitor Components
 
-Each alert consists of:
+Each monitor consists of:
 
 - **Metric** — What to monitor (e.g., tool failures, interaction duration)
 - **Estimator** — How to calculate the metric (e.g., average, maximum, 95th percentile)
 - **Time Window** — How far back to look (e.g., last 10 minutes, last 1 hour)
-- **Trigger Conditions** — When to fire the alert (e.g., value > threshold)
-- **Severity** — Alert priority (High, Medium, Low)
+- **Trigger Conditions** — When to fire the monitor (e.g., value > threshold)
+- **Severity** — Monitor priority (High, Medium, Low)
 - **Actions** — What to do when triggered (email, SMS notifications)
-- **Schedule** — When the alert is active (optional)
+- **Schedule** — When the monitor is active (optional)
+- **Agent Filter** — Optional agent ID to monitor a specific agent
 
-## Alert Lifecycle
+## Monitor Scope
 
-1. **Creation** — Define metric, conditions, and actions
-2. **Activation** — Alert becomes active and starts monitoring
-3. **Evaluation** — Scheduler checks conditions at configured intervals
-4. **Triggering** — When conditions are met, an incident is created
-5. **Notification** — Alert actions are executed (emails, SMS sent)
-6. **Resolution** — Incident is resolved when conditions no longer match
-7. **Reminders** — Optional reminders sent while incident is open
+Monitors can be configured at different levels:
 
-## Alert Examples
+### Tenant-Level Monitors
 
-Common alert use cases:
+Monitor metrics across all agents in your tenant. Leave `AgentID` empty or null.
 
-- **High Tool Failure Rate** — Alert when tool failures exceed 5% in the last hour
-- **Long Interaction Duration** — Alert when average interaction duration exceeds 10 minutes
-- **High Escalation Rate** — Alert when escalation percentage exceeds 20%
-- **No Active Interactions** — Alert when no interactions occur for 30 minutes
-- **Tool-Specific Failures** — Alert when a specific tool fails more than 3 times in 10 minutes
+**Use Cases**:
+- System-wide health monitoring
+- Overall performance tracking
+- Tenant-level metrics
 
-## Alert Status
+### Agent-Level Monitors
 
-Alerts can be:
+Monitor metrics for a specific agent. Set `AgentID` to the agent's ID.
+
+**Use Cases**:
+- Agent-specific performance monitoring
+- Individual agent health checks
+- Compare different agents
+
+## Monitor Examples
+
+Common monitor use cases:
+
+- **High Tool Failure Rate** — Monitor when tool failures exceed 5% in the last hour
+- **Long Interaction Duration** — Monitor when average interaction duration exceeds 10 minutes
+- **High Escalation Rate** — Monitor when escalation percentage exceeds 20%
+- **No Active Interactions** — Monitor when no interactions occur for 30 minutes
+- **Tool-Specific Failures** — Monitor when a specific tool fails more than 3 times in 10 minutes
+- **Agent-Specific Issues** — Monitor a specific agent's performance metrics
+
+## Monitor Status
+
+Monitors can be:
 
 - **Active** — Currently monitoring and evaluating conditions
 - **Inactive** — Temporarily disabled (not monitoring)
@@ -62,8 +75,8 @@ Alerts can be:
 
 ## Related Concepts
 
-- **[Alert Incidents](/understanding-the-platform/alerts/alert-incidents)** — Individual alert trigger events
-- **[Alert Metrics](/understanding-the-platform/alerts/alert-metrics)** — Available metrics to monitor
-- **[Alert Actions](/understanding-the-platform/alerts/alert-actions)** — Notification and action types
-- **[Alert Schedules](/understanding-the-platform/alerts/alert-schedules)** — Time-based alert activation
+- **[Monitor Incidents](/understanding-the-platform/alerts/alert-incidents)** — Individual monitor trigger events
+- **[Monitor Metrics](/understanding-the-platform/alerts/alert-metrics)** — Available metrics to monitor
+- **[Monitor Actions](/understanding-the-platform/alerts/alert-actions)** — Notification and action types
+- **[Monitor Schedules](/understanding-the-platform/alerts/alert-schedules)** — Time-based monitor activation
 

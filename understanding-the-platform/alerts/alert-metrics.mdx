@@ -1,11 +1,11 @@
 ---
-title: "Alert Metrics"
+title: "Monitor Metrics"
 description: "Available metrics for monitoring agent and interaction performance"
 ---
 
-## Alert Metrics Overview
+## Monitor Metrics Overview
 
-Alerts can monitor various metrics that track agent performance, interaction quality, and system health. Each metric measures a specific aspect of your agents' behavior.
+Monitors can track various metrics that measure agent performance, interaction quality, and system health. Each metric measures a specific aspect of your agents' behavior.
 
 ## Available Metrics
 
@@ -18,7 +18,7 @@ Alerts can monitor various metrics that track agent performance, interaction qua
 - Detect when no interactions are occurring
 - Track peak usage times
 
-**Example**: Alert when active interactions drop to 0 for 30 minutes (system may be down)
+**Example**: Monitor when active interactions drop to 0 for 30 minutes (system may be down)
 
 ### TotalInteractions
 
@@ -29,7 +29,7 @@ Alerts can monitor various metrics that track agent performance, interaction qua
 - Detect unusual spikes or drops
 - Track business hours activity
 
-**Example**: Alert when total interactions exceed 1000 in the last hour (high volume)
+**Example**: Monitor when total interactions exceed 1000 in the last hour (high volume)
 
 ### Duration
 
@@ -40,7 +40,7 @@ Alerts can monitor various metrics that track agent performance, interaction qua
 - Detect unusually long interactions
 - Track average handling time
 
-**Example**: Alert when average duration exceeds 10 minutes (interactions taking too long)
+**Example**: Monitor when average duration exceeds 10 minutes (interactions taking too long)
 
 **Note**: Duration values are in milliseconds. The estimator determines how duration is calculated (average, maximum, etc.)
 
@@ -53,7 +53,7 @@ Alerts can monitor various metrics that track agent performance, interaction qua
 - Detect when too many interactions require human intervention
 - Track escalation trends
 
-**Example**: Alert when forward amount exceeds 50 in the last hour (high escalation rate)
+**Example**: Monitor when forward amount exceeds 50 in the last hour (high escalation rate)
 
 ### ForwardPercentage
 
@@ -64,7 +64,7 @@ Alerts can monitor various metrics that track agent performance, interaction qua
 - Detect when agent effectiveness drops
 - Track quality metrics
 
-**Example**: Alert when forward percentage exceeds 20% (agent struggling)
+**Example**: Monitor when forward percentage exceeds 20% (agent struggling)
 
 **Note**: Percentage values range from 0 to 100
 
@@ -77,9 +77,9 @@ Alerts can monitor various metrics that track agent performance, interaction qua
 - Detect when tools are failing frequently
 - Track integration health
 
-**Example**: Alert when tool failures exceed 10 in the last 10 minutes (tool issues)
+**Example**: Monitor when tool failures exceed 10 in the last 10 minutes (tool issues)
 
-**Note**: Can be filtered by specific tool name (see Tool-Specific Alerts)
+**Note**: Can be filtered by specific tool name (see Tool-Specific Monitors)
 
 ### ToolApplicationFailure
 
@@ -90,7 +90,7 @@ Alerts can monitor various metrics that track agent performance, interaction qua
 - Detect when tools are being called incorrectly
 - Track agent tool usage issues
 
-**Example**: Alert when tool application failures exceed 5 in the last hour (agent configuration issues)
+**Example**: Monitor when tool application failures exceed 5 in the last hour (agent configuration issues)
 
 ## Metric Filtering
 
@@ -103,6 +103,8 @@ All metrics can be filtered by `AgentID` to monitor specific agents:
 - Monitor a single agent's performance
 - Compare different agents
 - Track agent-specific issues
+
+**Agent-Level Monitors**: When `AgentID` is set, the monitor only evaluates metrics for that specific agent. This allows you to create monitors that track individual agent performance separately from tenant-wide metrics.
 
 ### Tool Filtering
 
