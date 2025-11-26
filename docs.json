@@ -87,6 +87,17 @@
                   "understanding-the-platform/evals/batch-evals",
                   "understanding-the-platform/evals/human-feedback-improvements"
                 ]
+              },
+              {
+                "group": "Alerts",
+                "pages": [
+                  "understanding-the-platform/alerts/what-alerts-are",
+                  "understanding-the-platform/alerts/alert-metrics",
+                  "understanding-the-platform/alerts/alert-conditions",
+                  "understanding-the-platform/alerts/alert-actions",
+                  "understanding-the-platform/alerts/alert-incidents",
+                  "understanding-the-platform/alerts/alert-schedules"
+                ]
               }
             ]
           },

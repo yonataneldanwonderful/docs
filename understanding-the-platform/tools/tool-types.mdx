@@ -5,7 +5,7 @@ description: "Understanding different types of tools in Wonderful"
 
 ## Tool Types
 
-Tools come in different types, each serving a specific purpose and scope.
+Tools come in different types, each serving a specific purpose and scope. Tools are associated with skills and can be triggered in different ways based on their configuration.
 
 ## System Tools
 
@@ -31,7 +31,9 @@ Agent tools provide persistent capabilities that are available throughout the co
 
 Skill tools are available only when a specific skill is active. They provide domain-specific capabilities that are scoped to the skill's functionality.
 
-When a skill is unloaded, its tools are no longer accessible. This scoping ensures tools are only available when relevant.
+When a skill is unloaded (in multi-skill mode), its tools are no longer accessible. In default mode, all skill tools are always available. This scoping ensures tools are only available when relevant.
+
+**Note**: All tools must be associated with a skill. Tools without a skill association are not supported.
 
 ## Tenant Tools
 
@@ -64,4 +66,59 @@ Tenant tools enable reuse and standardization across your organization.
 - Shared capabilities
 - Common integrations
 - Organization-wide functionality
+
+## Tool Function Types
+
+Beyond scope (system, agent, skill, tenant), tools also have function types that define how they execute:
+
+### API Tools (`FuncTypeAPI`)
+- Connect to external REST APIs
+- Handle HTTP requests and responses
+- Support authentication (API keys, OAuth, etc.)
+- Transform request/response data
+
+### RAG Tools (`FuncTypeRAG`)
+- Query knowledge bases and document stores
+- Perform semantic search
+- Retrieve context from uploaded documents
+- Support retrieval-augmented generation
+
+### Programmable Tools (`FuncTypeProgrammable`)
+- Execute custom JavaScript/TypeScript code
+- Handle complex business logic
+- Perform data transformations
+- Integrate with custom workflows
+
+### Mock Tools (`FuncTypeMock`)
+- Testing and development tools
+- Simulate API responses
+- Prototype without external dependencies
+
+## Tool Triggers
+
+Tools can be triggered in different ways based on their `Trigger` configuration:
+
+- **`agent`** (default) — Called by the agent during conversation based on context
+- **`on_start`** — Executed automatically when interaction starts
+- **`on_end`** — Executed automatically when interaction ends
+- **`on_enhanced_finished`** — Executed after enhancement/processing completes
+- **`on_user_transcription`** — Triggered when user transcription is received
+- **`on_agent_transcription`** — Triggered when agent transcription is generated
+- **`on_before_first_message`** — Executed before the first agent message
+- **`on_after_first_message`** — Executed after the first agent message
+- **`on_user_finished_hearing`** — Triggered when user finishes hearing agent response
+- **`on_user_interruption`** — Triggered when user interrupts the agent
+- **`on_tool_call`** — Triggered when another tool is called
+
+## Tool Configuration
+
+Tools support extensive configuration options:
+
+- **Available In** — Restrict which channels the tool is available on (voice, chat, email)
+- **Parameters** — Define input parameters with types, descriptions, defaults, and validation
+- **Non-exposed Parameters** — Parameters that are not shown to the LLM but have default values
+- **Required Parameters** — Parameters that must be provided
+- **Enum Values** — Predefined options for parameters
+- **Function Config** — Channel-specific behavior, announcements, delays, and permissions
+- **Agent Notes** — Internal notes about tool usage (not shown to LLM)
 

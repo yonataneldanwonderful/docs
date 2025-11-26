@@ -20,11 +20,13 @@ Skills provide several key benefits:
 ## Skill Characteristics
 
 Skills are:
-- **Self-contained** — Include their own prompts and tools
+- **Self-contained** — Include their own prompts (instructions) and tools
 - **Focused** — Handle a specific domain or task
-- **Reusable** — Can be shared across multiple agents
-- **Dynamic** — Load only when needed
+- **Reusable** — Can be shared across multiple agents via many-to-many relationship
+- **Dynamic** — Load only when needed (in multi-skill mode) or always available (default mode)
 - **Composable** — Can work together with other skills
+- **Tag-enabled** — Can have associated tags for analytics and routing
+- **Active/Inactive** — Can be enabled or disabled without deletion
 
 ## Skill Examples
 
@@ -34,4 +36,32 @@ Common skill examples:
 - **Schedule Appointment** — Books appointments and manages calendars
 - **Update Address** — Updates customer address information
 - **Check Order Status** — Retrieves and reports order information
+
+## Skill Structure
+
+Each skill contains:
+- **Name and Display Name** — Identifier and human-readable name
+- **Description** — What the skill does
+- **Instructions** — Prompt/instructions that define the skill's behavior
+- **Tools** — Collection of tools scoped to this skill
+- **Tags** — Associated tags for tracking and analytics
+- **Active Status** — Whether the skill is currently enabled
+
+## Skill Loading Modes
+
+Skills can be used in two modes:
+
+### Default Mode (Always-Loaded)
+- All skills attached to an agent are loaded at conversation start
+- All tools from all skills are immediately available
+- No skill switching required
+- Best for agents with few skills (1-3) or when tools are frequently used together
+
+### Multi-Skill Mode (Dynamic Loading)
+- Skills are registered but only one is active at a time
+- Tools from only the active skill are available
+- Agent can switch between skills during conversation
+- Best for agents with many skills (4+) or distinct domains
+
+See [Dynamic Loading](/understanding-the-platform/skills/dynamic-loading) for detailed information.
 

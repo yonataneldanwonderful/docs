@@ -1,0 +1,191 @@
+---
+title: "Alert Incidents"
+description: "Understanding alert incidents - individual alert trigger events"
+---
+
+## Alert Incidents Overview
+
+An alert incident is created when an alert's trigger conditions are met. Incidents track individual alert events, their status, and resolution.
+
+## What Are Incidents
+
+Incidents represent a single occurrence of an alert condition being met. Each incident records:
+
+- **When it was triggered** — Timestamp of when conditions were met
+- **Metric value** — The actual metric value that triggered the alert
+- **Status** — Whether the incident is open or resolved
+- **Resolution** — When and by whom it was resolved (if resolved)
+
+## Incident Lifecycle
+
+### 1. Triggered
+
+An incident is created when:
+- Alert conditions evaluate to true
+- No open incident exists for this alert
+- OR the time window has passed since the last incident
+
+**Triggered At**: Timestamp when incident was created
+
+### 2. Open
+
+The incident remains open while:
+- Alert conditions continue to be met
+- OR conditions are no longer met but incident hasn't been resolved
+
+**Status**: `Open`
+
+### 3. Resolved
+
+The incident is resolved when:
+- Alert conditions are no longer met (automatic resolution)
+- OR manually resolved by a user
+
+**Status**: `Resolved`
+**Resolved At**: Timestamp when incident was resolved
+**Resolved By**: User ID who resolved it (if manual)
+
+## Incident Status
+
+### Open
+
+Incident is currently active. The alert condition is (or was) met.
+
+- Notifications are sent (initial + reminders if configured)
+- Incident appears in active incidents list
+- Can be manually resolved
+
+### Resolved
+
+Incident has been resolved. The alert condition is no longer met.
+
+- Resolution notification sent (if configured)
+- Incident appears in resolved incidents list
+- Can be reviewed for historical analysis
+
+## Incident Data
+
+Each incident stores:
+
+- **Alert ID** — Which alert triggered this incident
+- **Agent ID** — Which agent this relates to (if alert is agent-specific)
+- **Metric Value** — The calculated metric value that triggered the alert
+- **Triggered At** — When the incident was created
+- **Status** — Open or Resolved
+- **Resolved At** — When resolved (if resolved)
+- **Resolved By** — Who resolved it (if manual resolution)
+- **Last Notification Sent At** — When the last reminder was sent
+
+## Incident Creation Rules
+
+### New Incident Creation
+
+A new incident is created when:
+
+1. Alert is active
+2. Alert conditions evaluate to true
+3. **AND** one of:
+   - No previous incidents exist for this alert
+   - Last incident is resolved
+   - Time window has passed since last incident (`WindowValue` + `TimeUnit`)
+
+### Preventing Duplicate Incidents
+
+The system prevents creating duplicate incidents:
+
+- **Open incidents block new ones**: If an open incident exists, no new incident is created
+- **Window-based deduplication**: New incidents are only created after the time window passes
+- **Automatic resolution**: When conditions are no longer met, open incidents are automatically resolved
+
+## Automatic Resolution
+
+Incidents are automatically resolved when:
+
+- Alert conditions are no longer met (e.g., metric value drops below threshold)
+- Alert is deactivated
+- Alert is deleted
+
+**Resolution Time**: When conditions first evaluate to false
+**Resolved By**: System (automatic)
+
+## Manual Resolution
+
+Incidents can be manually resolved by users:
+
+- Mark incident as resolved in the UI
+- Useful when issue is addressed but conditions haven't changed yet
+- Allows tracking of manual intervention
+
+**Resolution Time**: When user marks as resolved
+**Resolved By**: User ID of the person who resolved it
+
+## Incident Notifications
+
+### Initial Notification
+
+Sent when incident is created:
+- All alert actions are executed
+- Email/SMS sent to all configured recipients
+- Includes incident details and metric value
+
+### Reminder Notifications
+
+Sent while incident is open (if `ReminderFrequencyMinutes` > 0):
+- Sent at configured intervals
+- Helps ensure incidents don't go unnoticed
+- Stops when incident is resolved
+
+### Resolution Notification
+
+Sent when incident is resolved (if `NotifyOnResolvedIncidents` is enabled):
+- Notifies that the issue is resolved
+- Includes resolution time
+- Confirms system is back to normal
+
+## Incident Filtering
+
+Incidents can be filtered by:
+
+- **Alert** — Show incidents for specific alerts
+- **Agent** — Show incidents for specific agents
+- **Status** — Open or Resolved
+- **Time Range** — When incidents were triggered
+- **Severity** — Alert severity level
+
+## Incident History
+
+Incident history provides:
+
+- **Trend Analysis** — How often alerts trigger
+- **Resolution Time** — How long incidents stay open
+- **Pattern Recognition** — Common triggers and times
+- **Alert Tuning** — Data to adjust alert thresholds
+
+## Best Practices
+
+### Incident Management
+
+- **Review regularly**: Check open incidents and resolve manually if needed
+- **Analyze patterns**: Look for recurring incidents to identify root causes
+- **Tune alerts**: Adjust thresholds based on incident frequency
+- **Document resolutions**: Note why incidents occurred and how they were resolved
+
+### Resolution Strategy
+
+- **Automatic resolution**: Let system resolve when conditions improve
+- **Manual resolution**: Resolve manually when issue is addressed but conditions unchanged
+- **Investigation**: Use incident data to investigate root causes
+
+### Alert Tuning
+
+- **Too many incidents**: Increase thresholds or adjust conditions
+- **Too few incidents**: Decrease thresholds or check if alerts are working
+- **False positives**: Refine conditions to be more specific
+- **Missed issues**: Lower thresholds or add additional alerts
+
+## Related Concepts
+
+- **[What Alerts Are](/understanding-the-platform/alerts/what-alerts-are)** — Overview of the alert system
+- **[Alert Conditions](/understanding-the-platform/alerts/alert-conditions)** — How trigger conditions work
+- **[Alert Actions](/understanding-the-platform/alerts/alert-actions)** — Notification configuration
+

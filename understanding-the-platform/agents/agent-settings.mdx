@@ -7,6 +7,8 @@ description: "Configuring agent behavior across channels and scenarios"
 
 Agent settings configure how agents behave across different channels and scenarios. These settings control everything from initial greetings to voice configuration to privacy controls.
 
+Agent settings are stored in the `Settings` field (JSONB) and include various configuration options that fine-tune agent behavior.
+
 ## Channels
 
 Configure which channels the agent is available on and how it behaves on each:
@@ -58,6 +60,14 @@ Configure how the agent handles delays and failures:
 - **Tool timeout** — Maximum time for tool execution
 - **Retry logic** — When and how to retry failed operations
 - **Fallback behavior** — What to do when timeouts occur
+- **Timeout after duration** (`timeout_after_duration_seconds`) — Automatically end interaction after specified duration
+- **Forward after timeout** (`forward_to_after_timeout`) — Route to human agent or another destination after timeout
+- **Timeout end message** (`timeout_end_message`) — Message to deliver when timeout occurs
+- **Idle check interval** (`override_idle_check_interval`) — How often to check for user inactivity
+- **Idle hang-up check** (`override_idle_hang_up_check`) — Duration of inactivity before hang-up
+- **Hang up after silence** (`override_hang_up_after_silence`) — Silence duration threshold for automatic hang-up
+- **Idle check message** (`idle_check_message`) — Message to send when checking for user presence
+- **Idle goodbye message** (`idle_goodbye_message`) — Final message before ending due to inactivity
 
 ## Channel Setup
 
@@ -67,4 +77,41 @@ Configure entry points for each channel:
 - **Inboxes** — Configure email inboxes
 - **Embed widgets** — Set up embed code and customization
 - **Webhook endpoints** — Configure webhook URLs for integrations
+
+## Advanced Settings
+
+### Multi-Skill Mode
+- **IsMultiSkill** — Enable dynamic skill loading where only one skill is active at a time
+- When enabled, skills are registered but only the active skill's tools are available
+- When disabled (default), all skills are loaded simultaneously with all tools available
+
+### LLM Configuration
+- **Model selection** — Choose language model and provider
+- **Temperature** — Control response randomness
+- **Token limits** — Set context window and response length limits
+- **Experimental models** — Enable experimental model features (`use_experimental_model`)
+
+### Transcription Settings
+- **Transcription corrector** (`use_transcription_corrector`) — Enable automatic transcription correction
+- **Translation** (`enable_transcription_translation`) — Translate transcriptions to another language
+- **Translation language** (`translation_language`) — Target language for transcription translation
+- **Custom dictionaries** (`aws_transcribe_dictionary_name`) — Use custom pronunciation dictionaries
+
+### Response Configuration
+- **Minimum response length** (`min_length_for_response`) — Minimum characters required for agent response (default: 24)
+- **Disable end of turn** (`disable_end_of_turn`) — Disable automatic turn completion detection
+- **End of turn configuration** — Fine-tune turn completion behavior
+
+### Governance & Quality
+- **Governance enabled** (`governance_enabled`) — Enable governance guardrails and safety checks
+- **Automated issues** (`automated_issues_enabled`) — Enable automatic detection of conversation issues
+- **Automated issues prompt** — Custom prompt for issue detection logic
+
+### Tool Configuration
+- **Toolkit name** (`toolkit_name`) — Custom toolkit identifier
+- **Excluded tools** (`excluded_tools`) — List of tool names to exclude from this agent
+- **Validators kit** (`use_validators_kit`) — Enable tool validation framework
+
+### Sender Configuration
+- **Sender ID** (`sender_id`) — Identifier for outbound communications (e.g., WhatsApp Business sender ID)
 

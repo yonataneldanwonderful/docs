@@ -15,6 +15,18 @@ The agent:
 3. **Generates tags** — Applies tags based on its analysis
 4. **Maintains consistency** — Uses the tag prompt to guide decisions
 
+## Tag Application Process
+
+LLM tags are applied through the enhancement process:
+
+1. **Tag Collection** — System collects all tags from skills attached to the agent that have `ExposeToEnhancer` enabled
+2. **Prompt Building** — A tag prompt is built from agent and skill tag prompts
+3. **Context Preparation** — Conversation transcript, available tags, and metadata are prepared
+4. **LLM Inference** — LLM analyzes the conversation and returns tag IDs to apply
+5. **Tag Application** — Tags are applied to the interaction/communication
+
+**Note**: Only tags with `ExposeToEnhancer = true` are considered for LLM tagging. This allows you to control which tags are available for LLM inference.
+
 ## Tag Prompt
 
 The tag prompt defines how the LLM should apply tags. It:
@@ -46,6 +58,20 @@ LLM tags have some limitations:
 - **Test thoroughly** — Validate tag application
 - **Monitor consistency** — Track tag application patterns
 - **Combine with deterministic** — Use deterministic tags when possible
+- **Control exposure** — Use `ExposeToEnhancer` to control which tags are available for LLM inference
+- **Tag organization** — Associate tags with skills for better organization
+- **Context consideration** — Include relevant context in tag prompts (e.g., who ended the conversation)
+
+## Tag Context
+
+The LLM receives additional context when applying tags:
+
+- **Transcripts** — Full conversation history
+- **Available Tags** — List of tags that can be applied (from skills with `ExposeToEnhancer = true`)
+- **Disconnected By** — Who ended the conversation (customer, agent, or system)
+- **Interaction Metadata** — Additional metadata about the interaction
+
+This context helps the LLM make more informed tagging decisions.
 
 LLM tags are powerful for nuanced, context-aware tagging that requires understanding intent and meaning.
 

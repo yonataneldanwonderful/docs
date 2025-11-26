@@ -41,6 +41,8 @@ Agent tools are always-available tools that the agent can call regardless of whi
 
 Agent tools are available throughout the conversation, providing persistent capabilities.
 
+**Tool Availability**: Tools can be configured with `AvailableIn` settings to restrict which channels they're available on (voice, chat, email). Tools can also be excluded from specific agents using the `ExcludedTools` configuration.
+
 ## Skills
 
 Skills are domain-specific modules loaded only when needed. They provide focused capabilities for specific scenarios. Skills can be dynamically loaded based on:
@@ -54,8 +56,56 @@ Skills enable agents to stay focused and efficient by only loading what's needed
 
 Skill tools become available when a specific skill is active. These tools are:
 - Scoped to the skill's domain
-- Only accessible when that skill is loaded
-- Automatically unloaded when the skill is unloaded
+- Only accessible when that skill is loaded (in multi-skill mode) or always available (in default mode)
+- Automatically unloaded when the skill is unloaded (multi-skill mode only)
 
 Skill tools provide capabilities that are specific to a skill's purpose.
+
+## Additional Agent Components
+
+### LLM Configuration
+Controls the language model and provider settings:
+- Model selection and provider
+- Temperature and other generation parameters
+- Token limits and context window management
+
+### Voice Configuration
+Text-to-speech settings for voice interactions:
+- Voice selection (gender, locale)
+- Speech rate and style
+- Language and accent settings
+
+### Transcriber Configuration
+Speech-to-text settings:
+- Transcription provider selection
+- Language detection
+- Custom dictionaries (e.g., AWS Transcribe dictionaries)
+- Transcription correction settings
+
+### PII Configuration
+Privacy and data protection settings:
+- Text masking for PII in transcripts
+- Voice masking for PII in recordings
+- Masking rules and patterns
+
+### End-of-Turn Configuration
+Controls how agents handle conversation turns:
+- Turn completion detection
+- Response generation timing
+- Turn transition behavior
+
+### Initial Messages
+Channel-specific greeting messages:
+- Voice channel initial message
+- Chat channel initial message
+- Email channel initial message
+- Can be customized per channel or use default templates
+
+### Settings
+Additional agent behavior settings:
+- Multi-skill mode toggle
+- Prompt builder enablement
+- Automated issues detection
+- Timeout configurations
+- Idle check intervals
 

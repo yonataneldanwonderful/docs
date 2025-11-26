@@ -36,14 +36,23 @@ All channels share the same agent logic, with differences only in formatting and
 
 ## What Interactions Include
 
-Interactions capture comprehensive information:
+Interactions (stored as `Communication` records) capture comprehensive information:
 
-- **Conversation transcript** — Full dialogue between agent and user
-- **Tool calls** — All tools executed during the interaction
+- **Conversation transcript** — Full dialogue between agent and user (stored as `BaseTranscript` records)
+- **Tool calls** — All tools executed during the interaction with parameters and results
 - **Skill loads** — Which skills were loaded and when
-- **Events** — System events that occurred
-- **Tags** — LLM and deterministic tags applied
+- **Events** — System events that occurred during the interaction
+- **Tags** — LLM and deterministic tags applied (stored via many-to-many relationship)
+- **Call Tags** — System-generated tags for call characteristics
 - **Metrics** — Duration, escalations, outcomes, and performance data
+- **Sentiment** — Customer sentiment analysis
+- **Rating** — Call rating and quality scores
+- **Summary** — Brief and detailed summaries of the interaction
+- **Tokens Usage** — LLM token consumption statistics
+- **Recording URLs** — Links to audio recordings (original, processed, masked)
+- **Metadata** — Additional custom metadata (e.g., who ended the call, forwarding information)
+- **Human Feedback** — Manual review and feedback from human reviewers
+- **Review Status** — Whether the interaction has been reviewed and by whom
 
 ## Interaction Purpose
 
@@ -54,4 +63,46 @@ Interactions serve multiple purposes:
 - **Debugging** — Troubleshoot issues and understand agent decisions
 - **Training** — Improve agents based on real interactions
 - **Compliance** — Maintain records for regulatory requirements
+- **Quality Assurance** — Review and rate interactions for quality
+- **Performance Monitoring** — Track metrics and KPIs
+- **Audit Trail** — Complete record of all actions and events
+
+## Interaction Status
+
+Interactions have a status that indicates their current state:
+
+- **Active** — Interaction is currently in progress
+- **Completed** — Interaction finished successfully
+- **Failed** — Interaction ended due to an error
+- **Escalated** — Interaction was transferred to a human agent
+
+## Interaction Direction
+
+Interactions can be:
+
+- **Inbound** — Customer initiates contact (from customer to agent)
+- **Outbound** — Agent initiates contact (from agent to customer)
+
+The direction affects how phone numbers are interpreted (from_number vs to_number).
+
+## Interaction Metadata
+
+Interactions store metadata that provides additional context:
+
+- **Ended By** — Who ended the interaction (customer, agent, or system)
+- **Forwarded To** — If escalated, where it was forwarded
+- **Session ID** — Unique identifier for the interaction session
+- **Agent Version** — Which version of the agent handled this interaction
+- **Custom Fields** — Tenant-specific metadata
+
+## Interaction Recordings
+
+For voice interactions, multiple recording versions may be available:
+
+- **Original Recording** — Raw audio recording
+- **Processed Recording** — Enhanced/processed audio
+- **Masked Recording** — Audio with PII masked (if PII masking is enabled)
+- **Masked MP3** — Masked audio in MP3 format
+
+Recordings are stored in S3 and accessible via signed URLs.
 

@@ -49,6 +49,18 @@ Deterministic tags provide:
 - Error code `PAYMENT_FAILED` → tag `payment_issue`
 - Tool `create_ticket` called → tag `support_ticket_created`
 
+## Call Tags (System-Generated Deterministic Tags)
+
+The platform also automatically applies system-level call tags based on interaction characteristics:
+
+- **System Error** — Applied when interaction status is `failed`
+- **Disconnected Before Interaction** — Applied when customer disconnects with ≤1 message
+- **Customer Not Understood** — Applied when call rating indicates customer wasn't understood (negative rating)
+- **Extension Transfer** — Applied when call is forwarded to a human agent
+- **Requested Human Before Interaction** — Applied when customer requests human agent very early in conversation
+
+These tags are applied automatically based on deterministic rules and don't require manual configuration.
+
 ## Best Practices
 
 - **Use for clear cases** — Apply when conditions are unambiguous

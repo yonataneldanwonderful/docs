@@ -15,36 +15,69 @@ The interaction begins when:
 - **Inbound**: Customer contacts the agent (calls, chats, emails)
 - **Outbound**: Agent initiates contact with customer
 
-At initiation, the agent loads and begins processing the request.
+At initiation:
+- A `Communication` record is created (or retrieved if session exists)
+- The agent is loaded with its configuration
+- Skills are registered (in multi-skill mode) or loaded (in default mode)
+- Initial messages are sent based on channel configuration
+- The interaction status is set to `active`
+- Session tracking begins
 
 ### 2. Active Conversation
 
 During the active conversation:
-- Agent and user exchange messages
-- Skills load dynamically as needed
-- Tools execute to perform actions
-- Events are generated and tracked
-- Tags are applied based on context and rules
+- Agent and user exchange messages (stored as transcript entries)
+- Skills load dynamically as needed (in multi-skill mode) or are already available (default mode)
+- Tools execute to perform actions (with triggers like `on_user_transcription`, `on_agent_transcription`, etc.)
+- Events are generated and tracked (published to event bus)
+- Tags are applied based on context and rules (LLM tags and deterministic tags)
+- Transcripts are continuously updated
+- Token usage is tracked
+- Timeout checks are performed (idle detection, hang-up after silence)
 
 The agent makes decisions, calls tools, and loads skills to accomplish the user's goal.
+
+**Special Events During Conversation:**
+- **Before First Message** — Tools with `on_before_first_message` trigger execute
+- **After First Message** — Tools with `on_after_first_message` trigger execute
+- **User Interruptions** — Tools with `on_user_interruption` trigger execute
+- **User Finished Hearing** — Tools with `on_user_finished_hearing` trigger execute
 
 ### 3. Resolution
 
 The interaction reaches resolution when:
 - The user's request is fulfilled
 - The agent successfully completes the task
-- An escalation occurs
+- An escalation occurs (forwarded to human agent)
 - The user ends the conversation
 - A timeout or error occurs
+- Idle timeout is reached (user inactive for configured duration)
+- Hang-up after silence (user silent for configured duration)
+- Maximum duration timeout (interaction exceeds `timeout_after_duration_seconds`)
+
+**Resolution Metadata:**
+- The `ended_by` field is set (customer, agent, or system)
+- If escalated, `forwarded_to` metadata is recorded
+- Final status is determined (completed, failed, escalated)
 
 ### 4. Completion
 
 Upon completion:
-- Final tags are applied
-- Metrics are calculated
-- The interaction is recorded
-- Analytics are updated
-- Follow-up actions may be triggered
+- **End-of-Interaction Tools** — Tools with `on_end` trigger execute
+- **Enhancement Process** — Interaction goes through enhancement:
+  - Transcript clarification (if enabled)
+  - LLM tag application (if tags are configured)
+  - Sentiment analysis (if enabled)
+  - Automated issue detection (if enabled)
+  - Call rating and call tag application
+- **Final Tags** — All tags (LLM and deterministic) are finalized
+- **Metrics Calculation** — Duration, token usage, and other metrics are calculated
+- **Summary Generation** — Brief and detailed summaries may be generated
+- **Recording Processing** — Audio recordings are processed and stored
+- **Analytics Update** — Dashboards and analytics are updated
+- **Follow-up Actions** — Any configured follow-up actions are triggered
+
+The interaction status is updated to `completed` or `failed`, and the `end_time` is recorded.
 
 ## State Transitions
 
@@ -61,13 +94,28 @@ Interactions can transition between states:
 
 Key events during the lifecycle:
 
-- **Interaction started** — Initial contact established
-- **Skill loaded** — Dynamic skill activation
-- **Tool called** — Action execution
-- **Tag applied** — Behavior annotation
-- **Escalation** — Transfer to human
-- **Resolution** — Task completion
+- **Interaction started** — Initial contact established, communication record created
+- **Skill loaded** — Dynamic skill activation (in multi-skill mode)
+- **Tool called** — Action execution (various trigger types)
+- **Tag applied** — Behavior annotation (LLM or deterministic)
+- **Escalation** — Transfer to human agent
+- **Resolution** — Task completion or failure
 - **Interaction ended** — Conversation closed
+- **Enhancement started** — Post-interaction processing begins
+- **Enhancement completed** — All post-processing finished
+
+## Post-Interaction Enhancement
+
+After an interaction ends, it goes through an enhancement process:
+
+1. **Clarification** — Transcript may be clarified/corrected
+2. **Tagging** — LLM tags are applied based on conversation analysis
+3. **Sentiment** — Customer sentiment is analyzed
+4. **Automated Issues** — System detects potential issues automatically
+5. **Rating** — Call is rated and call tags are applied
+6. **Summary** — Summaries may be generated
+
+This enhancement happens asynchronously and doesn't block the interaction completion.
 
 ## Monitoring the Lifecycle
 

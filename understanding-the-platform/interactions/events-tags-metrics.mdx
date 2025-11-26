@@ -12,8 +12,31 @@ Events are system occurrences that happen during an interaction. They track:
 - Escalations
 - State changes
 - User actions
+- Transcription events
+- Agent responses
+- System actions
 
 Events enable deterministic behavior and provide a complete audit trail of what happened during an interaction.
+
+### Event Bus Architecture
+
+The platform uses an event bus system for event propagation:
+
+- **Event Types** — Different event types for different system occurrences
+- **Event Groups** — Events are organized into groups (e.g., by tenant, by interaction)
+- **Publish/Subscribe** — Components can publish events and subscribe to event types
+- **Asynchronous Processing** — Events can be published asynchronously for performance
+- **Event Handlers** — Handlers process events and trigger actions (e.g., tag application)
+
+### Event Structure
+
+Events contain:
+- **Type** — The event type identifier
+- **Data** — Event-specific data payload
+- **Metadata** — Additional context and metadata
+- **Source Worker ID** — Which worker/component generated the event
+
+Events are published to the event bus and can trigger deterministic tag rules, logging, analytics, and other downstream processes.
 
 ## Tags
 
@@ -37,13 +60,35 @@ Tags enable:
 
 Metrics provide quantitative measures of interaction performance:
 
-- **Duration** — How long the interaction lasted
+- **Duration** — How long the interaction lasted (in milliseconds)
 - **Escalations** — Whether and when escalation occurred
 - **Outcomes** — Success, failure, or other outcomes
 - **Tool usage** — Which tools were called and how often
 - **Skill usage** — Which skills were loaded
 - **Tag distribution** — Which tags were applied
 - **User satisfaction** — Feedback and ratings
+- **Token usage** — LLM token consumption (input and output tokens)
+- **QA Score** — Quality assurance score
+- **Active interactions** — Count of currently active interactions
+- **Total interactions** — Count of all interactions in a time window
+- **Forward amount** — Number of escalations/forwards
+- **Forward percentage** — Percentage of interactions that were escalated
+- **Tool failures** — Count of tool execution failures
+- **Tool application failures** — Count of tool application/validation failures
+
+### Metric Extraction
+
+Metrics are extracted from interactions using metric extractors:
+
+- **Time Windows** — Metrics can be calculated over different time windows (e.g., last 10 minutes, last 10 hours)
+- **Filtering** — Metrics can be filtered by tenant, agent, time range, and other criteria
+- **Aggregation** — Metrics are aggregated and can be used for dashboards, alerts, and analytics
+
+### Metric Types
+
+- **Counter Metrics** — Count occurrences (e.g., total interactions, tool failures)
+- **Continuous Metrics** — Measure continuous values (e.g., duration, token usage)
+- **Distribution Metrics** — Track distributions (e.g., tag distribution, sentiment distribution)
 
 ## Using Interaction Data
 
