@@ -9,7 +9,12 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "tabs": []
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": []
+      }
+    ]
   },
   "logo": {
     "light": "/logo/light.svg",
