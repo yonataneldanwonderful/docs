@@ -3,61 +3,8 @@ title: "Agents"
 description: "Understanding agents - the core AI entities in Wonderful"
 ---
 
-## What an Agent Is
+## Documentation Coming Soon
 
-An agent is a complete AI entity that can converse, call tools, load skills, and run across channels. Each agent is customized for a specific purpose and defines how the AI thinks and behaves.
+This section of the documentation is currently being prepared.
 
-## Agent Components
-
-### System Prompt
-
-The system prompt is a hidden scaffold that defines the core operating rules. It establishes the fundamental behavior and constraints that govern all agent interactions.
-
-### System Tools
-
-System tools are internal tools used for engine-level behavior. Examples include `skip_turn` and `escalate`. These tools enable the agent to manage conversation flow and handle edge cases.
-
-### Agent Prompt
-
-The agent prompt defines the persona, goals, and constraints specific to this agent. It shapes how the agent presents itself and what it prioritizes in conversations.
-
-### Agent Tools
-
-Agent tools are always-available tools that the agent can call regardless of which skills are loaded. These typically include CRM APIs, payment APIs, and RPA actions that are core to the agent's functionality.
-
-### Skills
-
-Skills are domain-specific modules loaded only when needed. They provide focused capabilities for specific scenarios. Skills can be dynamically loaded based on conversation context or deterministic rules.
-
-### Skill Tools
-
-Skill tools become available when a specific skill is active. These tools are scoped to the skill's domain and only accessible when that skill is loaded.
-
-### Agent Settings
-
-Agent settings configure behavior across channels and scenarios:
-
-- **Initial message per channel** — Custom greetings for voice, chat, email
-- **Timeout & retry behavior** — How the agent handles delays and failures
-- **Voice config** — Voice selection, speed, and style for voice interactions
-- **PII reduction** — Privacy controls for sensitive data
-- **Channel setup** — Phone numbers, inboxes, embed widgets
-
-## Agent Versioning
-
-Agents support a versioning workflow:
-
-**Draft → Versioned → Published**
-
-- **Draft**: Work-in-progress changes that don't affect production
-- **Versioned**: Snapshot of agent configuration at a point in time
-- **Published**: Active version running in production
-
-Evals are tied to versions, enabling you to:
-- Test specific versions before publishing
-- Compare performance across versions
-- Rollback to previous versions if needed
-- Track improvements over time
-
-Versioning ensures you can iterate safely and maintain production stability.
-
+For access to the full documentation, please contact your Wonderful representative.

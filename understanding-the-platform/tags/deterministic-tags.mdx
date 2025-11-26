@@ -3,71 +3,8 @@ title: "Deterministic Tags (Event Rules)"
 description: "Rule-based tags for consistent behavior tracking"
 ---
 
-## Deterministic Tags
+## Documentation Coming Soon
 
-Deterministic tags are applied based on rules that evaluate events. These rules provide 100% consistency and real-time application.
+This section of the documentation is currently being prepared.
 
-## How Deterministic Tags Work
-
-Deterministic tags use event rules:
-1. **Events occur** — System events are generated
-2. **Rules evaluate** — Rules check if conditions are met
-3. **Tags apply** — Tags are applied immediately when rules match
-4. **Consistent results** — Same events always produce same tags
-
-## Event Rules
-
-Rules can trigger tags when:
-- **Skill loaded** — Specific skill is activated
-- **Tool called** — Particular tool is executed
-- **Error codes** — Specific error codes occur
-- **Escalations** — Escalation events happen
-- **State changes** — Interaction state changes
-- **Any system event** — Any event matching rule conditions
-
-## Rule Syntax
-
-Rules define conditions and actions:
-- **Conditions** — When the rule should trigger
-- **Actions** — What tags to apply
-- **Logic** — AND/OR combinations of conditions
-
-## Benefits
-
-Deterministic tags provide:
-- **100% consistency** — Same events always produce same tags
-- **Real-time** — Tags applied immediately as events occur
-- **Cost-effective** — No LLM calls required
-- **Debuggable** — Clear rules make it easy to understand why tags were applied
-- **Reliable metrics** — Consistent tagging ensures accurate analytics
-
-## Examples
-
-- Tool `send_sms` succeeds → tag `sms_sent`
-- Skill `cancel_card` loaded → tag `credit_card`
-- Agent escalates → tag `escalation`
-- Error code `PAYMENT_FAILED` → tag `payment_issue`
-- Tool `create_ticket` called → tag `support_ticket_created`
-
-## Call Tags (System-Generated Deterministic Tags)
-
-The platform also automatically applies system-level call tags based on interaction characteristics:
-
-- **System Error** — Applied when interaction status is `failed`
-- **Disconnected Before Interaction** — Applied when customer disconnects with ≤1 message
-- **Customer Not Understood** — Applied when call rating indicates customer wasn't understood (negative rating)
-- **Extension Transfer** — Applied when call is forwarded to a human agent
-- **Requested Human Before Interaction** — Applied when customer requests human agent very early in conversation
-
-These tags are applied automatically based on deterministic rules and don't require manual configuration.
-
-## Best Practices
-
-- **Use for clear cases** — Apply when conditions are unambiguous
-- **Combine with LLM tags** — Use both for comprehensive tagging
-- **Document rules** — Clearly document rule logic
-- **Test thoroughly** — Validate rules work as expected
-- **Monitor application** — Track tag application patterns
-
-Deterministic tags are ideal for clear, event-driven tagging that requires consistency and reliability.
-
+For access to the full documentation, please contact your Wonderful representative.

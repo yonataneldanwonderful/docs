@@ -3,61 +3,8 @@ title: "Core Concepts Overview"
 description: "Overview of Wonderful's core platform concepts"
 ---
 
-## Core Platform Concepts
+## Documentation Coming Soon
 
-Wonderful is built around foundational concepts that work together to create powerful, reliable AI agents.
+This section of the documentation is currently being prepared.
 
-### Agents
-
-AI agents customized for a specific purpose. Agents orchestrate conversations, call tools, load skills, and run across channels. Each agent defines how the AI thinks and behaves through prompts, tools, and skills.
-
-[Learn more about Agents](/understanding-the-platform/agents/what-agents-are)
-
-### Interactions
-
-A single conversation between an agent and a real user. Interactions can be inbound (customer contacts the agent) or outbound (agent contacts the customer). They include conversation transcripts, tool calls, skill loads, events, tags, and metrics.
-
-[Learn more about Interactions](/understanding-the-platform/interactions/what-interactions-are)
-
-### Skills
-
-Self-contained sub-agents that encode specific capabilities. Skills load dynamically based on context, keeping agent context small and focused. Examples include "Cancel Credit Card" or "Create Support Ticket".
-
-[Learn more about Skills](/understanding-the-platform/skills/what-skills-are)
-
-### Tools
-
-APIs or internal actions the agent can call. Tools come in different types: system tools for engine behavior, agent tools always available, skill tools scoped to skills, and tenant tools shared across agents.
-
-[Learn more about Tools](/understanding-the-platform/tools/tool-types)
-
-### Tags
-
-Yes/no markers applied to conversations or turns. Tags come from LLM inference or deterministic event rules. They enable analytics, routing, behavior tracking, and product logic.
-
-[Learn more about Tags](/understanding-the-platform/tags/llm-tags)
-
-### Channels
-
-How agents interact with users. Wonderful supports voice (SIP, phone), chat (web widgets), email, WhatsApp, and embed. All channels share the same agent logic, with differences only in formatting and input handling.
-
-[Learn more about Channels](/understanding-the-platform/channels/voice)
-
-### Evals
-
-Structured test scenarios that measure agent behavior. Evals include single scenarios, batch tests, voice-specific tests, and human feedback. They're tied to agent versions for safe iteration.
-
-[Learn more about Evals](/understanding-the-platform/evals/what-evals-are)
-
-## How They Work Together
-
-1. **Agents** orchestrate conversations and load **Skills** as needed
-2. **Skills** provide focused capabilities and their own **Tools**
-3. **Tools** execute actions and generate **Events**
-4. **Events** trigger deterministic **Tags** and behaviors
-5. **Channels** deliver the experience across voice, chat, email, WhatsApp
-6. **Interactions** capture everything: conversations, tool calls, events, tags
-7. **Evals** validate agent behavior before and after deployment
-
-This architecture ensures agents are efficient, reliable, and production-ready.
-
+For access to the full documentation, please contact your Wonderful representative.
