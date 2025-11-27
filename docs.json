@@ -3,15 +3,19 @@
   "theme": "mint",
   "name": "Wonderful",
   "colors": {
-    "primary": "#7DA2FF",
-    "light": "#C4D3E6",
-    "dark": "#5B7FD9"
+    "primary": "#1E7BF4",
+    "light": "#CFB7FE",
+    "dark": "#141414",
+    "anchors": {
+      "from": "#1E7BF4",
+      "to": "#E48C0C"
+    }
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/images/favicon-wonderful.svg",
   "navigation": {
     "tabs": [
       {
-        "tab": "Documentation",
+        "tab": "Docs",
         "groups": [
           {
             "group": "Introduction to Wonderful",
@@ -100,21 +104,96 @@
                 ]
               }
             ]
+          }
+        ]
+      },
+      {
+        "tab": "Agent studio",
+        "groups": [
+          {
+            "group": "Get started",
+            "pages": [
+              "platform/get-started/overview"
+            ]
           },
           {
-            "group": "Platform Areas (Product Features)",
+            "group": "Build agents",
             "pages": [
-              "platform-areas/agent-studio",
-              "platform-areas/skills-manager",
-              "platform-areas/tool-builder",
-              "platform-areas/channel-configuration",
-              "platform-areas/governance-guardrails",
-              "platform-areas/monitoring-dashboards",
-              "platform-areas/interactions-control",
-              "platform-areas/cx-oversight-agent",
-              "platform-areas/ab-testing",
-              "platform-areas/integration-layer",
-              "platform-areas/voice-language-infrastructure"
+              "build-agents/overview",
+              "build-agents/agent-types",
+              "build-agents/agent-instructions",
+              "build-agents/models",
+              "build-agents/skills",
+              "build-agents/channels",
+              {
+                "group": "Voice & language",
+                "pages": [
+                  "build-agents/voice-and-language/diacritics",
+                  "build-agents/voice-and-language/speed-control",
+                  "build-agents/voice-and-language/voices",
+                  "build-agents/voice-and-language/voice-style",
+                  "build-agents/voice-and-language/language"
+                ]
+              },
+              {
+                "group": "Tools",
+                "pages": [
+                  "build-agents/tools/agent-tools-and-skill-tools",
+                  "build-agents/tools/rag",
+                  "build-agents/tools/low-code",
+                  "build-agents/tools/mcp-tools",
+                  "build-agents/tools/integrations"
+                ]
+              },
+              {
+                "group": "Personalization",
+                "pages": [
+                  "build-agents/personalization/dynamic-variables"
+                ]
+              },
+              {
+                "group": "Authentication",
+                "pages": [
+                  "build-agents/authentication/overview"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Deploy",
+            "pages": [
+              "deploy/overview",
+              {
+                "group": "Chat",
+                "pages": [
+                  "deploy/chat/widget"
+                ]
+              },
+              {
+                "group": "Telephony",
+                "pages": [
+                  "deploy/telephony/sip-trunk",
+                  "deploy/telephony/telephony",
+                  "deploy/telephony/ccaas-integrations"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Monitor",
+            "pages": [
+              "monitor/alerts",
+              "monitor/governance",
+              "monitor/interactions",
+              "monitor/dashboard",
+              "monitor/issues"
+            ]
+          },
+          {
+            "group": "Privacy",
+            "pages": [
+              "privacy/retention",
+              "privacy/pii"
             ]
           }
         ]
@@ -123,10 +202,14 @@
         "tab": "API reference",
         "groups": [
           {
-            "group": "API reference",
+            "group": "Overview",
             "pages": [
               "api-reference/introduction"
             ]
+          },
+          {
+            "group": "Wonderful API",
+            "openapi": "api-reference/openapi.json"
           }
         ]
       },
