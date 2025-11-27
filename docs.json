@@ -111,7 +111,7 @@
                 ]
               },
               {
-                "group": "Build agents",
+                "group": "Build",
                 "pages": [
                   "build-agents/overview",
                   "build-agents/agent-types",
