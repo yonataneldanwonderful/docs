@@ -102,12 +102,6 @@
             ]
           },
           {
-            "group": "Agent Studio",
-            "pages": [
-              "platform/get-started/overview"
-            ]
-          },
-          {
             "group": "Build",
             "pages": [
               "build-agents/overview",
