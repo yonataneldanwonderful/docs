@@ -100,96 +100,96 @@
                 ]
               }
             ]
-          }
-        ]
-      },
-      {
-        "tab": "Agent studio",
-        "groups": [
-          {
-            "group": "Get started",
-            "pages": [
-              "platform/get-started/overview"
-            ]
           },
           {
-            "group": "Build agents",
+            "group": "Agent Studio",
             "pages": [
-              "build-agents/overview",
-              "build-agents/agent-types",
-              "build-agents/agent-instructions",
-              "build-agents/models",
-              "build-agents/skills",
-              "build-agents/channels",
               {
-                "group": "Voice & language",
+                "group": "Get started",
                 "pages": [
-                  "build-agents/voice-and-language/diacritics",
-                  "build-agents/voice-and-language/speed-control",
-                  "build-agents/voice-and-language/voices",
-                  "build-agents/voice-and-language/voice-style",
-                  "build-agents/voice-and-language/language"
+                  "platform/get-started/overview"
                 ]
               },
               {
-                "group": "Tools",
+                "group": "Build agents",
                 "pages": [
-                  "build-agents/tools/agent-tools-and-skill-tools",
-                  "build-agents/tools/rag",
-                  "build-agents/tools/low-code",
-                  "build-agents/tools/mcp-tools",
-                  "build-agents/tools/integrations"
+                  "build-agents/overview",
+                  "build-agents/agent-types",
+                  "build-agents/agent-instructions",
+                  "build-agents/models",
+                  "build-agents/skills",
+                  "build-agents/channels",
+                  {
+                    "group": "Voice & language",
+                    "pages": [
+                      "build-agents/voice-and-language/diacritics",
+                      "build-agents/voice-and-language/speed-control",
+                      "build-agents/voice-and-language/voices",
+                      "build-agents/voice-and-language/voice-style",
+                      "build-agents/voice-and-language/language"
+                    ]
+                  },
+                  {
+                    "group": "Tools",
+                    "pages": [
+                      "build-agents/tools/agent-tools-and-skill-tools",
+                      "build-agents/tools/rag",
+                      "build-agents/tools/low-code",
+                      "build-agents/tools/mcp-tools",
+                      "build-agents/tools/integrations"
+                    ]
+                  },
+                  {
+                    "group": "Personalization",
+                    "pages": [
+                      "build-agents/personalization/dynamic-variables"
+                    ]
+                  },
+                  {
+                    "group": "Authentication",
+                    "pages": [
+                      "build-agents/authentication/overview"
+                    ]
+                  }
                 ]
               },
               {
-                "group": "Personalization",
+                "group": "Deploy",
                 "pages": [
-                  "build-agents/personalization/dynamic-variables"
+                  "deploy/overview",
+                  {
+                    "group": "Chat",
+                    "pages": [
+                      "deploy/chat/widget"
+                    ]
+                  },
+                  {
+                    "group": "Telephony",
+                    "pages": [
+                      "deploy/telephony/sip-trunk",
+                      "deploy/telephony/telephony",
+                      "deploy/telephony/ccaas-integrations"
+                    ]
+                  }
                 ]
               },
               {
-                "group": "Authentication",
+                "group": "Monitor",
                 "pages": [
-                  "build-agents/authentication/overview"
+                  "monitor/alerts",
+                  "monitor/governance",
+                  "monitor/interactions",
+                  "monitor/dashboard",
+                  "monitor/issues"
+                ]
+              },
+              {
+                "group": "Privacy",
+                "pages": [
+                  "privacy/retention",
+                  "privacy/pii"
                 ]
               }
-            ]
-          },
-          {
-            "group": "Deploy",
-            "pages": [
-              "deploy/overview",
-              {
-                "group": "Chat",
-                "pages": [
-                  "deploy/chat/widget"
-                ]
-              },
-              {
-                "group": "Telephony",
-                "pages": [
-                  "deploy/telephony/sip-trunk",
-                  "deploy/telephony/telephony",
-                  "deploy/telephony/ccaas-integrations"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Monitor",
-            "pages": [
-              "monitor/alerts",
-              "monitor/governance",
-              "monitor/interactions",
-              "monitor/dashboard",
-              "monitor/issues"
-            ]
-          },
-          {
-            "group": "Privacy",
-            "pages": [
-              "privacy/retention",
-              "privacy/pii"
             ]
           }
         ]
