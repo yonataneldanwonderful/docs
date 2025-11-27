@@ -1,0 +1,39 @@
+---
+title: "Evals"
+description: "Understanding evals - structured testing for agent behavior"
+---
+
+## What Evals Are
+
+Evals are structured test scenarios that measure agent behavior. They provide a systematic way to validate that agents perform correctly across different situations and use cases.
+
+## Eval Types
+
+### Single Scenario
+
+Single scenario evals test one specific interaction pattern. They validate that an agent handles a particular case correctly, such as booking an appointment or handling a refund request.
+
+### Batch
+
+Batch evals run multiple scenarios with iterations. They test agent behavior across a range of cases and can include multiple runs to check for consistency. Batch evals are useful for regression testing and validating improvements.
+
+### Voice Evals
+
+Voice evals specifically test voice channel interactions. They account for the unique characteristics of voice, including timing, latency, barge-in behavior, and audio quality considerations.
+
+### Human Feedback
+
+Human feedback evals incorporate human judgment to improve agent behavior. They allow reviewers to assess agent responses and provide guidance for refinement.
+
+## Eval Components
+
+Evals include several key components:
+
+- **Scenario text** — The input or situation being tested
+- **Expected answers** — What the agent should say or do
+- **Tool/behavior checks** — Validation that correct tools were called
+- **Metrics** — Quantitative measures of performance
+- **Output comparison** — How actual behavior compares to expected behavior
+
+Evals are tied to agent versions, enabling you to test changes before publishing and compare performance across versions.
+

@@ -1,0 +1,53 @@
+---
+title: "Skills"
+description: "Understanding skills - modular competencies for agents"
+---
+
+## What Skills Are
+
+Skills are self-contained sub-agents that encode a specific capability. Examples include "Cancel Credit Card" or "Create Support Ticket". Each skill is a focused module that handles a particular domain or task.
+
+## Why Skills Exist
+
+Skills provide several key benefits:
+
+- **Keep context small** — Only load what's needed, reducing token usage and improving accuracy
+- **Focus behavior** — Narrow scope enables more precise responses
+- **Enable reusability** — Share skills across multiple agents
+- **Control deterministic tagging** — Skills can trigger specific tags and behaviors
+- **Scope tools safely** — Tools are only available when the relevant skill is active
+
+## Skill Components
+
+### Skill Prompt
+
+The skill prompt defines the skill's specific behavior, constraints, and goals. It guides how the skill interprets context and responds to user requests.
+
+### Skill Tools
+
+Skill tools are capabilities that become available only when the skill is active. These tools are scoped to the skill's domain and provide the actions needed to fulfill the skill's purpose.
+
+### Deterministic Tag Rules
+
+Deterministic tag rules (future V2) will allow skills to automatically apply tags based on their activation or specific events within the skill's execution.
+
+## Dynamic Loading
+
+Agents load skills only when needed. Skills are activated when:
+
+- The agent predicts a skill is needed based on conversation context
+- A deterministic rule triggers skill loading
+- A tool usage requires a specific skill to be active
+
+This on-demand loading keeps conversations efficient and context-focused.
+
+## Base Skills
+
+Base skills are optional always-loaded skills for scenarios where:
+
+- A capability must always be available
+- A tool must never require dynamic loading
+- A foundational behavior layer is needed
+
+Base skills provide a persistent layer of functionality that's always accessible, regardless of which other skills are dynamically loaded.
+

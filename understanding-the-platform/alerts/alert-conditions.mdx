@@ -1,0 +1,169 @@
+---
+title: "Monitor Conditions"
+description: "How to define trigger conditions for monitors"
+---
+
+## Monitor Conditions Overview
+
+Monitor conditions define when a monitor should trigger. Conditions compare the calculated metric value against thresholds using comparison operators.
+
+## Condition Structure
+
+Conditions are defined as a tree structure using `ConditionNode`:
+
+- **Leaf Nodes** — Contain comparison operators and values
+- **Branch Nodes** — Combine multiple conditions with AND/OR operators
+
+## Comparison Operators
+
+### GreaterThan (>)
+
+Triggers when metric value is greater than the threshold.
+
+**Example**: Duration > 600000 (duration greater than 10 minutes in milliseconds)
+
+### GreaterThanOrEqualTo (>=)
+
+Triggers when metric value is greater than or equal to the threshold.
+
+**Example**: ForwardPercentage >= 20 (escalation rate at least 20%)
+
+### LessThan (<)
+
+Triggers when metric value is less than the threshold.
+
+**Example**: ActiveInteractions < 1 (no active interactions)
+
+### LessThanOrEqualTo (<=)
+
+Triggers when metric value is less than or equal to the threshold.
+
+**Example**: TotalInteractions <= 0 (no interactions in window)
+
+### EqualTo (=)
+
+Triggers when metric value exactly equals the threshold.
+
+**Example**: ToolFailure = 0 (no tool failures)
+
+### NoData
+
+Triggers when no data is available for the metric in the time window.
+
+**Example**: NoData for ActiveInteractions (system may be down)
+
+## Logical Operators
+
+Conditions can be combined using logical operators:
+
+### AND
+
+All child conditions must be true for the monitor to trigger.
+
+**Example**: 
+```
+(ForwardPercentage >= 20) AND (TotalInteractions > 10)
+```
+Monitor triggers when escalation rate is high AND there are many interactions
+
+### OR
+
+At least one child condition must be true for the monitor to trigger.
+
+**Example**:
+```
+(ToolFailure > 5) OR (ToolApplicationFailure > 3)
+```
+Triggers when either type of tool failure is high
+
+## Condition Examples
+
+### Simple Condition
+
+**Single threshold check**:
+```
+Duration > 600000
+```
+Monitor triggers when average duration exceeds 10 minutes
+
+### Complex Condition with AND
+
+**Multiple conditions that must all be true**:
+```
+(TotalInteractions > 50) AND (ForwardPercentage >= 25)
+```
+Monitor triggers when there are many interactions AND high escalation rate
+
+### Complex Condition with OR
+
+**Multiple conditions where any can trigger**:
+```
+(ToolFailure > 10) OR (ToolApplicationFailure > 5)
+```
+Monitor triggers when either type of failure is high
+
+### Nested Conditions
+
+**Combining AND and OR**:
+```
+(TotalInteractions > 100) AND ((ForwardPercentage >= 30) OR (Duration > 900000))
+```
+Monitor triggers when there are many interactions AND (high escalation OR long duration)
+
+## Condition Value Types
+
+Condition values are numeric (float64):
+
+- **Counts**: Use integer values (e.g., 10, 50, 100)
+- **Percentages**: Use decimal values (e.g., 20.0 for 20%, 0.5 for 0.5%)
+- **Durations**: Use milliseconds (e.g., 600000 for 10 minutes, 3600000 for 1 hour)
+
+## Best Practices
+
+### Setting Thresholds
+
+- **Start conservative**: Set thresholds higher than typical values to avoid noise
+- **Monitor and adjust**: Review monitor history and adjust thresholds based on actual patterns
+- **Consider business hours**: Different thresholds may be needed for different times
+- **Account for seasonality**: Adjust for known patterns (e.g., higher volume on Mondays)
+
+### Condition Design
+
+- **Keep it simple**: Start with simple conditions, add complexity only when needed
+- **Use AND for precision**: Combine conditions with AND to reduce false positives
+- **Use OR for coverage**: Combine related conditions with OR to catch multiple scenarios
+- **Test conditions**: Verify conditions work as expected before relying on them
+
+### Common Patterns
+
+**High Volume + High Error Rate**:
+```
+(TotalInteractions > 100) AND (ForwardPercentage >= 20)
+```
+
+**Tool Reliability**:
+```
+(ToolFailure > 5) OR (ToolApplicationFailure > 3)
+```
+
+**Performance Degradation**:
+```
+(Duration > 600000) AND (TotalInteractions > 10)
+```
+
+**System Health**:
+```
+(ActiveInteractions = 0) OR (NoData)
+```
+
+## Condition Evaluation
+
+Conditions are evaluated:
+
+1. **At configured intervals** — Based on monitor's `Interval` setting (default: 60 seconds)
+2. **Over the time window** — Using the specified `WindowValue` and `TimeUnit`
+3. **With the estimator** — Using the selected estimator (Average, Maximum, etc.)
+4. **Against the threshold** — Comparing calculated value to condition value
+
+If the condition evaluates to true and no open incident exists (or the window has passed since the last incident), a new incident is created.
+

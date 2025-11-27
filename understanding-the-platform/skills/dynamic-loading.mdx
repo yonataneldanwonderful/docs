@@ -1,0 +1,78 @@
+---
+title: "Dynamic Loading"
+description: "How skills load on demand to keep context small"
+---
+
+## Dynamic Loading
+
+Agents load skills only when needed. This on-demand loading keeps conversations efficient and context-focused.
+
+## When Skills Load
+
+Skills are activated when:
+
+- **Agent prediction** — The agent predicts a skill is needed based on conversation context
+- **Deterministic rule** — A rule triggers skill loading based on events or conditions
+- **Tool requirement** — A tool usage requires a specific skill to be active
+
+## Benefits of Dynamic Loading
+
+Dynamic loading provides several advantages:
+
+- **Small context** — Only relevant skills are loaded, reducing token usage
+- **High accuracy** — Focused context improves agent precision
+- **Cost efficiency** — Fewer tokens mean lower costs
+- **Better performance** — Smaller context windows process faster
+- **Focused behavior** — Agents stay on task without distraction
+
+## Loading Process
+
+1. **Detection** — Agent or system detects need for a skill
+2. **Loading** — Skill is loaded into agent context
+3. **Activation** — Skill tools become available
+4. **Execution** — Skill handles the relevant task
+5. **Unloading** — Skill is unloaded when no longer needed
+
+## Unloading Skills
+
+Skills are automatically unloaded when:
+- The task is complete
+- The conversation moves to a different topic
+- A deterministic rule triggers unloading
+- The interaction ends
+
+Unloading keeps the context clean and focused.
+
+## Skill Registry and Toolkit Caching
+
+In multi-skill mode, the platform uses a skill registry system:
+
+- **Skill Registry**: All attached skills are registered at conversation start
+- **Toolkit Caching**: Toolkits for each skill are built on-demand and cached for performance
+- **Lazy Loading**: Toolkits are only built when a skill is first activated
+- **Atomic Operations**: Toolkit building is atomic to ensure consistency
+
+This architecture ensures efficient skill switching with minimal overhead.
+
+## Best Practices
+
+### When to Use Default Mode
+- You have 1-3 skills
+- Tools from different skills are frequently used together
+- You want the simplest configuration
+- All skills are relevant to most conversations
+
+### When to Use Multi-Skill Mode
+- You have 4+ skills
+- Skills represent distinct domains or workflows
+- You want the LLM to focus on one domain at a time
+- Skills have overlapping or conflicting tool names
+- You want better control over which tools are available when
+
+### Skill Design Tips
+- **Keep skills focused**: Each skill should handle one specific domain
+- **Design for reusability**: Create skills that can be shared across agents
+- **Use clear naming**: Name skills after the action they perform
+- **Avoid monolithic skills**: Split large skills into smaller, focused ones
+- **Consider tool scoping**: Use skill tools for domain-specific actions
+

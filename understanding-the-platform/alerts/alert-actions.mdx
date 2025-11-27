@@ -1,0 +1,238 @@
+---
+title: "Monitor Actions"
+description: "Notification types for monitors"
+---
+
+## Monitor Actions Overview
+
+Monitor actions define what happens when a monitor triggers. Actions send notifications to team members via various channels to ensure timely response to issues.
+
+**Note**: Monitors only send notifications. They do not trigger automated responses or actions beyond sending email and SMS notifications.
+
+## Action Types
+
+### Email
+
+Send email notifications to specific email addresses.
+
+**Type**: `email`
+
+**Value**: Email address (e.g., `team@example.com`)
+
+**Use Cases**:
+- Notify specific team members
+- Send to distribution lists
+- Alert external stakeholders
+
+**Example**:
+```json
+{
+  "type": "email",
+  "value": "ops-team@example.com"
+}
+```
+
+### SMS
+
+Send SMS notifications to phone numbers.
+
+**Type**: `sms`
+
+**Value**: Phone number in E.164 format (e.g., `+1234567890`)
+
+**Use Cases**:
+- Critical alerts requiring immediate attention
+- On-call notifications
+- Mobile team notifications
+
+**Example**:
+```json
+{
+  "type": "sms",
+  "value": "+1234567890"
+}
+```
+
+**Note**: SMS requires Twilio configuration and may incur costs.
+
+### User Email
+
+Send email notifications to platform users by user ID.
+
+**Type**: `user_email`
+
+**Value**: User ID (UUID)
+
+**Use Cases**:
+- Notify specific team members by their platform account
+- Alert users based on their role
+- Send to users who created the alert
+
+**Example**:
+```json
+{
+  "type": "user_email",
+  "value": "550e8400-e29b-41d4-a716-446655440000"
+}
+```
+
+**Note**: The system resolves the user ID to their email address automatically.
+
+### Group Email
+
+Send email notifications to all members of a user group.
+
+**Type**: `group_email`
+
+**Value**: Group ID (UUID)
+
+**Use Cases**:
+- Notify entire teams
+- Alert groups based on responsibility
+- Send to multiple people without managing individual addresses
+
+**Example**:
+```json
+{
+  "type": "group_email",
+  "value": "660e8400-e29b-41d4-a716-446655440001"
+}
+```
+
+**Note**: The system resolves the group ID to all member email addresses automatically.
+
+## Multiple Actions
+
+Alerts can have multiple actions. All actions are executed when an alert triggers:
+
+**Example**:
+```json
+[
+  {
+    "type": "email",
+    "value": "ops-team@example.com"
+  },
+  {
+    "type": "sms",
+    "value": "+1234567890"
+  },
+  {
+    "type": "group_email",
+    "value": "on-call-group-id"
+  }
+]
+```
+
+This sends email to the ops team, SMS to the on-call person, and email to the on-call group.
+
+## Notification Content
+
+### Email Notifications
+
+Email notifications include:
+
+- **Subject**: "Alert: [Alert Name]" or "Alert Resolved: [Alert Name]"
+- **Alert Name**: The name of the alert
+- **Condition**: Human-readable description of the trigger condition
+- **Severity**: Alert severity (High, Medium, Low)
+- **Current Value**: The metric value that triggered the alert
+- **Triggered/Resolved Time**: When the incident was triggered or resolved
+- **Tool Function**: If applicable, which tool is being monitored
+- **Incident ID**: Unique identifier for the incident
+
+Emails are formatted as HTML with clear visual indicators (🚨 for triggered, ✅ for resolved).
+
+### SMS Notifications
+
+SMS notifications include:
+
+- **Prefix**: "🚨 Alert" or "✅ Alert Resolved"
+- **Alert Name**: The name of the alert
+- **Condition**: Brief description of the trigger condition
+- **Current Value**: The metric value
+- **Severity**: Alert severity
+- **Tool Function**: If applicable, which tool is being monitored
+
+SMS messages are concise to fit within message limits.
+
+## Notification Timing
+
+### Initial Notification
+
+Notifications are sent immediately when:
+- A new incident is created (alert triggers)
+- The alert condition is met for the first time
+- No open incident exists (or window has passed)
+
+### Reminder Notifications
+
+If `ReminderFrequencyMinutes` is set (> 0), additional notifications are sent:
+- At the specified interval while the incident remains open
+- Only for unresolved incidents
+- Helps ensure incidents don't go unnoticed
+
+**Example**: If `ReminderFrequencyMinutes = 60`, reminders are sent every hour until the incident is resolved.
+
+### Resolution Notifications
+
+If `NotifyOnResolvedIncidents` is enabled:
+- A notification is sent when the incident is resolved
+- Subject line indicates "Alert Resolved"
+- Includes resolution time and final metric value
+
+## Action Configuration
+
+Actions are configured when creating or updating an alert:
+
+```json
+{
+  "alert_actions": [
+    {
+      "type": "email",
+      "value": "team@example.com"
+    },
+    {
+      "type": "user_email",
+      "value": "user-id-here"
+    }
+  ],
+  "reminder_frequency_minutes": 60,
+  "notify_on_resolved_incidents": true
+}
+```
+
+## Best Practices
+
+### Action Selection
+
+- **Use email for most alerts**: Email is reliable and provides detailed information
+- **Use SMS for critical alerts**: Reserve SMS for alerts requiring immediate action
+- **Use groups for teams**: Group email simplifies managing team notifications
+- **Combine channels**: Use multiple actions for important alerts (email + SMS)
+
+### Reminder Configuration
+
+- **Set reminders for high-severity alerts**: Ensure critical issues don't go unnoticed
+- **Balance frequency**: Too frequent = annoying, too infrequent = missed incidents
+- **Consider business hours**: Adjust reminder frequency based on when alerts are active
+
+### Resolution Notifications
+
+- **Enable for important alerts**: Get notified when issues are resolved
+- **Disable for noisy alerts**: Avoid notification fatigue for low-priority alerts
+
+### Testing Actions
+
+- **Test email addresses**: Verify email addresses are correct
+- **Test phone numbers**: Ensure SMS numbers are in correct format
+- **Verify group membership**: Confirm groups have the right members
+- **Check notification content**: Review email/SMS content for clarity
+
+## Notification Delivery
+
+- **Email**: Delivered via Resend email service
+- **SMS**: Delivered via Twilio SMS service
+- **User/Group Email**: Resolved to email addresses and sent via Resend
+
+Notifications are sent asynchronously and failures are logged but don't prevent alert processing.
+

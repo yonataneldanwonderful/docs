@@ -1,0 +1,74 @@
+---
+title: "What Agents Are"
+description: "Understanding agents - the core AI entities in Wonderful"
+---
+
+## What an Agent Is
+
+An agent is a complete AI entity that can converse, call tools, load skills, and run across channels. Each agent is customized for a specific purpose and defines how the AI thinks and behaves.
+
+Agents are the primary building blocks of Wonderful. They orchestrate conversations, make decisions, and coordinate the use of skills and tools to accomplish tasks.
+
+## Agent Capabilities
+
+Agents can:
+- **Converse** with users through natural dialogue across multiple channels
+- **Call tools** to perform actions and interact with external systems
+- **Load skills** dynamically based on conversation context (in multi-skill mode) or have all skills available simultaneously (default mode)
+- **Run across channels** with the same logic (voice, chat, email, WhatsApp)
+- **Track events** and apply tags for analytics and routing
+- **Version and publish** safely with comprehensive testing
+- **Operate in different modes**: Active mode for real-time conversations or Passive mode for analysis and processing
+- **Handle timeouts and escalations** with configurable behavior
+- **Apply governance and automated issue detection** when enabled
+
+## Agent Examples
+
+Agents can be built for various purposes:
+
+- **Customer Support** — Handle support requests, escalate issues, create tickets
+- **Appointment Scheduling** — Book appointments, manage calendars, send confirmations
+- **Account Management** — Update addresses, cancel cards, manage subscriptions
+- **Lead Capture** — Qualify leads, collect information, route to sales
+- **Technical Diagnosis** — Troubleshoot issues, provide solutions, document problems
+
+## Agent Lifecycle
+
+1. **Creation** — Define agent prompt, tools, and initial skills
+2. **Configuration** — Set up channels, voice settings, initial messages, LLM configuration, and behavior settings
+3. **Testing** — Run evals to validate behavior
+4. **Versioning** — Create versions for safe iteration
+5. **Publishing** — Deploy to production
+6. **Monitoring** — Track performance, tags, and metrics
+7. **Iteration** — Improve based on feedback and analytics
+
+## Agent Modes
+
+Agents can operate in two distinct modes:
+
+### Active Mode (Default)
+- **Real-time conversations** with users
+- Handles live interactions across all channels
+- Processes user input and generates responses immediately
+- Used for customer-facing interactions
+
+### Passive Mode
+- **Analysis and processing** of existing data
+- No real-time user interaction
+- Useful for batch processing, analysis, and background tasks
+- Can process transcripts, analyze interactions, or perform automated tasks
+
+## Key Configuration Options
+
+Agents support extensive configuration:
+
+- **Multi-Skill Mode** (`IsMultiSkill`): Enable dynamic skill loading where only one skill is active at a time, or use default mode where all skills are loaded simultaneously
+- **LLM Configuration**: Customize language model, provider, temperature, and other model parameters
+- **Voice Configuration**: Text-to-speech settings including voice selection, speed, and style
+- **Transcriber Configuration**: Speech-to-text settings for voice interactions
+- **PII Configuration**: Privacy controls for masking sensitive data in text and voice
+- **End-of-Turn Configuration**: Control how agents handle conversation turns
+- **Timeout Settings**: Configure idle detection, hang-up behavior, and timeout messages
+- **Governance**: Enable guardrails and automated issue detection
+- **Automated Issues**: Enable automatic detection and flagging of conversation issues
+
