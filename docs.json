@@ -145,7 +145,7 @@
             ]
           },
           {
-            "group": "Deploy",
+            "group": "Manage",
             "pages": [
               "deploy/overview",
               {
