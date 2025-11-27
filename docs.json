@@ -120,6 +120,17 @@
         ]
       },
       {
+        "tab": "API reference",
+        "groups": [
+          {
+            "group": "API reference",
+            "pages": [
+              "api-reference/introduction"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "Demo",
         "groups": [
           {
