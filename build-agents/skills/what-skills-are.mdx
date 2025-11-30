@@ -1,0 +1,74 @@
+---
+title: "What Skills Are"
+description: "Understanding skills - modular competencies for agents"
+---
+
+# What Skills Are
+
+Skills are modular capabilities that agents can load and unload as needed. Each skill encodes a focused domain such as “Cancel Credit Card”, “Create Support Ticket”, or “Schedule Appointment”.
+
+## Overview and why it matters
+
+In Wonderful, skills keep agents small, focused, and reusable. They provide their own instructions, tools, and tags, and can be attached to multiple agents via a many-to-many relationship.
+
+The `Skill` model in the codebase holds the core fields: tenant, name, display name, description, active flag, and relations to tools, tags, and agents.
+
+## How It Works
+
+1. A skill is defined with a **name**, **display name**, **description**, and active status.
+2. Tools are attached to the skill via the `Tools` relation on the `Skill` model; each tool carries its own parameters and triggers.
+3. Tags are attached to the skill via the `Tags` many-to-many relation, allowing both deterministic and LLM-based tagging to reference the skill’s domain.
+4. Agents reference skills via the `Agents` many-to-many relation (`agents_skills` join table), so the same skill can be reused across agents and tenants.
+5. During a live call or chat, the agent either:
+   - Loads **all skills** at conversation start (default mode), or
+   - Loads **one skill at a time** in multi-skill mode, based on conversation context and event rules.
+6. When a skill is active, its tools become available for the LLM to call, and its tags can be applied to interactions.
+
+Skills can be toggled active/inactive without deleting them, allowing safe experimentation and gradual rollouts.
+
+## Key ideas at a glance
+
+- **Identity & Description**  
+  `Name`, `DisplayName`, and `Description` fields define what the skill is and how it appears in the UI and logs.
+
+- **Tools**  
+  The `Tools` relation holds all tools scoped to the skill. Each tool includes type, triggers, parameters, and configuration that limit where and how it can be used.
+
+- **Tags**  
+  The `Tags` relation associates skills with tags used for analytics, routing, and governance. Tags can be exposed to the LLM or only used deterministically.
+
+- **Agent Attachments**  
+  The `Agents` relation (`many2many:agents_skills`) connects skills to the agents that can use them.
+
+- **Active Flag**  
+  The `Active` field controls whether the skill is currently in use; inactive skills remain defined but do not participate in routing or tool availability.
+
+## Usage
+
+1. **Identify capabilities**: Break your use case into distinct capabilities (for example “Authenticate User”, “Check Balance”, “Update Address”).
+2. **Create skills**: For each capability, create a skill with clear instructions, a concise description, and an appropriate display name.
+3. **Attach tools**: Attach tools that implement the capability (APIs, RAG, programmable functions, mocks) to each skill.
+4. **Attach tags**: Define tags that reflect outcomes or states for the skill (for example `payment_issue`, `card_cancelled`) and attach them to the skill.
+5. **Attach to agents**: Link the skills to one or more agents that should be able to use them.
+6. **Choose loading mode**: Decide whether the agent should run in default (all skills loaded) or multi-skill (one skill active at a time) mode.
+7. **Test with evals**: Create eval scenarios per skill to validate that prompts, tools, and tags behave as expected.
+
+## FAQ's
+
+- **How granular should a skill be?**  
+  Prefer skills that represent end-to-end tasks (for example “Cancel Credit Card”) rather than extremely small operations. Too-granular skills are harder to manage.
+
+- **Can multiple agents share the same skill?**  
+  Yes. Skills are intentionally designed to be reusable across agents via the agents–skills many-to-many relationship.
+
+- **How do skills relate to tools?**  
+  Skills own tools; tools are always attached to a skill in the data model and become available when that skill is active for an agent.
+
+## Related
+
+- [What Agents Are](/understanding-the-platform/agents/what-agents-are)
+- [Dynamic Loading](/build-agents/skills/dynamic-loading)
+- [Skill Prompts & Tools](/build-agents/skills/skill-prompts-tools)
+- [Tool Types](/understanding-the-platform/tools/tool-types)
+- [LLM Tags](/understanding-the-platform/tags/llm-tags)
+- [Deterministic Tags](/understanding-the-platform/tags/deterministic-tags)
