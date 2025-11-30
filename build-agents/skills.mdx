@@ -5,13 +5,13 @@ description: "How to design, attach, and manage skills when building agents"
 
 # Skills
 
-When you first build an agent, it’s tempting to pour everything into one big prompt: billing, support, verification, refunds, all crammed into a single “brain”. It works for a demo, then quietly turns into something nobody wants to touch.
+When you first build an agent, it's tempting to pour everything into one big prompt: billing, support, verification, refunds, all crammed into a single "brain". It works for a demo, then quietly turns into something nobody wants to touch.
 
-Skills are how you avoid that. A skill is a small, named capability — “Authenticate user”, “Answer billing questions”, “Create ticket” — with its own prompt, tools, and tags. Agents don’t know everything; they pick up the skills they need as the conversation unfolds.
+Skills are how you avoid that. A skill is a small, named capability — "Authenticate user", "Answer billing questions", "Create ticket" — with its own prompt, tools, and tags. Agents don't know everything; they pick up the skills they need as the conversation unfolds.
 
 ## Overview / Why it matters
 
-In Wonderful, a skill is the unit of behavior you can **reason about, reuse, and swap** without rewriting the whole agent. Instead of asking “What does this 4‑page prompt do?”, you ask:
+In Wonderful, a skill is the unit of behavior you can **reason about, reuse, and swap** without rewriting the whole agent. Instead of asking "What does this 4‑page prompt do?", you ask:
 
 - What skills does this agent have?  
 - What does each one promise to handle?  
@@ -21,18 +21,18 @@ Under the hood, a skill is a tenant-scoped object with a name, description, acti
 
 In Build, you use skills to:
 
-- Break a large journey into focused capabilities (for example “Authenticate user”, “Check balance”, “Update address”).  
+- Break a large journey into focused capabilities (for example "Authenticate user", "Check balance", "Update address").  
 - Reuse the same capability across multiple agents (support, sales, collections) without duplicating prompts.  
 - Limit which tools and tags are active at any given moment, especially in multi-skill mode.  
 - Make it obvious to product, CX, and engineering teams where a behavior lives.
 
 <Info>
-  A good test: if you can’t explain a skill in one sentence – <em>“This skill handles X for Y kind of request.”</em> – it’s probably trying to do too much.
+  A good test: if you can't explain a skill in one sentence – <em>"This skill handles X for Y kind of request."</em> – it's probably trying to do too much.
 </Info>
 
 ## How skills behave at runtime
 
-Think of a live call that wanders from **“Where’s my order?”** to **“While I have you, can I update my card?”** to **“Actually my device is broken.”** If you model that as one agent with one prompt, you either leave something out or you get a prompt nobody understands.
+Think of a live call that wanders from **"Where's my order?"** to **"While I have you, can I update my card?"** to **"Actually my device is broken."** If you model that as one agent with one prompt, you either leave something out or you get a prompt nobody understands.
 
 With skills:
 
@@ -40,7 +40,7 @@ With skills:
 2. You attach them to the agent.  
 3. During the call, the agent starts in one skill and switches when the topic really changes.
 
-In default mode, all attached skills are “loaded” from the start. In **multi‑skill** mode, the agent only has one skill “in its head” at a time. When the LLM decides it needs a different playbook, it calls an internal `switch_skill` tool; the runtime quietly rebuilds the prompt around the new skill, and the next sentence comes from that perspective.
+In default mode, all attached skills are "loaded" from the start. In **multi‑skill** mode, the agent only has one skill "in its head" at a time. When the LLM decides it needs a different playbook, it calls an internal `switch_skill` tool; the runtime quietly rebuilds the prompt around the new skill, and the next sentence comes from that perspective.
 
 Behind the scenes:
 
@@ -102,16 +102,32 @@ Skill
     Identify natural boundaries in your use case (for example authentication vs account management vs ticketing). Aim for skills that represent complete tasks or domains, not single fields or trivial steps.
   </Step>
 
-  <Step title="Create or reuse skills">
-    In the Build UI, create new skills for new domains, and reuse existing skills for common behaviors (like ticket creation or FAQ handling) when behavior and governance match.
+  <Step title="Create a new skill">
+    1. Go to **Build > Skills** in the left sidebar
+    2. Click **+ New Skill** in the top right
+    3. Enter a **Name** (e.g., "Authenticate User") and **Description** that explains what the skill handles
+    4. Click **Create**
+  </Step>
+
+  <Step title="Configure the skill">
+    On the skill detail page:
+    1. **Prompt tab**: Write the skill's instructions—what it should do and how it should behave
+    2. **Tools tab**: Click **+ Add Tool** to attach API, RAG, or programmable tools the skill needs
+    3. **Tags tab**: Add tags for analytics and routing (e.g., `auth_success`, `auth_failed`)
+    4. Toggle **Active** to enable the skill
   </Step>
 
   <Step title="Attach skills to an agent">
-    Add skills to your agent based on its purpose and channel mix. Confirm that each attached skill is Active and correctly configured with tools and tags.
+    1. Go to **Build > Agents** and select your agent
+    2. Open the **Skills tab**
+    3. Click **+ Add Skill** and select the skills you want to attach
+    4. Confirm each attached skill is Active and correctly configured
   </Step>
 
   <Step title="Choose a loading mode">
-    Use default (always-loaded) mode for simple agents with a small number of closely related skills, and multi-skill mode when agents span multiple distinct workflows or domains and you want tighter control over tool availability.
+    On the agent's **Settings tab**:
+    - **Default mode**: All attached skills are loaded from the start—best for simple agents with a small number of related skills
+    - **Multi-skill mode**: Toggle on **Multi-skill** to have the agent load one skill at a time and switch as needed—best for agents spanning multiple distinct workflows
   </Step>
 
   <Step title="Iterate with evals and monitoring">
@@ -121,26 +137,14 @@ Skill
 
 ## Design principles for your skill catalog
 
-- **Start from journeys, not org charts**  
-  Map skills to end-to-end journeys users experience (“reset password”, “update card”, “schedule visit”), not to internal team names. This keeps skills stable even if your org structure changes.
-
-- **Name skills for outcomes, not mechanics**  
-  Prefer <code>Update Address</code> over <code>CRM Write</code>. The tools inside the skill can be technical; the skill name should be understandable to product and CX teams.
-
-- **Keep skills cohesive but not tiny**  
-  A good skill can usually be explained as “handles X for Y situation”. If a skill description lists many unrelated behaviors, split it; if it only wraps a single low-level API call, consider folding it into a broader skill.
-
-- **Align prompts, tools, and tags**  
-  For each skill, make sure:
-  - The **prompt** describes the same domain the name and description do.  
-  - The **tools** only cover that domain.  
-  - The **tags** you attach describe outcomes or states in that domain.
-
-- **Reuse skills deliberately**  
-  Reuse skills across agents when behavior and governance are truly the same. If two agents need different rules or guardrails for the “same” workflow, create separate skills rather than overloading one.
-
-- **Version and test skills like code**  
-  When changing a skill that many agents depend on, treat it like a code change: create a new version, run evals and focused testing, and only then roll it out.
+| Principle | Guidance |
+|-----------|----------|
+| Start from journeys | Map skills to user journeys ("reset password", "update card"), not internal team names |
+| Name for outcomes | Prefer `Update Address` over `CRM Write`—names should be clear to product and CX teams |
+| Keep skills cohesive | A skill should "handle X for Y situation". Split if unrelated behaviors; merge if it only wraps a single API call |
+| Align prompts, tools, and tags | Each skill's prompt, tools, and tags should all describe the same domain |
+| Reuse deliberately | Only share skills across agents when behavior and governance are truly identical |
+| Version and test like code | Run evals before rolling out changes to skills that multiple agents depend on |
 
 ## Examples / Recipes
 
@@ -223,6 +227,6 @@ For an internal assistant used by employees:
   </Accordion>
 
   <Accordion title="What happens if I disable a skill on a live agent?">
-    The skill’s tools and tags will no longer be available for that agent. Test in non-production environments before disabling skills that handle critical workflows.
+    The skill's tools and tags will no longer be available for that agent. Test in non-production environments before disabling skills that handle critical workflows.
   </Accordion>
 </AccordionGroup>
