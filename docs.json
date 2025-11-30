@@ -17,42 +17,12 @@
             "group": "Introduction to Wonderful",
             "pages": [
               "introduction-to-wonderful/what-is-wonderful",
-              "introduction-to-wonderful/core-concepts-overview",
-              {
-                "group": "Understanding the Platform",
-                "pages": [
-                  {
-                    "group": "Agents",
-                    "pages": [
-                      "understanding-the-platform/agents/what-agents-are"
-                    ]
-                  },
-                  {
-                    "group": "Skills",
-                    "pages": [
-                      "understanding-the-platform/skills/what-skills-are"
-                    ]
-                  },
-                  {
-                    "group": "Tools",
-                    "pages": [
-                      "understanding-the-platform/tools/tool-types"
-            ]
-          },
-          {
-                    "group": "Evals",
-                    "pages": [
-                      "understanding-the-platform/evals/what-evals-are"
-                    ]
-                  }
-                ]
-              }
+              "introduction-to-wonderful/core-concepts-overview"
             ]
           },
           {
             "group": "Build",
             "pages": [
-              "build-agents/agent-types",
               "build-agents/agent-instructions",
               "build-agents/models",
               "build-agents/skills",
@@ -63,14 +33,6 @@
                   "understanding-the-platform/agents/agent-components",
                   "understanding-the-platform/agents/agent-settings",
                   "understanding-the-platform/agents/versioning-publishing"
-                ]
-              },
-              {
-                "group": "Skills",
-                "pages": [
-                  "understanding-the-platform/skills/dynamic-loading",
-                  "understanding-the-platform/skills/base-skills",
-                  "understanding-the-platform/skills/skill-prompts-tools"
                 ]
               },
               {

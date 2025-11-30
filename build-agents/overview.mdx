@@ -57,9 +57,6 @@ Build is tightly coupled to the underlying Go services (controller, runner, proc
 
 ## Components
 
-- **Agent types**  
-  Decide what kind of agent you are building (for example support, sales, back-office) and which defaults it should inherit.
-
 - **Agent instructions**  
   Author the agent-level prompt that defines persona, goals, and cross-skill behavior.
 
@@ -87,7 +84,7 @@ When working in Build, you typically:
 
 <Steps>
 <Step title="Start from a use case">
-  Pick a concrete use case (for example “inbound support”, “renewals”, “collections”) and create an initial agent with type and instructions that match it.
+  Pick a concrete use case (for example “inbound support”, “renewals”, “collections”) and create an initial agent with instructions and configuration that match it.
 </Step>
 
 <Step title="Model capabilities as skills">
@@ -124,8 +121,8 @@ As your catalog grows, reuse skills, tools, and patterns across agents rather th
   In the Agents area, create a new agent (for example <code>Support - Inbound</code>) with the correct tenant, locale, and default mode.
 </Step>
 
-<Step title="Pick an agent type and instructions">
-  Use <code>Agent types</code> to frame this as an inbound support agent, then author clear agent instructions that define scope (what this agent can and cannot do), escalation rules, and tone.
+<Step title="Clarify the use case and write instructions">
+  Treat this explicitly as an inbound support agent (as opposed to sales, collections, or an internal assistant), then author clear agent instructions that define scope (what this agent can and cannot do), escalation rules, and tone.
 </Step>
 
 <Step title="Attach core skills and tools">

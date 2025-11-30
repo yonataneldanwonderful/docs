@@ -1,9 +1,9 @@
 ---
-title: "Core Concepts Overview"
-description: "Overview of Wonderful's core platform concepts"
+title: "Understanding the Wonderful platform"
+description: "Core concepts and how they fit together, with links to deeper guides"
 ---
 
-# Core Concepts Overview
+# Understanding the Wonderful platform
 
 Wonderful is built around a small set of primitives that show up repeatedly in the codebase and product: agents, skills, tools, channels, interactions, tags, evals, and tenants. Understanding how these concepts fit together is the fastest way to reason about the platform.
 
@@ -25,44 +25,105 @@ In the Go codebase this is reflected in shared models such as `Agent`, `Skill`, 
 
 This loop—interactions → agents → skills → tools → events/tags—is the core of Wonderful’s architecture.
 
-## Components
+## Core concepts at a glance
 
-- **Agents**: Top-level AI entities in the `Agent` model that own configuration, skills, and behavior.
-- **Skills**: Modular capabilities in the `Skill` model, with their own prompts, tools, tags, and active/inactive status.
-- **Tools**: Deterministic functions described by the `Tool`, `Func`, and `Parameter` structs, used for APIs, RAG, programmable logic, and mocks.
-- **Channels**: Delivery mechanisms (voice, chat, email, WhatsApp, embed) mapped to channel-specific configuration and infrastructure.
-- **Interactions**: End-to-end conversations that capture transcripts, tool calls, and metrics for a single user journey.
-- **Tags**: Boolean labels applied via deterministic rules or LLM analysis for analytics, routing, and governance.
-- **Evals**: Scenarios and batches that exercise agents and interactions for regression testing and optimization.
-- **Tenants**: Isolation boundary in all core models (`TenantBase`) used for multi-tenant security and configuration.
+<me:comment>Cards linking to the main concept pages.</me:comment>
 
-## Usage
+<CardGroup cols={3}>
 
-- **Design agents** by first mapping requirements to these primitives: which skills, which tools, which channels, and which tags/evals are needed.
-- **Read models** in `common/models` when you need precise behavior or configuration fields for agents, skills, tools, or interactions.
-- **Use tags and events** to make behavior observable and debuggable instead of relying only on free-form LLM output.
-- **Plan governance** (PII controls, automated issues, guardrails) around tenants, tags, evals, and monitoring dashboards.
+<Card title="Agents" href="/understanding-the-platform/agents/what-agents-are">
+  Top-level AI entities that own configuration, skills, prompts, channels, and governance for a use case.
+</Card>
 
-When in doubt, start from this concept list, then drill into the detailed pages for each primitive.
+<Card title="Skills" href="/understanding-the-platform/skills/what-skills-are">
+  Modular capabilities that bundle prompts, tools, and tags, and can be reused across agents.
+</Card>
+
+<Card title="Tools" href="/understanding-the-platform/tools/tool-types">
+  Deterministic functions (API, RAG, programmable, mock) that let agents read from and write to your systems.
+</Card>
+
+<Card title="Channels" href="/understanding-the-platform/channels/voice">
+  Delivery surfaces — voice, chat, email, WhatsApp, embed — that carry interactions between users and agents.
+</Card>
+
+<Card title="Interactions" href="/understanding-the-platform/interactions/what-interactions-are">
+  End‑to‑end conversations that capture turns, tool calls, tags, metrics, and recordings for a single journey.
+</Card>
+
+<Card title="Tags" href="/understanding-the-platform/tags/llm-tags">
+  Boolean labels applied via rules or LLM analysis to power analytics, routing, QA, and governance.
+</Card>
+
+<Card title="Evals" href="/understanding-the-platform/evals/what-evals-are">
+  Scenarios and batches that exercise agents through the real orchestrator to measure quality and regressions.
+</Card>
+
+<Card title="Alerts &amp; issues" href="/understanding-the-platform/alerts/what-alerts-are">
+  Concepts for turning metrics and signals into alerts, incidents, and follow‑up work.
+</Card>
+
+<Card title="Tenants" href="/privacy/ting/data-and-retention">
+  The isolation boundary (<code>TenantId</code> / <code>TenantBase</code>) used for configuration and data scoping.
+</Card>
+
+</CardGroup>
+
+## How to use this page
+
+- **Design agents** by mapping your use case to these primitives: which skills, which tools, which channels, and which tags/evals you need.  
+- **Look up models** in <code>common/models</code> and <code>wonderful-*/</code> services when you need precise behavior or configuration fields.  
+- **Make behavior observable** by leaning on interactions, tags, metrics, and alerts instead of only reading free‑form LLM output.  
+- **Plan governance early** around tenants, PII, issues, and monitoring so you can scale safely.
+
+When in doubt, start here, then click into the detailed “What X are” and concept pages for the building block you’re working with.
 
 ## FAQ's
 
-- **Do I have to use all primitives in every deployment?**  
-  No. You can start with a single agent, a small set of skills, and one channel, then gradually add tools, tagging, and evals as you harden the use case.
+<AccordionGroup>
+  <Accordion title="Do I have to use all primitives in every deployment?">
+    No. You can start with a single agent, a small set of skills, and one channel, then gradually add tools, tagging, and evals as you harden the use case.
+  </Accordion>
 
-- **Where do these concepts live in the code?**  
-  Shared models and types live under `common/models` and `shared_types`, and service-specific logic for agents, skills, tools, and interactions lives primarily in `wonderful-controller` and `wonderful-runner-platform`.
+  <Accordion title="Where do these concepts live in the code?">
+    Shared models and types live under <code>common/models</code> and <code>shared_types</code>, and service-specific logic for agents, skills, tools, and interactions lives primarily in <code>wonderful-controller</code> and <code>wonderful-runner-platform</code>.
+  </Accordion>
 
-- **How do I know which concept to reach for first?**  
-  If you are designing behavior, start with agents and skills; if you are integrating systems, start with tools; if you need analytics and governance, start with tags, evals, and interactions.
+  <Accordion title="How do I know which concept to reach for first?">
+    If you are designing behavior, start with agents and skills; if you are integrating systems, start with tools; if you need analytics and governance, start with tags, evals, alerts, and interactions.
+  </Accordion>
+</AccordionGroup>
 
 ## Related
 
-- [What is Wonderful?](/introduction-to-wonderful/what-is-wonderful)
-- [What Agents Are](/understanding-the-platform/agents/what-agents-are)
-- [What Skills Are](/understanding-the-platform/skills/what-skills-are)
-- [Tool Types](/understanding-the-platform/tools/tool-types)
-- [What Interactions Are](/understanding-the-platform/interactions/what-interactions-are)
-- [What Evals Are](/understanding-the-platform/evals/what-evals-are)
-- [LLM Tags](/understanding-the-platform/tags/llm-tags)
-- [Deterministic Tags](/understanding-the-platform/tags/deterministic-tags)
+<CardGroup cols={2}>
+
+<Card title="What is Wonderful?" href="/introduction-to-wonderful/what-is-wonderful">
+  High-level overview of the platform and why teams adopt it.
+</Card>
+
+<Card title="Agents" href="/understanding-the-platform/agents/what-agents-are">
+  Deep dive into the agent model and configuration.
+</Card>
+
+<Card title="Skills" href="/understanding-the-platform/skills/what-skills-are">
+  Learn how skills encode capabilities that agents can reuse.
+</Card>
+
+<Card title="Tools" href="/understanding-the-platform/tools/tool-types">
+  Explore API, RAG, programmable, and mock tools in detail.
+</Card>
+
+<Card title="Interactions" href="/understanding-the-platform/interactions/what-interactions-are">
+  Understand how user conversations and calls are represented.
+</Card>
+
+<Card title="Tags &amp; metrics" href="/understanding-the-platform/interactions/events-tags-metrics">
+  See how tags and metrics make behavior measurable.
+</Card>
+
+<Card title="Evals &amp; alerts" href="/understanding-the-platform/evals/what-evals-are">
+  Learn how evals and alerts help you keep quality high in production.
+</Card>
+
+</CardGroup>
