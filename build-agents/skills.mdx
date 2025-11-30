@@ -97,14 +97,17 @@ Skill
 
 ## Create & manage skills in Build
 
+To create and manage skills, navigate to the **Agent Studio** screen. You can access Agent Studio by going to **Build > Agents** and selecting an agent from the list.
+
 <Steps>
   <Step title="Plan your skill breakdown">
     Identify natural boundaries in your use case (for example authentication vs account management vs ticketing). Aim for skills that represent complete tasks or domains, not single fields or trivial steps.
   </Step>
 
   <Step title="Create a new skill">
-    1. Go to **Build > Skills** in the left sidebar
-    2. Click **+ New Skill** in the top right
+    In Agent Studio:
+    1. Open the **Skills tab** in the left panel
+    2. Click **+ New Skill**
     3. Enter a **Name** (e.g., "Authenticate User") and **Description** that explains what the skill handles
     4. Click **Create**
   </Step>
@@ -118,16 +121,10 @@ Skill
   </Step>
 
   <Step title="Attach skills to an agent">
-    1. Go to **Build > Agents** and select your agent
-    2. Open the **Skills tab**
-    3. Click **+ Add Skill** and select the skills you want to attach
-    4. Confirm each attached skill is Active and correctly configured
-  </Step>
-
-  <Step title="Choose a loading mode">
-    On the agent's **Settings tab**:
-    - **Default mode**: All attached skills are loaded from the start—best for simple agents with a small number of related skills
-    - **Multi-skill mode**: Toggle on **Multi-skill** to have the agent load one skill at a time and switch as needed—best for agents spanning multiple distinct workflows
+    In Agent Studio:
+    1. Open the **Skills tab** in the left panel
+    2. Click **+ Add Skill** and select the skills you want to attach
+    3. Confirm each attached skill is Active and correctly configured
   </Step>
 
   <Step title="Iterate with evals and monitoring">
