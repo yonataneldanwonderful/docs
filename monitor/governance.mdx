@@ -1,39 +1,107 @@
 ---
 title: Governance
+description: "Configuring guardrails, policies, and auditability for Wonderful agents"
 ---
 
 # Governance
 
-Placeholder for documenting governance and guardrails.
+Governance in Wonderful covers the guardrails, policies, and audit capabilities that ensure agents behave safely and compliantly across tenants, channels, and use cases.
 
 ## Overview
 
-Summarize governance capabilities across agents, tools, and data.
+Governance capabilities include:
+
+- **Configuration guardrails** at the agent and tool level (for example governance flags, PII, automated issues).  
+- **Monitoring and alerts** on key metrics and behaviors.  
+- **Audit logging** for sensitive actions and configuration changes.
+
+Use this page to understand the governance surfaces exposed in Monitor and how they relate to configuration and runtime behavior.
+
+<Info>
+  Governance is not a single feature; it’s a **layered set of controls** spanning agent configuration, alerts, issues, privacy, and audit logging.
+</Info>
 
 ## How It Works
 
-Explain policies, approvals, and enforcement at a high level.
+1. **Agent-level governance settings**  
+   - Agents expose flags such as:
+     - `GovernanceEnabled`: whether governance capabilities are active.  
+     - `AutomatedIssuesEnabled`: whether automated issue detection is enabled.  
+     - PII configuration and related privacy settings.  
+   - These settings influence how interactions are monitored and when issues are raised automatically.
+2. **Alerts and metrics**  
+   - Alerts (see `Alert` model) provide metric-based triggers on behaviors such as tool failures, forwarding, and interaction duration.  
+   - Governance uses these signals to enforce thresholds and highlight non-compliant behavior.
+3. **Issues and QA**  
+   - Automated issues and QA ratings can flag interactions that violate policies or expectations, driving follow-up work in Issues.
+4. **Audit logging**  
+   - Audit logging tracks key configuration changes and sensitive operations (for example changes to agents, tools, integrations, retention, and PII settings) with resource types and change maps.  
+   - This supports compliance and forensic analysis.
 
 ## Components
-- Policies
-- Controls
-- Auditability
+
+- **Governance flags and settings**  
+  - Agent- and tenant-level toggles that enable or configure governance behaviors.
+
+- **Alerts and metrics**  
+  - Metric-based guardrails that surface undesirable behavior or performance issues.
+
+- **Issues and automated issues**  
+  - Work items created manually or automatically to track policy violations and problems.
+
+- **Audit logs**  
+  - Records of who changed what and when, for sensitive resources.
 
 ## Usage
 
-Outline how to set up governance for new and existing deployments.
+<Steps>
+<Step title="Define governance requirements">
+  Clarify which policies and behaviors must be enforced (for example PII handling, maximum durations, acceptable tool failure rates).
+</Step>
 
-## Examples
+<Step title="Enable governance features on agents">
+  Turn on governance and automated issues where appropriate, and configure PII and privacy settings to match your policies.
+</Step>
 
-Add examples for governance models in different industries.
+<Step title="Configure alerts and thresholds">
+  Create alerts on key governance metrics (duration, tool failures, forwarding, interaction volume) and tune thresholds to match your risk tolerance.
+</Step>
 
-## Best Practices
+<Step title="Use issues and audit logs to enforce policies">
+  Use Issues to track and resolve violations, and rely on audit logs to review configuration changes when investigating incidents.
+</Step>
+</Steps>
 
-Summarize guidance for scalable, lightweight governance.
+## FAQ's
+
+<AccordionGroup>
+  <Accordion title="What does enabling governance on an agent do?">
+    Enabling governance activates governance-related behaviors such as automated issue creation and potentially stricter monitoring and tagging for that agent.
+  </Accordion>
+
+  <Accordion title="How do alerts relate to governance?">
+    Alerts provide metric-based triggers that can surface policy violations or risk conditions, feeding into governance workflows and issues.
+  </Accordion>
+
+  <Accordion title="How does audit logging fit into governance?">
+    Audit logs record sensitive configuration changes and user actions, providing traceability and evidence for compliance and post-incident review.
+  </Accordion>
+</AccordionGroup>
 
 ## Related
 
-- /monitor/alerts
-- /platform-areas/governance-guardrails
+<CardGroup cols={2}>
 
+<Card title="Alerts" href="/monitor/alerts">
+  Configure metric-based alerts that enforce governance thresholds.
+</Card>
 
+<Card title="Issues" href="/monitor/issues">
+  Track and resolve governance-related problems discovered in operations.
+</Card>
+
+<Card title="PII" href="/privacy/pii">
+  Learn how PII configuration contributes to governance and compliance.
+</Card>
+
+</CardGroup>

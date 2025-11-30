@@ -1,39 +1,88 @@
 ---
 title: Language
+description: "Configuring languages and multi-language behavior for agents"
 ---
 
 # Language
 
-Placeholder for documenting language coverage and configuration.
+Language configuration controls how agents understand and respond across markets: locale, transcription language, TTS voice language, and any translation behavior. This page focuses on how to configure language behavior when building agents.
 
 ## Overview
 
-Summarize supported languages and key constraints.
+Wonderful is designed to operate in many languages, with:
+
+- Agent locale and gender driving default prompts and greetings.  
+- Transcriber and voice configurations selecting the right ASR/TTS providers and voices.  
+- Optional transcription translation enabling agents to operate in one language while customers speak another.
+
+Language choices affect both user experience and model behavior, so they should be configured deliberately for each agent and tenant.
 
 ## How It Works
 
-Explain how language selection affects models, TTS, and ASR.
+1. **Agent locale and greetings**  
+   - Each agent has a `Locale` and `Gender` which are used to:
+     - Choose localized default initial messages and responses.  
+     - Influence voice configuration for certain providers.
+2. **Voice language**  
+   - Voice-related configuration (for example provider-specific voice settings) controls which language and voice the agent uses in voice channels.
+3. **Transcription language**  
+   - Transcriber configuration determines in which language speech recognition runs for voice interactions.
+4. **Translation (optional)**  
+   - Agents can enable transcription translation (`EnableTranscriptionTranslation`, `TranslationLanguage`) so that:
+     - Incoming speech is transcribed and translated into a working language for the model.  
+     - Responses can be rendered back in the user’s language via TTS settings.
+5. **Tenant-level features and constraints**  
+   - Tenant settings can enable or disable extended voice configuration and other features that influence language support.
+
+Together, these settings define how an agent behaves linguistically across voice, chat, and email.
 
 ## Components
-- Language support matrix
-- Region-specific behavior
-- Fallbacks
+
+- **Agent locale**  
+  - Determines default language for prompts, messages, and certain i18n behaviors.
+
+- **Voice configuration**  
+  - Chooses voice provider, voice name, speed, and features (for example denoiser model, emotional mode) which may be language-specific.
+
+- **Transcriber configuration**  
+  - Selects ASR provider and language used to transcribe audio for voice calls.
+
+- **Translation settings**  
+  - `EnableTranscriptionTranslation` and `TranslationLanguage` control whether input is translated before being processed.
+
+- **Tenant language settings and lists**  
+  - Tenant-level configuration and language support lists help determine which languages are available where.
 
 ## Usage
 
-Outline how to configure languages for agents and channels.
+1. **Set the agent’s primary locale**  
+   - Choose the locale that reflects the agent’s main market and language; this informs greetings and default behavior.
+2. **Configure voice language and provider**  
+   - In Voice & language settings, pick a voice that supports your target language and region.  
+   - Verify pronounciation and style are appropriate via voice previews.
+3. **Configure transcription language**  
+   - Choose a transcriber provider and language that match your callers.  
+   - For multilingual environments, consider translation.
+4. **Enable translation where needed**  
+   - If the working model language differs from user languages, enable translation and set `TranslationLanguage` appropriately.  
+   - Test that translations preserve intent for your domain.
+5. **Test cross-channel language behavior**  
+   - Confirm that language behavior is consistent across voice, chat, email, and messaging channels.
 
-## Examples
+## FAQ's
 
-Add examples for multilingual agents and routing.
+- **Can one agent handle multiple languages?**  
+  Yes, using appropriate locale, transcriber, voice, and translation configuration; however, you may prefer separate agents for very different markets or personas.
 
-## Best Practices
+- **How do I update language behavior for an existing agent?**  
+  Adjust locale, voice, transcriber, and translation settings in Build, then test across all channels before deploying changes.
 
-Summarize guidance for global deployments.
+- **Where do language support lists live?**  
+  Language support files and CSVs (for example in the repository’s language lists) document which languages are supported by which providers.
 
 ## Related
 
-- /build-agents/voice-and-language/diacritics
-- /build-agents/overview
-
-
+- [Build overview](/build-agents/overview)
+- [Diacritics](/build-agents/voice-and-language/diacritics)
+- [Speed control](/build-agents/voice-and-language/speed-control)
+- [Voices](/build-agents/voice-and-language/voices)

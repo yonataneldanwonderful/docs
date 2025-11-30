@@ -3,61 +3,66 @@ title: "Core Concepts Overview"
 description: "Overview of Wonderful's core platform concepts"
 ---
 
-## Core Platform Concepts
+# Core Concepts Overview
 
-Wonderful is built around foundational concepts that work together to create powerful, reliable AI agents.
+Wonderful is built around a small set of primitives that show up repeatedly in the codebase and product: agents, skills, tools, channels, interactions, tags, evals, and tenants. Understanding how these concepts fit together is the fastest way to reason about the platform.
 
-### Agents
+## Overview
 
-AI agents customized for a specific purpose. Agents orchestrate conversations, call tools, load skills, and run across channels. Each agent defines how the AI thinks and behaves through prompts, tools, and skills.
+At runtime, every customer interaction is an **interaction** handled by an **agent**. The agent may load **skills**, call **tools**, apply **tags**, and send messages over different **channels** (voice, chat, email, WhatsApp, embed). Evals and monitoring run on top of these same primitives.
 
-[Learn more about Agents](/understanding-the-platform/agents/what-agents-are)
+In the Go codebase this is reflected in shared models such as `Agent`, `Skill`, `Tool`, `Interaction`, `Tag`, and related configuration structs for voice, LLMs, end-of-turn, and PII. Services like the controller, runner, and processor manipulate these shared types to provide a single, consistent runtime.
 
-### Interactions
+## How It Works
 
-A single conversation between an agent and a real user. Interactions can be inbound (customer contacts the agent) or outbound (agent contacts the customer). They include conversation transcripts, tool calls, skill loads, events, tags, and metrics.
+1. **Agents** define prompts, configuration, attached skills, and which tools they can call.
+2. A user interaction arrives through a **channel** (for example SIP, chat widget, email, WhatsApp).
+3. The runtime creates or resumes an **interaction** object and records all turns, tool calls, and events.
+4. Based on context and configuration, the agent loads **skills** (all at once or dynamically in multi-skill mode).
+5. The LLM chooses and calls **tools** (API, RAG, programmable, mock) with structured parameters defined in the `Tool` and `Func` models.
+6. Each turn produces **events** and **tags** (deterministic and LLM-based) that drive analytics, routing, and governance.
+7. **Evals** and batch evals run the same flows in a controlled way, attached to specific agent versions.
 
-[Learn more about Interactions](/understanding-the-platform/interactions/what-interactions-are)
+This loop—interactions → agents → skills → tools → events/tags—is the core of Wonderful’s architecture.
 
-### Skills
+## Components
 
-Self-contained sub-agents that encode specific capabilities. Skills load dynamically based on context, keeping agent context small and focused. Examples include "Cancel Credit Card" or "Create Support Ticket".
+- **Agents**: Top-level AI entities in the `Agent` model that own configuration, skills, and behavior.
+- **Skills**: Modular capabilities in the `Skill` model, with their own prompts, tools, tags, and active/inactive status.
+- **Tools**: Deterministic functions described by the `Tool`, `Func`, and `Parameter` structs, used for APIs, RAG, programmable logic, and mocks.
+- **Channels**: Delivery mechanisms (voice, chat, email, WhatsApp, embed) mapped to channel-specific configuration and infrastructure.
+- **Interactions**: End-to-end conversations that capture transcripts, tool calls, and metrics for a single user journey.
+- **Tags**: Boolean labels applied via deterministic rules or LLM analysis for analytics, routing, and governance.
+- **Evals**: Scenarios and batches that exercise agents and interactions for regression testing and optimization.
+- **Tenants**: Isolation boundary in all core models (`TenantBase`) used for multi-tenant security and configuration.
 
-[Learn more about Skills](/understanding-the-platform/skills/what-skills-are)
+## Usage
 
-### Tools
+- **Design agents** by first mapping requirements to these primitives: which skills, which tools, which channels, and which tags/evals are needed.
+- **Read models** in `common/models` when you need precise behavior or configuration fields for agents, skills, tools, or interactions.
+- **Use tags and events** to make behavior observable and debuggable instead of relying only on free-form LLM output.
+- **Plan governance** (PII controls, automated issues, guardrails) around tenants, tags, evals, and monitoring dashboards.
 
-APIs or internal actions the agent can call. Tools come in different types: system tools for engine behavior, agent tools always available, skill tools scoped to skills, and tenant tools shared across agents.
+When in doubt, start from this concept list, then drill into the detailed pages for each primitive.
 
-[Learn more about Tools](/understanding-the-platform/tools/tool-types)
+## FAQ's
 
-### Tags
+- **Do I have to use all primitives in every deployment?**  
+  No. You can start with a single agent, a small set of skills, and one channel, then gradually add tools, tagging, and evals as you harden the use case.
 
-Yes/no markers applied to conversations or turns. Tags come from LLM inference or deterministic event rules. They enable analytics, routing, behavior tracking, and product logic.
+- **Where do these concepts live in the code?**  
+  Shared models and types live under `common/models` and `shared_types`, and service-specific logic for agents, skills, tools, and interactions lives primarily in `wonderful-controller` and `wonderful-runner-platform`.
 
-[Learn more about Tags](/understanding-the-platform/tags/llm-tags)
+- **How do I know which concept to reach for first?**  
+  If you are designing behavior, start with agents and skills; if you are integrating systems, start with tools; if you need analytics and governance, start with tags, evals, and interactions.
 
-### Channels
+## Related
 
-How agents interact with users. Wonderful supports voice (SIP, phone), chat (web widgets), email, WhatsApp, and embed. All channels share the same agent logic, with differences only in formatting and input handling.
-
-[Learn more about Channels](/understanding-the-platform/channels/voice)
-
-### Evals
-
-Structured test scenarios that measure agent behavior. Evals include single scenarios, batch tests, voice-specific tests, and human feedback. They're tied to agent versions for safe iteration.
-
-[Learn more about Evals](/understanding-the-platform/evals/what-evals-are)
-
-## How They Work Together
-
-1. **Agents** orchestrate conversations and load **Skills** as needed
-2. **Skills** provide focused capabilities and their own **Tools**
-3. **Tools** execute actions and generate **Events**
-4. **Events** trigger deterministic **Tags** and behaviors
-5. **Channels** deliver the experience across voice, chat, email, WhatsApp
-6. **Interactions** capture everything: conversations, tool calls, events, tags
-7. **Evals** validate agent behavior before and after deployment
-
-This architecture ensures agents are efficient, reliable, and production-ready.
-
+- [What is Wonderful?](/introduction-to-wonderful/what-is-wonderful)
+- [What Agents Are](/understanding-the-platform/agents/what-agents-are)
+- [What Skills Are](/understanding-the-platform/skills/what-skills-are)
+- [Tool Types](/understanding-the-platform/tools/tool-types)
+- [What Interactions Are](/understanding-the-platform/interactions/what-interactions-are)
+- [What Evals Are](/understanding-the-platform/evals/what-evals-are)
+- [LLM Tags](/understanding-the-platform/tags/llm-tags)
+- [Deterministic Tags](/understanding-the-platform/tags/deterministic-tags)

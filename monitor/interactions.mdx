@@ -1,38 +1,110 @@
 ---
 title: Interactions
+description: "Reviewing and analyzing interactions in Wonderful"
 ---
 
 # Interactions
 
-Placeholder for documenting interaction monitoring and analysis.
+The Interactions view lets you inspect individual conversations across channels, including transcripts, tags, metrics, recordings, and QA annotations.
 
 ## Overview
 
-Summarize how interactions are captured and surfaced in Wonderful.
+Each interaction is backed by a `Communication` record that captures:
+
+- Channel and direction (voice, chat, email; inbound or outbound).  
+- Timing and duration.  
+- Sentiment, QA scores, and ratings.  
+- Tags, call tags, and metadata.  
+- Links to recordings and summaries.
+
+Use this page when you need to review specific conversations, perform QA, or debug unexpected behavior.
+
+<Info>
+  Interactions are the **source of truth** for what actually happened in conversations — including transcripts, tool usage, tags, and outcomes.
+</Info>
 
 ## How It Works
 
-Explain sessions, transcripts, tags, and metrics at a high level.
+1. **Interaction records**  
+   - `Communication` and `CommunicationDTO` store:
+     - `Type`, `Interactor`, `Direction`, `AgentId`, `Locale`, `Status`.  
+     - `StartTime`, `EndTime`, `Duration`.  
+     - `TokensUsage`, `QAScore`, `Summary`.  
+     - `Tags`, `CallTags`, `Metadata`, `HumanFeedback`, and bookmark state.  
+     - Recording keys/URLs (raw, processed, masked).
+2. **Transcripts and recordings**  
+   - Transcripts and recordings are associated through `CommunicationDTO` and related transcript models, exposing:
+     - Turn-by-turn text.  
+     - Speaker information (agent, human).  
+     - Masked and unmasked audio where permitted.
+3. **Tags and call tags**  
+   - Tags originate from deterministic rules and LLM tagging pipelines; call tags capture call-specific categorizations.  
+   - Both are available in Interactions for filtering and analysis.
+4. **Metrics and summaries**  
+   - Metrics like duration, QA scores, ratings, and tokens usage are computed per interaction.  
+   - Summaries provide brief and detailed descriptions with bullet points.
 
 ## Components
-- Interaction records
-- Tagging
-- Metrics
+
+- **Interaction list**  
+  - Filterable table of interactions with key columns (agent, channel, duration, sentiment, QA score, tags, status).
+
+- **Interaction detail view**  
+  - Transcript, recordings, summary, tools usage, tags, metadata, and ratings for a single interaction.
+
+- **Filters and search**  
+  - Filters by agent, channel, sentiment, tags, QA score, status, timeframe, and other metadata.
 
 ## Usage
 
-Outline how to review and analyze interactions in practice.
+<Steps>
+<Step title="Filter to the right slice">
+  Use filters (agent, channel, tags, timeframe, sentiment) to narrow down interactions relevant to your investigation or QA review.
+</Step>
 
-## Examples
+<Step title="Open interaction details">
+  Inspect transcripts, recordings, summaries, and tags to understand what happened in each conversation.
+</Step>
 
-Add examples of workflows for QA and operations teams.
+<Step title="Annotate and link to issues">
+  Where needed, create issues from interactions or add human feedback and ratings to feed back into QA and evals.
+</Step>
 
-## Best Practices
+<Step title="Monitor patterns">
+  Regularly review interactions with specific tags or failure states to find systematic problems and opportunities to improve agents.
+</Step>
+</Steps>
 
-Summarize guidance for ongoing monitoring and triage.
+## FAQ's
+
+<AccordionGroup>
+  <Accordion title="What data is stored for each interaction?">
+    Interactions store channel, direction, timing, sentiment, QA scores, tokens usage, tags, call tags, metadata, transcripts, recordings (including masked variants), and summaries.
+  </Accordion>
+
+  <Accordion title="How do tags and call tags differ?">
+    Tags capture general categorizations (topics, intents, outcomes), while call tags capture call-specific or rule-based labels used in routing, QA, or compliance.
+  </Accordion>
+
+  <Accordion title="Can I export interactions for offline analysis?">
+    Yes, subject to retention and PII policies; consult your deployment’s export capabilities and privacy configuration.
+  </Accordion>
+</AccordionGroup>
 
 ## Related
 
-- /monitor/dashboard
+<CardGroup cols={2}>
 
+<Card title="Dashboard" href="/monitor/dashboard">
+  See how interaction-level data aggregates into high-level KPIs.
+</Card>
 
+<Card title="Issues" href="/monitor/issues">
+  Learn how to track problems discovered in interactions.
+</Card>
+
+<Card title="What Interactions Are" href="/understanding-the-platform/interactions/what-interactions-are">
+  Read the conceptual model behind interactions and their lifecycle.
+</Card>
+
+</CardGroup>

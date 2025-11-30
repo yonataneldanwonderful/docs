@@ -1,39 +1,85 @@
 ---
 title: Integrations
+description: "Connecting Wonderful agents to external systems"
 ---
 
 # Integrations
 
-Placeholder for documenting platform integrations used by agents.
+Integrations connect agents to external systems such as CRMs, ticketing tools, CCaaS platforms, email providers, and internal APIs. In Wonderful, integrations are typically surfaced through tools backed by OAuth integrations, secrets, or tenant-level settings.
 
 ## Overview
 
-Summarize the types of integrations Wonderful supports (CRMs, CCaaS, data systems, etc.).
+Integrations enable agents to:
+
+- Read and write data in external systems (for example customer records, tickets, orders).  
+- Trigger workflows in CCaaS or back-office platforms.  
+- Send and receive email or other messages via provider APIs.
+
+As a builder, you attach integrations to tools and skills so that agents can call them safely and consistently.
 
 ## How It Works
 
-Explain how integrations are configured, authenticated, and called.
+1. **Integration configuration**  
+   - Integrations are configured per tenant using:
+     - OAuth integrations (`OAuthIntegration` records) for providers like Google or Microsoft.  
+     - Tenant settings (for example telephony, email, or CCaaS configuration).  
+     - Secrets managed in secret manager for API keys and credentials.
+2. **Tool definitions**  
+   - Tools wrap integration endpoints, specifying:
+     - Which integration they use (for example which OAuthIntegration or secret).  
+     - Parameters, validation, and behavior.  
+     - Channel availability and triggers.
+3. **Skill and agent attachment**  
+   - Tools that use integrations are placed into skills, and those skills are attached to agents that need access to the external system.
+4. **Runtime calls**  
+   - When a tool is invoked, the runtime:
+     - Retrieves the necessary tokens or secrets.  
+     - Calls the external API.  
+     - Logs structured results and errors.  
+     - Returns structured data back to the LLM and agent.
 
 ## Components
-- Integration connectors
-- Credentials and secrets
-- Mapping and transformation
+
+- **OAuthIntegration model**  
+  - Stores OAuth tokens (`AccessToken`, `RefreshToken`, `IDToken`, `ExpiresAt`) and provider type (Google, Microsoft, Meta), optionally tied to an `AgentId`.
+
+- **Tenant settings**  
+  - Telephony, email, and other integration-related settings configured at the tenant level.
+
+- **Secret manager integration**  
+  - Secure storage for API keys and other credentials used by tools.
+
+- **Tools and skills**  
+  - The primary way integrations are exposed to agents during interactions.
 
 ## Usage
 
-Outline how to attach integrations to tools, skills, and agents.
+1. **Configure provider integrations**  
+   - Set up OAuth integrations and tenant settings for the external systems you need (for example email providers, CRMs).
+2. **Define tools that use integrations**  
+   - Create tools that call specific endpoints or workflows in the external system.  
+   - Include appropriate parameters and validation for safe usage.
+3. **Attach tools to skills and agents**  
+   - Place integration-backed tools in skills and attach those skills to agents that need access.  
+   - Ensure tools are only available in relevant channels.
+4. **Test and monitor**  
+   - Use test agents and evals to validate integration behavior.  
+   - Monitor errors, latency, and side effects in both Wonderful and the external system.
 
-## Examples
+## FAQ's
 
-Add integration examples for common SaaS systems.
+- **Where are integration credentials stored?**  
+  In `OAuthIntegration` records and secret manager, scoped per tenant, never hard-coded in code or prompts.
 
-## Best Practices
+- **Can I share integrations across agents?**  
+  Yes. A single integration (for example a CRM or email provider) can be used by multiple tools and agents within the same tenant.
 
-Summarize guidance for secure, reliable integrations.
+- **How do I safely decommission an integration?**  
+  Remove or disable tools that depend on it, revoke tokens, and remove secrets, then verify that no flows or agents rely on it.
 
 ## Related
 
-- /build-agents/tools/agent-tools-and-skill-tools
-- /build-agents/overview
-
-
+- [Agent tools and skill tools](/build-agents/tools/agent-tools-and-skill-tools)
+- [Low code](/build-agents/tools/low-code)
+- [Authentication](/build-agents/authentication/overview)
+- [Build overview](/build-agents/overview)

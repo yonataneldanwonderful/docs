@@ -1,38 +1,115 @@
 ---
 title: Models
+description: "Choosing and configuring language models for agents"
 ---
 
 # Models
 
-Placeholder for documenting model selection and configuration for agents.
+Models define which LLM provider and model an agent uses to reason, call tools, and generate responses. Wonderful lets you configure provider and model per agent through `AgentLLMConfiguration`, while shared LLM services handle retries, metrics, and provider-specific details.
 
 ## Overview
 
-Describe how models are chosen and wired into Wonderful.
+Use this page when you want to understand how to choose models, how they are wired into the runtime, and how those choices affect latency, quality, and cost.
+
+Each agent has its own LLM configuration, but global LLM settings still control which providers are enabled and how fallbacks work. Token usage is tracked on interactions so you can see the impact of your choices.
+
+<Info>
+  Configure **models per agent** using `AgentLLMConfiguration`, while keeping provider credentials and global policies centralized. This keeps runtime behavior flexible without duplicating sensitive settings.
+</Info>
 
 ## How It Works
 
-Explain how model settings affect latency, quality, and cost.
+At a high level:
+
+1. **Per-agent LLM configuration**  
+   - Each agent has an `llm_configuration` that specifies:
+     - `selected_provider` (for example `openai` or `azure`)  
+     - `model` (string identifier for the model or deployment)  
+     - `provider_settings` (provider-specific overrides)
+2. **Provider selection**  
+   - The runtime reads the agent’s LLM configuration and chooses a provider type based on:
+     - The agent’s `selected_provider`, and  
+     - Global LLM provider configuration (which providers are enabled).
+3. **Model usage at runtime**  
+   - For text and voice orchestrators, the selected model is passed into the LLM client (OpenAI, Azure, Anthropic where applicable).  
+   - Token usage (`TokensUsage`) is tracked per interaction on `Communication` and per client.
+4. **Fallbacks and rotation**  
+   - Provider helper functions can switch between providers where configured, allowing failover while still honoring agent-level configuration where possible.
+
+This separation lets you choose models per agent while centralizing sensitive provider configuration.
 
 ## Components
-- Model providers
-- Configuration options
-- Fallbacks and routing
+
+- **AgentLLMConfiguration (per agent)**  
+  - `selected_provider`: which LLM provider to use (for example OpenAI or Azure).  
+  - `model`: the model name or deployment ID to call.  
+  - `provider_settings`: provider-specific options (for example deployment names, base URLs, or feature flags).
+
+- **Provider types (LLM service)**  
+  - Internal `ProviderType` values (for example `openai`, `azure`) determine which LLM client to call.  
+  - Helper functions decide defaults based on which providers are enabled in global config.
+
+- **LLM clients**  
+  - OpenAI client for chat and completion-style calls.  
+  - Azure OpenAI-compatible paths where configured.  
+  - Anthropic client used in evaluator and specific workflows where configured.
+
+- **Token usage tracking**  
+  - `TokensUsage` on `Communication` accumulates input, cached input, and output tokens for monitoring and cost analysis.
 
 ## Usage
 
-Outline how to select and update models for an agent.
+<Steps>
+<Step title="Choose a provider">
+  Select from the providers enabled for your deployment (for example OpenAI or Azure OpenAI), making sure compliance and data residency requirements are met.
+</Step>
 
-## Examples
+<Step title="Pick a model per agent">
+  For real-time voice, prefer models optimized for latency and function calling; for complex reasoning or back-office, choose higher-capability models with longer context windows; for batch/offline analysis, prioritize quality and cost over latency.
+</Step>
 
-Add example model configurations here.
+<Step title="Set `llm_configuration` on the agent">
+  In the UI, select provider and model per agent, and optionally specify provider-specific settings (for example custom deployment names).
+</Step>
 
-## Best Practices
+<Step title="Monitor token usage and behavior">
+  Use Monitor dashboards to track token usage, duration, and error rates per agent and model, then adjust models where you see latency, cost, or quality issues.
+</Step>
 
-Summarize guidance for balancing performance and quality.
+<Step title="Test before wide rollout">
+  Use evals to compare behavior across models for the same agent and scenarios before changing production traffic.
+</Step>
+</Steps>
+
+## FAQ's
+
+- **Can I use different models for different agents?**  
+  Yes. Each agent has its own `llm_configuration`, so you can tailor providers and models per use case.
+
+- **How do I change models safely?**  
+  Update the agent’s model in Build, run evals to compare behavior, and roll out gradually while monitoring metrics.
+
+- **What happens if a provider is misconfigured or unavailable?**  
+  Global LLM configuration and provider rotation logic determine fallbacks; errors are logged, and interactions may fail over or error depending on configuration.
 
 ## Related
 
-- /build-agents/overview
+<CardGroup cols={2}>
 
+<Card title="Build overview" href="/build-agents/overview">
+  See how model selection fits into the broader Build pipeline.
+</Card>
 
+<Card title="Agent instructions" href="/build-agents/agent-instructions">
+  Align model choices with how your agents are instructed to behave.
+</Card>
+
+<Card title="What Agents Are" href="/understanding-the-platform/agents/what-agents-are">
+  Understand which parts of the agent model are affected by LLM configuration.
+</Card>
+
+<Card title="What Evals Are" href="/understanding-the-platform/evals/what-evals-are">
+  Use evals to validate model changes before and after rollout.
+</Card>
+
+</CardGroup>

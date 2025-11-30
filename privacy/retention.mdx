@@ -1,38 +1,106 @@
 ---
 title: Retention
+description: "Configuring how long Wonderful keeps different types of data"
 ---
 
 # Retention
 
-Placeholder for documenting data retention policies.
+Retention controls how long Wonderful stores interaction data, recordings, and analytics before automatically deleting them, on a per-tenant basis.
 
 ## Overview
 
-Summarize how long different classes of data are retained.
+Retention policies help you:
+
+- Comply with data protection regulations (for example GDPR).  
+- Limit how long sensitive data is stored.  
+- Control storage cost and performance for large deployments.
+
+In the product, retention is configured through data settings that specify retention windows for different data classes (logs, transcripts, recordings, analytics).
+
+<Info>
+  Retention is **tenant-scoped**: each tenant can have its own policy for how long calls, transcripts, recordings, and analytics are kept before deletion.
+</Info>
 
 ## How It Works
 
-Explain how retention policies are enforced across storage layers.
+1. **Retention configuration**  
+   - Data settings include fields such as:
+     - `callLogRetentionDays`  
+     - `transcriptRetentionDays`  
+     - `recordingRetentionDays`  
+     - `analyticsRetentionDays`  
+     - `autoDeleteEnabled`
+2. **Data classes**  
+   - Retention applies separately to:
+     - Call logs and interaction metadata.  
+     - Transcripts and tags.  
+     - Audio recordings.  
+     - Aggregated analytics and metrics.
+3. **Enforcement**  
+   - Background jobs enforce retention by deleting or anonymizing data that exceeds configured windows.  
+   - Deletions are permanent and apply across storage layers (database, object storage, analytics stores).
+4. **Permissions and access**  
+   - Only users with appropriate permissions (for example data retention settings permissions) can view or change retention values.
+
+NOTE: Implementation details for cleanup jobs and exact enforcement windows may vary by deployment. Clarification required for full job schedules and storage backends.
 
 ## Components
-- Retention policies
-- Data classes
-- Deletion workflows
+
+- **Retention settings**  
+  - Per-tenant configuration of retention windows and auto-delete behavior.
+
+- **Data classes**  
+  - Separate retention periods for logs, transcripts, recordings, and analytics.
+
+- **Cleanup workflows**  
+  - Background workers and jobs that delete or anonymize aged data.
 
 ## Usage
 
-Outline how to configure retention by tenant or environment.
+<Steps>
+<Step title="Review regulatory and business requirements">
+  Work with legal, security, and operations to determine how long different data types should be retained for each tenant or environment.
+</Step>
 
-## Examples
+<Step title="Configure retention windows">
+  In data settings, set appropriate values for call log, transcript, recording, and analytics retention, and enable automatic deletion where required.
+</Step>
 
-Add examples for different compliance regimes here.
+<Step title="Test on non-production tenants">
+  Apply stricter retention to staging or test tenants first and verify that cleanup behaves as expected and does not remove needed data.
+</Step>
 
-## Best Practices
+<Step title="Roll out to production tenants">
+  Apply retention settings to production tenants, document the policy, and communicate changes to stakeholders.
+</Step>
+</Steps>
 
-Summarize guidance for balancing compliance and observability.
+## FAQ's
+
+<AccordionGroup>
+  <Accordion title="Does retention apply to all tenants equally?">
+    No. Retention is configured per tenant, so different tenants can have different retention windows and auto-delete behavior.
+  </Accordion>
+
+  <Accordion title="What happens when data reaches its retention limit?">
+    When auto-delete is enabled, data older than the configured retention window is permanently deleted by background cleanup jobs.
+  </Accordion>
+
+  <Accordion title="Can deleted data be recovered?">
+    No. Retention-driven deletions are designed to be permanent; use backups and export workflows where additional safeguards are required.
+  </Accordion>
+</AccordionGroup>
 
 ## Related
 
-- /privacy/pii
+<CardGroup cols={2}>
 
+<Card title="PII" href="/privacy/pii">
+  Configure how PII is detected, redacted, and protected in conjunction with retention.
+</Card>
 
+<Card title="Agent Settings" href="/understanding-the-platform/agents/agent-settings">
+  See how privacy-related settings (recordings, PII, governance) are configured at the agent level.
+</Card>
+
+</CardGroup>

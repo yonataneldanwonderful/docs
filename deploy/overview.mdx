@@ -1,38 +1,114 @@
 ---
 title: Manage
+description: "Configure channels and infrastructure to connect agents to real users"
 ---
 
 # Manage
 
-High-level overview of how to manage live agents across channels.
+The Manage section is where you connect built agents to real users across chat, voice, email, and messaging channels, and where you integrate with existing contact center infrastructure.
 
 ## Overview
 
-Summarize the management surface area: chat, voice, email, and integrations.
+<Info>
+  Use **Manage** when you are moving from a working agent to a live deployment, or when you need to change how traffic reaches agents across channels.
+</Info>
+
+While **Build** defines what agents can do, **Manage** defines how they are exposed in production:
+
+- **Interactions**: how conversations are created, tagged, and routed.  
+- **Chat**: widget deployment and chat channel configuration.  
+- **Telephony**: SIP trunks, phone numbers, call routing, and CCaaS integrations.  
+- **Other channels**: email, WhatsApp, and embedded experiences, including channel-specific setup.
+
+Use this area when you are moving from a working agent to a live deployment, or when you need to change how traffic reaches agents.
 
 ## How It Works
 
-Explain how management configuration connects agents to real users.
+<Steps>
+<Step title="Configure channel entry points">
+  For each channel, configure entry points (widgets, phone numbers, email inboxes, WhatsApp senders, embeds) that map to agents and tenants.
+</Step>
+
+<Step title="Enable routing & orchestration">
+  Use controller and telephony/chat/email configuration to route inbound requests to the right agent, create `Communication` records, and start orchestrators.
+</Step>
+
+<Step title="Integrate with infrastructure">
+  Configure telephony and CCaaS integrations (for example SIP trunks, Twilio, or contact centers) so calls can enter and leave Wonderful safely, including high-traffic forwarding and transfers.
+</Step>
+
+<Step title="Adjust over time">
+  As you roll out, adjust routing rules, capacity settings, and CCaaS integrations to balance agent coverage and quality.
+</Step>
+</Steps>
 
 ## Components
--- Chat management
--- Telephony management
-- CCaaS integrations
+
+- **Interactions management**  
+  - Views and settings for how interactions are stored, tagged, and surfaced.
+
+- **Chat management**  
+  - Widget configuration, embedding, and per-agent chat settings.
+
+- **Telephony & CCaaS**  
+  - SIP trunk configuration, phone number management, call routing, and CCaaS integrations.
+
+- **Other channels**  
+  - Email, WhatsApp, and embedded UIs, plus their channel-specific setup.
 
 ## Usage
 
-Outline how teams should approach first deployments vs. scale-out.
+<Steps>
+<Step title="Start with a single channel">
+  For first deployments, choose one channel (typically telephony or web chat) and configure it end-to-end for a single agent.
+</Step>
 
-## Examples
+<Step title="Attach additional channels">
+  Once behavior is stable, add chat widgets, email, WhatsApp, or embed using the channel-specific setup guides.
+</Step>
 
-Add example deployment patterns here.
+<Step title="Integrate with existing contact center">
+  Use CCaaS integrations and telephony configuration to coordinate Wonderful agents with human agents.
+</Step>
 
-## Best Practices
+<Step title="Iterate on routing and capacity">
+  Adjust routing, capacity thresholds, and channel availability as you learn from interactions and monitoring.
+</Step>
+</Steps>
 
-Summarize guidance for safe rollouts and staged releases.
+## FAQ's
+
+- **Where should I start when going live?**  
+  Begin with one agent and one channel, verify quality and routing, then expand to more channels and agents.
+
+- **How do Manage and Build relate?**  
+  Build defines agent behavior; Manage connects that behavior to real-world entry points and infrastructure.
+
+- **Can I route the same channel to multiple agents?**  
+  Yes, depending on your telephony/chat/email setup, but you should design clear routing rules to avoid conflicts.
 
 ## Related
 
-- /platform/get-started/overview
+<CardGroup cols={2}>
 
+<Card title="Getting Started" href="/platform/get-started/overview">
+  Review initial setup before connecting agents to real traffic.
+</Card>
 
+<Card title="What Interactions Are" href="/understanding-the-platform/interactions/what-interactions-are">
+  Understand how interactions are represented and managed once traffic flows.
+</Card>
+
+<Card title="Voice Channel" href="/understanding-the-platform/channels/voice">
+  Learn how voice channel behavior and configuration work.
+</Card>
+
+<Card title="Chat Channel" href="/understanding-the-platform/channels/chat">
+  Explore chat capabilities and configuration options.
+</Card>
+
+<Card title="Email Channel" href="/understanding-the-platform/channels/email">
+  See how email-based interactions are handled and configured.
+</Card>
+
+</CardGroup>

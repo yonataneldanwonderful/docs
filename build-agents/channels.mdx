@@ -1,40 +1,101 @@
 ---
 title: Channels
+description: "How to connect agents to voice, chat, email, and messaging channels"
 ---
 
 # Channels
 
-Placeholder for documenting how agents connect to channels.
+Channels define how real users reach your agents: voice (telephony), chat widgets, email, WhatsApp, and other messaging surfaces. This page focuses on how to enable and wire channels when building agents.
 
 ## Overview
 
-Summarize supported channels and how agents attach to them.
+In the runtime, each interaction is tagged with a `CommunicationType` (`voice`, `chat`, or `email`) and corresponding channel-specific identifiers (for example phone numbers or email addresses). Channels determine:
+
+- How users start interactions (call, click, send message).  
+- How media is handled (audio vs text).  
+- Which configuration fields on the agent and telephony/chat/email systems are used.
+
+In Build, you attach concrete entry points (phone numbers, widgets, inboxes) to agents so that routing is deterministic and multi-channel behavior is consistent.
 
 ## How It Works
 
-Explain the lifecycle of messages and calls across channels.
+At a high level:
+
+1. **Channel type selection**  
+   - For each agent you decide which channel types to support: voice, chat, email, WhatsApp, embed, etc.  
+   - Internally, these map to `CommunicationType` values and channel-specific infrastructure.
+2. **Entry point configuration**  
+   - **Voice**: phone numbers and SIP trunks are associated with agents via `EntityPhoneNumber` records and telephony configuration.  
+   - **Chat**: widgets or embedded chat components are configured to target a specific agent.  
+   - **Email**: inbound addresses or routing rules forward messages into the platform for a given agent.  
+   - **WhatsApp and messaging**: messaging providers are configured to route sessions to agents.
+3. **Interaction creation**  
+   - When a user contacts a channel, the controller and router:
+     - Resolve which agent should handle the interaction.  
+     - Create a `Communication` record with the appropriate `Type`, `Direction`, and participant identifiers.
+4. **Shared agent logic**  
+   - Regardless of channel, the agent uses the same instructions, skills, tools, and tagging; only the input/output format and channel-specific behavior differ.
+
+This design lets you build once and reuse the same agent behavior across multiple channels.
 
 ## Components
-- Voice
-- Chat
-- Email
-- WhatsApp and other messaging
+
+- **CommunicationType**  
+  - Enumerated values (`voice`, `chat`, `email`) that describe how the interaction is delivered and rendered.
+
+- **Voice (telephony)**  
+  - SIP trunks and phone numbers mapped to agents.  
+  - Agent voice configuration (TTS provider, speed, style, denoiser model).  
+  - Idle and timeout behavior configured on the agent.
+
+- **Chat (widgets & embed)**  
+  - Web chat widgets and embedded components that start chat interactions with specific agents.  
+  - Channel-specific settings (for example branding, initial messages).
+
+- **Email**  
+  - Inbound email addresses or routing rules that forward messages into the platform.  
+  - Mappings from email metadata to tenants and agents.
+
+- **WhatsApp and other messaging**  
+  - Messaging integrations that create chat interactions tagged with appropriate metadata.  
+  - Configuration in provider dashboards plus Wonderful routing.
 
 ## Usage
 
-Outline how to enable channels for a given agent.
+1. **Decide which channels an agent should support**  
+   - Start with the channel where your users are today (for example telephony for support, chat for website leads) and add others over time.
+2. **Attach voice channels**  
+   - Assign phone numbers to agents, configure SIP trunks, and validate call flows end-to-end.  
+   - Confirm timeouts, end-of-turn, and PII behavior meet your requirements.
+3. **Configure chat and embed**  
+   - Generate and embed chat widgets on your site or application, ensuring they point to the correct agent.  
+   - Customize initial messages and branding as needed.
+4. **Set up email and messaging**  
+   - Connect email inboxes or routing rules to agents for asynchronous interactions.  
+   - Configure WhatsApp or other messaging providers to route conversations to the right agent.
+5. **Test cross-channel behavior**  
+   - Verify that the same use cases behave consistently across channels, adjusting instructions and skills where channel-specific differences matter.
 
-## Examples
+## FAQ's
 
-Add example channel setups here.
+<AccordionGroup>
+  <Accordion title="Do I need a separate agent per channel?">
+    Not necessarily. A single agent can handle multiple channels when behavior and governance requirements are aligned; use separate agents when use cases, tone, or policies differ.
+  </Accordion>
 
-## Best Practices
+  <Accordion title="How do I move an existing agent to a new channel?">
+    Attach the new entry point (phone number, widget, inbox, messaging integration) to the agent, then test interactions in that channel before rolling out broadly.
+  </Accordion>
 
-Summarize guidance for multi-channel deployments.
+  <Accordion title="Can I restrict certain tools or skills to specific channels?">
+    Yes. Use tool and skill configuration (including channel availability where supported) to limit what can run on voice vs chat vs email.
+  </Accordion>
+</AccordionGroup>
 
 ## Related
 
-- /core-concepts/channels
-- /build-agents/overview
-
-
+- [Build overview](/build-agents/overview)
+- [What Channels Are](/understanding-the-platform/channels/voice)
+- [What Interactions Are](/understanding-the-platform/interactions/what-interactions-are)
+- [Channel configuration (Chat)](/understanding-the-platform/channels/chat)
+- [Channel configuration (Telephony)](/understanding-the-platform/channels/voice)

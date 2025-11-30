@@ -17,84 +17,32 @@
             "group": "Introduction to Wonderful",
             "pages": [
               "introduction-to-wonderful/what-is-wonderful",
-              "introduction-to-wonderful/why-wonderful",
               "introduction-to-wonderful/core-concepts-overview",
-              "introduction-to-wonderful/glossary",
               {
                 "group": "Understanding the Platform",
                 "pages": [
                   {
                     "group": "Agents",
                     "pages": [
-                      "understanding-the-platform/agents/what-agents-are",
-                      "understanding-the-platform/agents/agent-components",
-                      "understanding-the-platform/agents/agent-settings",
-                      "understanding-the-platform/agents/versioning-publishing"
-                    ]
-                  },
-                  {
-                    "group": "Interactions",
-                    "pages": [
-                      "understanding-the-platform/interactions/what-interactions-are",
-                      "understanding-the-platform/interactions/events-tags-metrics",
-                      "understanding-the-platform/interactions/interaction-lifecycle"
+                      "understanding-the-platform/agents/what-agents-are"
                     ]
                   },
                   {
                     "group": "Skills",
                     "pages": [
-                      "understanding-the-platform/skills/what-skills-are",
-                      "understanding-the-platform/skills/dynamic-loading",
-                      "understanding-the-platform/skills/base-skills",
-                      "understanding-the-platform/skills/skill-prompts-tools"
+                      "understanding-the-platform/skills/what-skills-are"
                     ]
                   },
                   {
                     "group": "Tools",
                     "pages": [
-                      "understanding-the-platform/tools/tool-types",
-                      "understanding-the-platform/tools/config-auth",
-                      "understanding-the-platform/tools/low-code-tools",
-                      "understanding-the-platform/tools/import-export"
-                    ]
-                  },
-                  {
-                    "group": "Tags",
-                    "pages": [
-                      "understanding-the-platform/tags/llm-tags",
-                      "understanding-the-platform/tags/deterministic-tags",
-                      "understanding-the-platform/tags/tag-libraries"
-                    ]
-                  },
-                  {
-                    "group": "Channels",
-                    "pages": [
-                      "understanding-the-platform/channels/voice",
-                      "understanding-the-platform/channels/chat",
-                      "understanding-the-platform/channels/email",
-                      "understanding-the-platform/channels/whatsapp",
-                      "understanding-the-platform/channels/embed",
-                      "understanding-the-platform/channels/channel-specific-setup"
-                    ]
-                  },
-                  {
+                      "understanding-the-platform/tools/tool-types"
+            ]
+          },
+          {
                     "group": "Evals",
                     "pages": [
-                      "understanding-the-platform/evals/what-evals-are",
-                      "understanding-the-platform/evals/test-scenarios",
-                      "understanding-the-platform/evals/batch-evals",
-                      "understanding-the-platform/evals/human-feedback-improvements"
-                    ]
-                  },
-                  {
-                    "group": "Alerts",
-                    "pages": [
-                      "understanding-the-platform/alerts/what-alerts-are",
-                      "understanding-the-platform/alerts/alert-metrics",
-                      "understanding-the-platform/alerts/alert-conditions",
-                      "understanding-the-platform/alerts/alert-actions",
-                      "understanding-the-platform/alerts/alert-incidents",
-                      "understanding-the-platform/alerts/alert-schedules"
+                      "understanding-the-platform/evals/what-evals-are"
                     ]
                   }
                 ]
@@ -104,12 +52,27 @@
           {
             "group": "Build",
             "pages": [
-              "build-agents/overview",
               "build-agents/agent-types",
               "build-agents/agent-instructions",
               "build-agents/models",
               "build-agents/skills",
               "build-agents/channels",
+              {
+                "group": "Agents",
+                "pages": [
+                  "understanding-the-platform/agents/agent-components",
+                  "understanding-the-platform/agents/agent-settings",
+                  "understanding-the-platform/agents/versioning-publishing"
+                ]
+              },
+              {
+                "group": "Skills",
+                "pages": [
+                  "understanding-the-platform/skills/dynamic-loading",
+                  "understanding-the-platform/skills/base-skills",
+                  "understanding-the-platform/skills/skill-prompts-tools"
+                ]
+              },
               {
                 "group": "Voice & language",
                 "pages": [
@@ -127,7 +90,10 @@
                   "build-agents/tools/rag",
                   "build-agents/tools/low-code",
                   "build-agents/tools/mcp-tools",
-                  "build-agents/tools/integrations"
+                  "build-agents/tools/integrations",
+                  "understanding-the-platform/tools/config-auth",
+                  "understanding-the-platform/tools/low-code-tools",
+                  "understanding-the-platform/tools/import-export"
                 ]
               },
               {
@@ -149,9 +115,18 @@
             "pages": [
               "deploy/overview",
               {
+                "group": "Interactions",
+                "pages": [
+                  "understanding-the-platform/interactions/what-interactions-are",
+                  "understanding-the-platform/interactions/events-tags-metrics",
+                  "understanding-the-platform/interactions/interaction-lifecycle"
+                ]
+              },
+              {
                 "group": "Chat",
                 "pages": [
-                  "deploy/chat/widget"
+                  "deploy/chat/widget",
+                  "understanding-the-platform/channels/chat"
                 ]
               },
               {
@@ -159,7 +134,17 @@
                 "pages": [
                   "deploy/telephony/sip-trunk",
                   "deploy/telephony/telephony",
-                  "deploy/telephony/ccaas-integrations"
+                  "deploy/telephony/ccaas-integrations",
+                  "understanding-the-platform/channels/voice"
+                ]
+              },
+              {
+                "group": "Other channels",
+                "pages": [
+                  "understanding-the-platform/channels/email",
+                  "understanding-the-platform/channels/whatsapp",
+                  "understanding-the-platform/channels/embed",
+                  "understanding-the-platform/channels/channel-specific-setup"
                 ]
               }
             ]
@@ -171,7 +156,34 @@
               "monitor/governance",
               "monitor/interactions",
               "monitor/dashboard",
-              "monitor/issues"
+              "monitor/issues",
+              {
+                "group": "Evals",
+                "pages": [
+                  "understanding-the-platform/evals/test-scenarios",
+                  "understanding-the-platform/evals/batch-evals",
+                  "understanding-the-platform/evals/human-feedback-improvements"
+                ]
+              },
+              {
+                "group": "Tags",
+                "pages": [
+                  "understanding-the-platform/tags/llm-tags",
+                  "understanding-the-platform/tags/deterministic-tags",
+                  "understanding-the-platform/tags/tag-libraries"
+                ]
+              },
+              {
+                "group": "Alerts (concepts)",
+                "pages": [
+                  "understanding-the-platform/alerts/what-alerts-are",
+                  "understanding-the-platform/alerts/alert-metrics",
+                  "understanding-the-platform/alerts/alert-conditions",
+                  "understanding-the-platform/alerts/alert-actions",
+                  "understanding-the-platform/alerts/alert-incidents",
+                  "understanding-the-platform/alerts/alert-schedules"
+                ]
+              }
             ]
           },
           {

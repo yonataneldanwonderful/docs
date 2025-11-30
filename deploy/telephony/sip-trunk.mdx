@@ -1,38 +1,69 @@
 ---
 title: SIP trunk
+description: "Connecting your telephony carrier to Wonderful via SIP"
 ---
 
 # SIP trunk
 
-Placeholder for documenting SIP trunk configuration for Wonderful.
+SIP trunks connect your telephony carrier or on-premise PBX to Wonderful so calls can be delivered to agents over the voice channel.
 
 ## Overview
 
-Summarize how SIP connectivity is established between carriers and Wonderful.
+With SIP trunking, you can:
+
+- Use existing phone numbers and carriers while routing calls to Wonderful agents.  
+- Keep control of telephony contracts and infrastructure.  
+- Forward calls back to your CCaaS or PBX when needed (for example high-traffic forwarding or escalations).
+
+This page focuses on the network-level setup; see **Telephony** for end-to-end call flows.
 
 ## How It Works
 
-Explain call routing, registration, and failover at a high level.
+1. **SIP trunk setup**  
+   - Your carrier is configured to send inbound calls (SIP INVITEs) to your Wonderful telephony endpoints.  
+   - SIP metadata (for example `sip.call_id`, `sip.from`, `sip.to`) is preserved and parsed into `CallDetails`.
+2. **Call parsing and routing**  
+   - Wonderful’s telephony components parse incoming SIP URIs, extract phone numbers, and map calls to agents and tenants using configuration and metadata.
+3. **Media handling**  
+   - Once routed, media is bridged to the voice orchestrator, which handles ASR/TTS and conversation logic.
+4. **Forwarding and failover**  
+   - When high-traffic or failover rules are triggered, calls can be forwarded back through the carrier or to alternate destinations, using metadata and call forwarding configuration.
 
 ## Components
-- Carriers
-- SIP endpoints
-- Routing rules
+
+- **SIP endpoints**  
+  - Public endpoints exposed by Wonderful for receiving SIP traffic from carriers.
+
+- **CallDetails & SIP metadata**  
+  - Structures that parse and store SIP-related information (for example original From/To, `sip.source_ip`, and routing metadata).
+
+- **Call orchestrator**  
+  - The orchestrator that manages call lifecycle once the SIP connection is established.
 
 ## Usage
 
-Outline how to set up SIP for a new deployment.
+1. **Coordinate with your carrier**  
+   - Obtain and configure SIP trunk details (IP addresses, ports, codecs, TLS settings) to point to Wonderful’s telephony endpoints.
+2. **Configure routing rules**  
+   - Map dialed numbers or SIP URIs to the appropriate tenant and agent using metadata and configuration.
+3. **Test inbound calls**  
+   - Place test calls from your carrier through the SIP trunk and verify that calls reach the correct agent and orchestrator.
+4. **Configure failover**  
+   - Ensure the carrier has fallback routes if Wonderful is unreachable, and configure Wonderful’s forwarding to send calls back to your CCaaS or PBX when needed.
 
-## Examples
+## FAQ's
 
-Add configuration examples for common carrier setups.
+- **Do I have to use SIP trunks, or can I use hosted telephony?**  
+  Wonderful supports both; SIP trunks are used when you want to integrate with your own carrier or PBX.
 
-## Best Practices
+- **How are SIP headers used?**  
+  SIP-related metadata is parsed and stored so that routing and forwarding logic can reference headers such as `sip.call_id` and custom headers.
 
-Summarize guidance for resilience, quality, and security.
+- **How do I secure SIP traffic?**  
+  Use TLS, IP allowlists, and carrier-level security best practices; consult deployment-specific guidance for network configuration.
 
 ## Related
 
-- /deploy/overview
-
-
+- [Telephony](/deploy/telephony/telephony)
+- [Manage overview](/deploy/overview)
+- [Voice Channel](/understanding-the-platform/channels/voice)

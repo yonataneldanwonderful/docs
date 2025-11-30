@@ -1,39 +1,93 @@
 ---
 title: Low code
+description: "Using low-code flows to orchestrate behavior and integrations"
 ---
 
 # Low code
 
-Placeholder for documenting low-code tooling for flows and orchestration.
+Low-code flows let you orchestrate actions and integrations without writing Go or TypeScript. In Wonderful, low-code behavior is implemented as flows executed by the flow service and typically exposed to agents as programmable tools.
 
 ## Overview
 
-Summarize how low-code surfaces let users build behavior without writing code.
+Use low-code when you need to:
+
+- Combine multiple tool calls or API calls into a repeatable workflow.  
+- Implement conditional logic and branching for complex journeys.  
+- Give non-engineers a way to adjust behavior without deploying new code.
+
+Flows are versioned and executed by a dedicated flow service, while agents interact with them via tools.
 
 ## How It Works
 
-Explain how low-code definitions map onto runtime flows and engine components.
+1. **Flow definitions**  
+   - Flows define nodes (inputs, outputs, logic, integration steps) and connections between them.  
+   - Default node types (for example input/output) are provided under the `flow` module.
+2. **Flow service**  
+   - The flow service executes flows, manages state, and coordinates inputs/outputs.  
+   - Handler layers manage key-value storage and secrets for flows.
+3. **Tools as flow entry points**  
+   - Tools can reference flows (via identifiers such as `FlowId`) and act as entry points into low-code workflows.  
+   - When the LLM calls a programmable or low-code tool, the corresponding flow is executed.
+4. **Runtime orchestration**  
+   - Flows can call external systems, combine responses, and produce structured outputs back to the agent.
+
+NOTE: Exact flow schema and builder UI details can vary by deployment. Clarification required for the full authoring and publishing lifecycle.
 
 ## Components
-- Flow builder
-- Conditions and branching
-- Integrations
+
+- **Flow definitions**  
+  - Describe the nodes, connections, and configuration for low-code workflows.
+
+- **Flow service and handlers**  
+  - Execute flows and provide access to storage and secrets.
+
+- **Programmable/low-code tools**  
+  - Expose flows to agents as tools that the LLM can call during interactions.
 
 ## Usage
 
-Outline how operators should think about building low-code flows.
+1. **Identify candidate workflows**  
+   - Look for multi-step processes that would otherwise require multiple tool calls, branching, or retries.
+2. **Design the flow**  
+   - Break the workflow into nodes: inputs, decisions, API calls, data transformations, and outputs.
+3. **Attach the flow to a tool**  
+   - Configure a programmable or low-code tool that triggers the flow and returns structured output.
+4. **Attach the tool to skills and agents**  
+   - Place the tool in appropriate skills and attach those skills to the relevant agents.
+5. **Test and observe**  
+   - Use test calls and interactions to verify flow behavior.  
+   - Monitor tool logs and interaction data to refine flows.
 
-## Examples
+## FAQ's
 
-Add example flows for common use cases.
+<AccordionGroup>
+  <Accordion title="When should I use low-code vs a regular API tool?">
+    Use low-code for multi-step or branching workflows; use simple API tools for single, straightforward calls.
+  </Accordion>
 
-## Best Practices
+  <Accordion title="Can flows call other tools?">
+    Yes. Flows can orchestrate multiple tools and APIs as part of the same workflow.
+  </Accordion>
 
-Summarize guidance for maintainable, observable low-code setups.
+  <Accordion title="How do I debug flows?">
+    Use logs, interaction traces, and flow execution state (where available) to inspect each step and output.
+  </Accordion>
+</AccordionGroup>
 
 ## Related
 
-- /build-agents/tools/agent-tools-and-skill-tools
-- /build-agents/overview
+<CardGroup cols={2}>
 
+<Card title="Agent tools and skill tools" href="/build-agents/tools/agent-tools-and-skill-tools">
+  Learn how tools are attached at the skill vs agent level.
+</Card>
 
+<Card title="RAG" href="/build-agents/tools/rag">
+  See how retrieval-augmented tools plug into skills.
+</Card>
+
+<Card title="Build overview" href="/build-agents/overview">
+  Understand where low-code flows fit in the overall Build journey.
+</Card>
+
+</CardGroup>

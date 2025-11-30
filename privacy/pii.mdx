@@ -1,38 +1,110 @@
 ---
 title: PII
+description: "How Wonderful detects, redacts, and protects personally identifiable information"
 ---
 
 # PII
 
-Placeholder for documenting how Wonderful handles personally identifiable information.
+PII (personally identifiable information) handling in Wonderful combines agent-level configuration, platform-wide logging rules, and product settings for masking transcripts, recordings, and exports.
 
 ## Overview
 
-Summarize Wonderful’s approach to PII protection and minimization.
+Wonderful’s PII approach is based on:
+
+- **Configurable redaction** at the agent and tenant level (for example credit cards, IDs, account numbers).  
+- **Strict logging rules** that prevent sensitive data from leaking into logs.  
+- **Scoped access** to privacy settings and data.
+
+Use this page to understand how PII masking works conceptually and how to configure it safely.
+
+<Info>
+  PII handling is **defense-in-depth**: agent-level PII configuration, tenant-level data settings, and structured logging rules all work together to protect sensitive data.
+</Info>
 
 ## How It Works
 
-Explain tagging, redaction, access control, and logging at a high level.
+1. **Agent PII configuration**  
+   - Each agent has an `AgentPIIConfiguration` that includes:
+     - `Enabled`: whether PII redaction is enabled.  
+     - `RedactAccountNumbers` (with `AccountNumbersConfig`), `RedactPersonalIds`, `RedactCreditCards`.  
+     - `ApplyToRecordings`: whether masking applies to audio recordings as well as transcripts.
+   - This configuration is used to build prompt placeholders that tell the PII redaction logic exactly which types to detect and how to handle them.
+2. **Prompt-driven redaction**  
+   - `BuildPromptPlaceholders` constructs detailed instructions and examples that control what the PII redaction logic masks and what it leaves unchanged.  
+   - If all redaction flags are off, the prompt explicitly instructs the system to return text unchanged.
+3. **Data settings for PII**  
+   - Product-level data settings allow you to configure:
+     - Which PII types to redact (emails, phone numbers, credit cards, SSN, addresses, custom patterns).  
+     - Where to apply redaction: transcripts, recordings, exports.
+4. **Structured logging rules**  
+   - Logging rules require that any PII-like fields (`UserSpeechText`, `AgentSpeechText`, `FunctionCallArgs`, `FunctionCallOutput`) are only logged at debug level and never exposed in production logs.
+5. **Permissions and access control**  
+   - Only users with PII-related permissions can view or change PII settings; audit logging records configuration changes where applicable.
 
 ## Components
-- PII detection
-- Redaction
-- Access controls
+
+- **AgentPIIConfiguration**  
+  - Agent-level model controlling which PII classes are masked and whether recordings are included.
+
+- **AccountNumberConfig**  
+  - Nested configuration for how account numbers should be interpreted (numeric only vs alphanumeric).
+
+- **Data settings (UI)**  
+  - Tenant-level forms for retention and PII redaction (what to redact and where to apply it).
+
+- **Logging and audit rules**  
+  - Structured logging and audit logging standards that prevent PII exposure and track configuration changes.
 
 ## Usage
 
-Outline how to configure PII handling for a deployment.
+<Steps>
+<Step title="Define your PII policy">
+  With legal and security teams, decide which PII types must be masked (for example credit cards, national IDs, account numbers) and where masking should apply (transcripts, recordings, exports).
+</Step>
 
-## Examples
+<Step title="Configure agent PII settings">
+  For each agent, configure `AgentPIIConfiguration` (via the UI) to enable masking for the relevant fields and optionally apply masking to recordings.
+</Step>
 
-Add examples of PII policies for different regions and industries.
+<Step title="Configure tenant PII redaction">
+  In data settings, enable PII redaction, choose which entities to redact (emails, phone numbers, credit cards, IDs, addresses, custom patterns), and set where redaction applies.
+</Step>
 
-## Best Practices
+<Step title="Verify logging behavior">
+  Ensure logs follow the PII logging rules (PII fields only at debug level with standardized field names) and that no sensitive values appear in production logs.
+</Step>
 
-Summarize guidance for privacy by design.
+<Step title="Test end-to-end">
+  Run calls and chats that include sample PII and confirm that transcripts, recordings, exports, and logs behave according to your policy.
+</Step>
+</Steps>
+
+## FAQ's
+
+<AccordionGroup>
+  <Accordion title="Does PII redaction apply to both transcripts and recordings?">
+    Yes, when configured. Agent-level and tenant-level settings control whether PII masking applies to transcripts only or to recordings and exports as well.
+  </Accordion>
+
+  <Accordion title="What happens if I disable all PII redaction flags?">
+    When all redaction flags are off, the PII prompt explicitly instructs the system to return input text unchanged and not mask any PII types.
+  </Accordion>
+
+  <Accordion title="How do logging rules protect PII?">
+    Logging rules restrict PII-like fields to debug-level logs and standardized field names, preventing sensitive data from appearing in normal production logs.
+  </Accordion>
+</AccordionGroup>
 
 ## Related
 
-- /privacy/retention
+<CardGroup cols={2}>
 
+<Card title="Retention" href="/privacy/retention">
+  Configure how long different data classes are retained before deletion.
+</Card>
 
+<Card title="Agent Settings" href="/understanding-the-platform/agents/agent-settings">
+  See how PII configuration interacts with other agent-level settings.
+</Card>
+
+</CardGroup>

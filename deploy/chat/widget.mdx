@@ -1,38 +1,95 @@
 ---
 title: Chat widget
+description: "Embedding the Wonderful chat widget on your site"
 ---
 
 # Chat widget
 
-Placeholder for documenting the Wonderful chat widget deployment.
+The Wonderful chat widget is an embeddable web component that connects users on your site to a specific agent over the chat channel.
 
 ## Overview
 
-Summarize how the chat widget embeds on web properties.
+The widget is delivered as a JavaScript snippet that:
+
+- Loads `wonderful-chat.js` from your Wonderful environment.  
+- Instantiates `window.WonderfulChat` with your `agentId` and configuration.  
+- Opens a WebSocket connection to the agent’s chat endpoint.
+
+Use this page when you want to embed a production-ready chat experience into your website or web app.
+
+<Info>
+  The chat widget connects directly to a **single agent** via `agentId`. Create separate snippets or configurations if you need different agents on different properties.
+</Info>
 
 ## How It Works
 
-Explain how the widget connects to agents, sessions, and context.
+1. **Embed script**  
+   - A script tag loads `wonderful-chat.js` from your Wonderful deployment (`/embed/wonderful-chat.js`).  
+   - Once loaded, it creates a new `WonderfulChat` instance with the configuration you provide.
+2. **Configuration object**  
+   - Core fields include:
+     - `environment`: API host (for example `api.wonderful.ai`).  
+     - `agentId`: the ID of the agent to connect to.  
+     - `agentName`, `buttonText`, `placeholderText`, `isRTL`.  
+     - Theme colors and appearance options.
+3. **Connection lifecycle**  
+   - The widget opens a WebSocket to `embedded/agents/{agentId}/chat`.  
+   - It sends and receives messages, updates UI state, and handles retries when the connection drops.
+4. **UI behavior**  
+   - The widget renders a floating button and chat window, handles open/close animations, and displays messages for the user and agent.
 
 ## Components
-- Embed script
-- Configuration
-- Theming
+
+- **wonderful-chat.js**  
+  - The front-end implementation of the widget, including defaults and UI behavior.
+
+- **Embed configuration**  
+  - Options such as environment, agent metadata, and theme colors.
+
+- **WebSocket connection**  
+  - Real-time connection to the agent chat endpoint under `/embedded/agents/{id}/chat`.
 
 ## Usage
 
-Outline how to set up and test the widget on a new site.
+<Steps>
+<Step title="Copy the embed snippet">
+  From the UI (for example the embed code generator), copy the JavaScript snippet that loads `wonderful-chat.js` and initializes `WonderfulChat` with your agent ID and theme.
+</Step>
 
-## Examples
+<Step title="Paste into your site">
+  Add the snippet near the end of your HTML `<body>` on the pages where you want chat available.
+</Step>
 
-Add embed code samples and configuration examples here.
+<Step title="Customize appearance">
+  Adjust colors, text, and RTL/LTR settings in the configuration to match your brand.
+</Step>
 
-## Best Practices
+<Step title="Test the widget">
+  Load your site, open the widget, and verify that conversations are created and linked to the correct agent.
+</Step>
+</Steps>
 
-Summarize guidance for placement, performance, and UX.
+## FAQ's
+
+- **Which agent does the widget connect to?**  
+  The widget always connects to the agent whose `agentId` you pass into `WonderfulChat`.
+
+- **Can I run multiple widgets on one site?**  
+  Yes, by instantiating multiple `WonderfulChat` instances with different agent IDs or configurations (be mindful of UX).
+
+- **How do I change the environment for staging vs production?**  
+  Update the `environment` field in the configuration and the script URL to point to the appropriate Wonderful deployment.
 
 ## Related
 
-- /deploy/overview
+<CardGroup cols={2}>
 
+<Card title="Manage overview" href="/deploy/overview">
+  See how the chat widget fits into the broader Manage surface.
+</Card>
 
+<Card title="Chat Channel" href="/understanding-the-platform/channels/chat">
+  Understand chat channel behavior and configuration in more depth.
+</Card>
+
+</CardGroup>

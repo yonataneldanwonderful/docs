@@ -1,39 +1,76 @@
 ---
 title: Voice style
+description: "Controlling speaking style, tone, and prosody for agents"
 ---
 
 # Voice style
 
-Placeholder for documenting style, tone, and prosody controls.
+Voice style controls how an agent sounds beyond just voice identity: tone, energy, formality, and prosody. Different providers expose style in different ways, but Wonderful models styles at both the voice-catalog and provider configuration level.
 
 ## Overview
 
-Summarize what “style” means for voice interactions.
+Styles help you:
+
+- Differentiate agents (for example friendly support vs. formal collections).  
+- Adapt tone to channel or context.  
+- Experiment with different delivery without changing the underlying voice.
+
+In the data model, styles appear as:
+
+- `VoiceStyle` entries in the `Voice` catalog.  
+- Provider-specific style fields (for example style parameters in ElevenLabs or DeepDub directive config).
 
 ## How It Works
 
-Explain how style presets or parameters are applied to TTS output.
+1. **Voice catalog styles**  
+   - Each `Voice` has a `Styles` list of `VoiceStyle` entries (`Id`, `Name`) representing named style presets available for that voice.
+2. **Provider-specific style controls**  
+   - DeepDub: `VoiceStyle` in `DeepDubVoiceConfiguration` and potential directive configurations.  
+   - ElevenLabs: style-related parameters (for example `Style` fields) influence how the voice is rendered.  
+   - Other providers may expose style as named presets or numeric sliders.
+3. **Agent configuration**  
+   - When configuring an agent, you pick a provider, a voice, and optionally a style/preset or style parameters.  
+   - These settings are applied whenever speech is synthesized for that agent.
+4. **Runtime behavior**  
+   - During calls, the selected style affects the overall delivery but usually stays constant for the interaction unless changed explicitly.
 
 ## Components
-- Style presets
-- Per-utterance style hints
-- Channel-specific styles
+
+- **VoiceStyle model**  
+  - `Id`, `Name`: identify a specific style preset associated with a voice.
+
+- **Provider style configuration**  
+  - Provider-specific fields in voice configurations that adjust style, tone, or prosody.
+
+- **AgentVoiceConfiguration**  
+  - The place where you select style-relevant settings per agent.
 
 ## Usage
 
-Outline how to configure styles per agent or per scenario.
+1. **Choose base voices first**  
+   - Select voices that match your brand, language, and persona; then experiment with styles on top of those choices.
+2. **Pick styles for key scenarios**  
+   - For support, choose friendly and calm styles.  
+   - For collections or compliance calls, choose clearer, more formal styles.  
+   - For sales, consider more energetic and engaging styles.
+3. **Test styles with real scripts**  
+   - Use representative phrases (greetings, explanations, bad-news delivery) to evaluate how styles feel in practice.
+4. **Roll out gradually**  
+   - Try styles with a subset of traffic or in non-critical flows before applying them broadly.
 
-## Examples
+## FAQ's
 
-Add examples for friendly vs. formal vs. transactional styles.
+- **Can I change style without changing the voice?**  
+  Yes. Styles are layered on top of a base voice, so you can adjust tone while keeping the same voice identity where supported by the provider.
 
-## Best Practices
+- **Can style change mid-call?**  
+  This depends on provider capabilities and configuration; most setups assume a consistent style per interaction for simplicity.
 
-Summarize guidance for style consistency and experimentation.
+- **How do I ensure style consistency across agents?**  
+  Standardize on a small set of styles per brand or region and reuse them across agents where possible.
 
 ## Related
 
-- /build-agents/voice-and-language/voices
-- /build-agents/overview
-
-
+- [Voices](/build-agents/voice-and-language/voices)
+- [Speed control](/build-agents/voice-and-language/speed-control)
+- [Build overview](/build-agents/overview)

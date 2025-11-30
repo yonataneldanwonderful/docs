@@ -1,39 +1,78 @@
 ---
 title: Agent tools and skill tools
+description: "How to decide where tools live and how they are exposed to agents"
 ---
 
 # Agent tools and skill tools
 
-Placeholder for documenting how agent-level tools and skill-level tools interact.
+Tools give agents deterministic capabilities: they call APIs, query RAGs, run low-code flows, and perform programmable actions. This page explains how to think about tools attached at the skill level versus tools that are effectively “agent tools”.
 
 ## Overview
 
-Summarize the separation of concerns between tools attached to agents vs. tools attached to skills.
+In the data model, every tool belongs to a **skill** (`SkillId` on `Tool`). There is no separate `AgentTool` type; instead, whether a tool behaves like an “agent tool” or a “skill tool” depends on:
+
+- How skills are attached to agents.  
+- Whether the agent runs in always-loaded or multi-skill mode.  
+- Which skills are considered “base” or always-on.
+
+This design keeps ownership simple (skills own tools) while still allowing you to express both global capabilities and domain-specific ones.
 
 ## How It Works
 
-Explain invocation order, routing, and conflict resolution between tools.
+1. **Tool ownership**  
+   - Each `Tool` record embeds a `Func` definition plus configuration, and is associated with exactly one `Skill` via `SkillId`.  
+   - The skill decides which tools are available when it is active.
+2. **Agent–skill mapping**  
+   - Agents attach skills via a many-to-many relationship.  
+   - When a skill is attached and active, its tools become available for that agent.
+3. **Agent tools (behavior)**  
+   - Tools behave like “agent tools” when they live in skills that are always attached and effectively always active for the agent (for example base skills or core capabilities shared across all interactions).
+4. **Skill tools (behavior)**  
+   - Tools behave like “skill tools” when they belong to skills that are only active in certain contexts (for example specific workflows or domains), especially in multi-skill mode.
+5. **Shared tool definitions**  
+   - You can reuse tools by placing them in shared skills and attaching those skills to multiple agents, instead of duplicating tool definitions per agent.
+
+From the LLM’s perspective, tools are described uniformly; scoping is enforced by which skills are active for a given interaction.
 
 ## Components
-- Agent tools
-- Skill tools
-- Shared tool definitions
+
+- **Tool model**  
+  - `Name`, `Type`, `Trigger`, `AvailableIn`, `Parameters`, and `Config` define what the tool does and how it runs.  
+  - `SkillId` ties the tool to a specific skill.
+
+- **Skill with tools**  
+  - A skill’s `Tools` collection is the set of tools that become available when the skill is active.
+
+- **Agent with base and domain skills**  
+  - By attaching both base skills (core capabilities) and domain skills (specific workflows), you control which tools are effectively global versus contextual.
 
 ## Usage
 
-Outline patterns for assigning tools at the right level.
+1. **Use “agent tools” for core capabilities**  
+   - Place core integrations (for example CRM lookup, ticket creation, logging hooks) in skills that are always attached to the agent.  
+   - Treat those skills as base skills so their tools are available across the entire interaction.
+2. **Use “skill tools” for domain-specific actions**  
+   - Place domain- or flow-specific tools (for example “cancel card”, “update address”, “check policy coverage”) in skills that are only active in those domains.  
+   - In multi-skill mode, this limits tool availability to the relevant parts of the interaction.
+3. **Avoid duplicating tools**  
+   - If multiple agents need the same tool, define it once in a shared skill and attach that skill to all relevant agents.
+4. **Test tool availability**  
+   - Use evals and interaction traces to confirm that tools are only called where they make sense, and that base tools are available whenever they should be.
 
-## Examples
+## FAQ's
 
-Add example configurations for combined tool stacks.
+- **Is there a separate “agent tools” table or model?**  
+  No. All tools live under skills; “agent tools” are modeled by which skills you attach to the agent and how often those skills are active.
 
-## Best Practices
+- **How do I prevent tools from being used in the wrong context?**  
+  Use skill scoping and multi-skill mode so tools only appear when the corresponding skill is active, and configure channels in `AvailableIn` where appropriate.
 
-Summarize guidance for minimizing duplication and maximizing reuse.
+- **Can two skills use the same underlying API?**  
+  Yes. Either reuse a single tool in a shared skill, or create separate tools that wrap the same API with different parameters, descriptions, or constraints.
 
 ## Related
 
-- /core-concepts/tools
-- /build-agents/overview
-
-
+- [Build overview](/build-agents/overview)
+- [What Skills Are](/understanding-the-platform/skills/what-skills-are)
+- [Tool Types](/understanding-the-platform/tools/tool-types)
+- [RAG](/build-agents/tools/rag)

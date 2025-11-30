@@ -1,38 +1,92 @@
 ---
 title: "What is Wonderful?"
-description: "Introduction to Wonderful - A platform for building AI agents"
+description: "Introduction to Wonderful - the enterprise agent platform"
 ---
 
-## What is Wonderful?
+# What is Wonderful?
 
-Wonderful is a platform for building AI agents that run across channels (voice, chat, email), powered by dynamic skills, deterministic tools, and real-time system events.
+Wonderful is the enterprise agent platform for building production-ready AI agents that run consistently across voice, chat, email, and other channels. It gives teams a structured way to move from experiments to reliable, observable AI in production.
 
-Wonderful gives teams:
+## Overview
 
-- A unified agent model
-- A clean way to structure intelligence (agents → skills → tools)
-- Deterministic execution (events → rules → tags)
-- Strong evals and versioning
-- Enterprise-grade channel support
+Wonderful combines a powerful AI platform with best-in-class local deployment to deliver enterprise-grade AI agents to every market and every language. The platform centers around a unified agent model where agents orchestrate conversations, load skills, and call tools across channels.
 
-## One-Liner
+Instead of bespoke bots per channel, Wonderful keeps intelligence in one place—agents, skills, tools, tagging, and evals—so behavior stays consistent whether customers use telephony, web chat, email, or WhatsApp. Governance, monitoring, and privacy controls are built into the same runtime.
 
-Wonderful is the platform for building AI agents that work across voice, chat, email, and WhatsApp with dynamic skills and deterministic tools.
+## How It Works
 
-## Platform Positioning
+1. **Agents** define behavior: prompts, skills, tools, and channel configuration.
+2. **Interactions** start from a channel (voice, chat, email, WhatsApp, embed) and are handed into the Wonderful runtime.
+3. The runtime evaluates **events** (like messages, tool calls, timeouts) and uses **tags** (deterministic and LLM-based) to drive behavior.
+4. **Skills** are loaded either all at once or dynamically (multi-skill mode) so only relevant instructions and tools are active.
+5. **Tools** execute deterministic work (APIs, RAG queries, programmable logic) and return structured results to the agent.
+6. **Evals** and versions are attached to agents, so each change can be tested before publishing and monitored in production.
 
-Wonderful enables teams to build production-ready AI agents that:
-- Work consistently across all communication channels
-- Scale efficiently with dynamic skill loading
-- Execute reliably through deterministic tool execution
-- Track behavior accurately with event-driven tagging
-- Deploy safely with comprehensive versioning and evals
+All of this is implemented in the Wonderful codebase through Go services (controller, runner, processor) and shared models for agents, skills, tools, tags, and interactions.
 
-## Key Differentiators
+## Components
 
-- **Dynamic Skills**: Only load what you need → small context, high accuracy
-- **Deterministic Tools**: APIs define what the agent can do with guaranteed execution
-- **Multi-Channel by Design**: Voice, chat, email all share the same agent logic
-- **Event-Driven Architecture**: Real-time system events enable deterministic behavior
-- **Enterprise-Ready**: Built for scale, reliability, and governance
+- **Agents**: Top-level AI entities that own prompts, configuration, and attached skills and tools.
+- **Skills**: Focused, reusable capabilities (for example, “Cancel Credit Card” or “Create Support Ticket”) attached to agents.
+- **Tools**: Deterministic capabilities (APIs, RAG, programmable logic, mocks) that agents and skills can call.
+- **Channels**: Voice, chat, email, WhatsApp, and embed, all powered by the same agent configuration.
+- **Interactions**: Individual conversations that capture transcripts, tool calls, tags, and metrics for a single user session.
+- **Tags**: Deterministic and LLM-driven labels applied to interactions and turns for analytics, routing, and governance.
+- **Evals**: Structured tests and batches that validate behavior for specific agents and versions.
+- **Tenants & Governance**: Multi-tenant isolation, privacy controls, automated issues, and guardrails baked into the runtime.
 
+## Usage
+
+1. **Create an agent** with a clear purpose, display name, and description.
+2. **Attach skills** that encode the capabilities you need and wire them to tools.
+3. **Configure tools** (API, RAG, programmable, mock) with parameters, availability per channel, and behavior.
+4. **Connect channels** (telephony, chat widget, email, WhatsApp, embed) using the channel configuration guides.
+5. **Set up tags and events** so important behaviors are tracked deterministically.
+6. **Run evals** against draft versions, iterate, then publish to production.
+7. **Monitor interactions** and issues, then refine agents, skills, and tools over time.
+
+## FAQ's
+
+<AccordionGroup>
+  <Accordion title="How is Wonderful different from calling an LLM API directly?">
+    Wonderful provides a full runtime around LLMs: agents, skills, tools, tagging, evals, governance, and multi-channel delivery, so you can operate AI in production rather than just generate text.
+  </Accordion>
+
+  <Accordion title="Do I need to use all channels?">
+    No. You can start with a single channel (for example chat) and later enable voice, email, or WhatsApp using the same agents, skills, and tools.
+  </Accordion>
+
+  <Accordion title="Can I reuse agents and skills across tenants?">
+    Agents and skills are scoped per tenant in the codebase, but patterns, prompts, and tools can be reused or templatized across tenants.
+  </Accordion>
+
+  <Accordion title="How does Wonderful handle privacy and PII?">
+    Agents support PII configuration, voice/text masking, and strict logging rules enforced in the services and logging rules files.
+  </Accordion>
+</AccordionGroup>
+
+## Related
+
+<CardGroup cols={2}>
+
+<Card title="Core Concepts Overview" href="/introduction-to-wonderful/core-concepts-overview">
+  See how agents, skills, tools, interactions, tags, and evals fit together.
+</Card>
+
+<Card title="What Agents Are" href="/understanding-the-platform/agents/what-agents-are">
+  Learn how agents are represented in the codebase and runtime.
+</Card>
+
+<Card title="What Skills Are" href="/understanding-the-platform/skills/what-skills-are">
+  Understand how reusable capabilities are modeled as skills.
+</Card>
+
+<Card title="Tool Types" href="/understanding-the-platform/tools/tool-types">
+  Explore how tools connect agents to external systems and knowledge.
+</Card>
+
+<Card title="What Evals Are" href="/understanding-the-platform/evals/what-evals-are">
+  Learn how evals exercise agents through the real orchestrator.
+</Card>
+
+</CardGroup>

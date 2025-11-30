@@ -3,126 +3,112 @@ title: "Interaction Lifecycle"
 description: "How interactions progress from start to finish"
 ---
 
-## Interaction Lifecycle
+# Interaction Lifecycle
 
-Interactions follow a lifecycle from initiation to completion, with various stages and transitions.
+Interactions follow a lifecycle from initiation to completion, backed by the `Communication` model and enhancement pipeline. Understanding this flow helps when you design timeouts, escalation rules, and monitoring.
 
-## Lifecycle Stages
+## Overview
+
+An interaction starts when a customer and agent first connect on a channel, continues through a series of turns, tools, and events, and ends when the task is resolved or the conversation is terminated. The lifecycle is encoded in `Communication` fields like `Status`, `StartTime`, `EndTime`, `Duration`, `TokensUsage`, `Sentiment`, `Summary`, `Rating`, `CallTags`, and `Metadata`.
+
+Services in the controller, runner, and processor coordinate to create, update, and enhance communications as the interaction moves through each stage.
+
+## How It Works
 
 ### 1. Initiation
 
 The interaction begins when:
-- **Inbound**: Customer contacts the agent (calls, chats, emails)
-- **Outbound**: Agent initiates contact with customer
+
+- **Inbound** — The customer contacts the agent (voice, chat, email, WhatsApp, embed).  
+- **Outbound** — The agent or system initiates contact with the customer.
 
 At initiation:
-- A `Communication` record is created (or retrieved if session exists)
-- The agent is loaded with its configuration
-- Skills are registered (in multi-skill mode) or loaded (in default mode)
-- Initial messages are sent based on channel configuration
-- The interaction status is set to `active`
-- Session tracking begins
+
+- A `Communication` is created with `Type`, `Direction`, `AgentId`, `Status`, `StartTime`, and channel-specific identifiers (for example `FromNumber`, `ToNumber`, `Sid`).  
+- The agent configuration (skills, tools, channel settings, prompts) is loaded.  
+- Skills are registered (multi-skill) or pre-loaded (default mode).  
+- Channel-specific initial messages are sent based on the agent and channel configuration.  
+- Session tracking and tokens usage accounting begin.
 
 ### 2. Active Conversation
 
-During the active conversation:
-- Agent and user exchange messages (stored as transcript entries)
-- Skills load dynamically as needed (in multi-skill mode) or are already available (default mode)
-- Tools execute to perform actions (with triggers like `on_user_transcription`, `on_agent_transcription`, etc.)
-- Events are generated and tracked (published to event bus)
-- Tags are applied based on context and rules (LLM tags and deterministic tags)
-- Transcripts are continuously updated
-- Token usage is tracked
-- Timeout checks are performed (idle detection, hang-up after silence)
+During the active phase:
 
-The agent makes decisions, calls tools, and loads skills to accomplish the user's goal.
+- Agent and user exchange messages; transcripts and transcriptions are recorded for each turn.  
+- Skills load dynamically as needed (multi-skill) or are available from the start (default mode).  
+- Tools execute to perform actions according to their triggers (for example `on_user_transcription`, `on_agent_transcription`, `on_tool_call`).  
+- Events are emitted and used to apply deterministic tags and call tags.  
+- Timeouts and idle checks run based on the agent’s timeout and idle configuration.  
+- Status remains `active` while the conversation is ongoing.
 
-**Special Events During Conversation:**
-- **Before First Message** — Tools with `on_before_first_message` trigger execute
-- **After First Message** — Tools with `on_after_first_message` trigger execute
-- **User Interruptions** — Tools with `on_user_interruption` trigger execute
-- **User Finished Hearing** — Tools with `on_user_finished_hearing` trigger execute
+Special lifecycle hooks:
+
+- **Before first message** — Tools with `on_before_first_message` run.  
+- **After first message** — Tools with `on_after_first_message` run.  
+- **User interruptions** — Tools with `on_user_interruption` run.  
+- **User finished hearing** — Tools with `on_user_finished_hearing` run.
 
 ### 3. Resolution
 
-The interaction reaches resolution when:
-- The user's request is fulfilled
-- The agent successfully completes the task
-- An escalation occurs (forwarded to human agent)
-- The user ends the conversation
-- A timeout or error occurs
-- Idle timeout is reached (user inactive for configured duration)
-- Hang-up after silence (user silent for configured duration)
-- Maximum duration timeout (interaction exceeds `timeout_after_duration_seconds`)
+Resolution is reached when:
 
-**Resolution Metadata:**
-- The `ended_by` field is set (customer, agent, or system)
-- If escalated, `forwarded_to` metadata is recorded
-- Final status is determined (completed, failed, escalated)
+- The user’s request is fulfilled and the agent completes the task.  
+- The interaction is escalated to a human (for example via transfer or forwarding).  
+- The user hangs up or closes the session.  
+- A timeout or error occurs (idle timeout, hang-up after silence, maximum duration).  
 
-### 4. Completion
+At this point:
 
-Upon completion:
-- **End-of-Interaction Tools** — Tools with `on_end` trigger execute
-- **Enhancement Process** — Interaction goes through enhancement:
-  - Transcript clarification (if enabled)
-  - LLM tag application (if tags are configured)
-  - Sentiment analysis (if enabled)
-  - Automated issue detection (if enabled)
-  - Call rating and call tag application
-- **Final Tags** — All tags (LLM and deterministic) are finalized
-- **Metrics Calculation** — Duration, token usage, and other metrics are calculated
-- **Summary Generation** — Brief and detailed summaries may be generated
-- **Recording Processing** — Audio recordings are processed and stored
-- **Analytics Update** — Dashboards and analytics are updated
-- **Follow-up Actions** — Any configured follow-up actions are triggered
+- The `EndedBy` metadata is set (customer, agent, or system).  
+- Forwarding/transfer metadata is recorded when applicable.  
+- The communication `Status` is moved toward a terminal state (for example `completed`, `failed`, `escalated`).  
+- `EndTime` and `Duration` are set.
 
-The interaction status is updated to `completed` or `failed`, and the `end_time` is recorded.
+### 4. Completion & Enhancement
 
-## State Transitions
+After the active part ends:
 
-Interactions can transition between states:
+- **End-of-interaction tools** — Tools with `on_end` triggers run.  
+- **Enhancement pipeline** runs asynchronously:  
+  - Transcript clarification or normalization (if enabled).  
+  - LLM tags applied based on the full conversation.  
+  - Sentiment analysis and rating computation.  
+  - Automated issue detection and call tag application.  
+  - Summary generation (brief and detailed).  
+  - Recording processing and storage (including masked audio and MP3 keys).  
+  - Metric calculation and dashboard updates.
 
-- **Active** → **Paused** (user temporarily inactive)
-- **Active** → **Escalated** (transferred to human)
-- **Active** → **Completed** (successful resolution)
-- **Active** → **Failed** (error or timeout)
-- **Paused** → **Active** (user returns)
-- **Escalated** → **Completed** (human resolves)
+The communication ends in a terminal state with tags, call tags, rating, and summaries finalized.
 
-## Lifecycle Events
+## Components
 
-Key events during the lifecycle:
+- **Communication model** — Holds lifecycle core fields (`Status`, `StartTime`, `EndTime`, `Duration`, `TokensUsage`, `Sentiment`, `Summary`, `CallTags`, `Rating`, `Metadata`).  
+- **Direction and participants** — `Direction`, `FromNumber`, `ToNumber`, and helpers like `GetCustomerNumber`/`GetAgentNumber`.  
+- **Enhancement pipeline** — Processes transcripts, sentiment, tags, summaries, ratings, and call tags.  
+- **Timeouts and time windows** — Governed by agent configuration and used to transition interactions out of `active` when idle or long-running.
 
-- **Interaction started** — Initial contact established, communication record created
-- **Skill loaded** — Dynamic skill activation (in multi-skill mode)
-- **Tool called** — Action execution (various trigger types)
-- **Tag applied** — Behavior annotation (LLM or deterministic)
-- **Escalation** — Transfer to human agent
-- **Resolution** — Task completion or failure
-- **Interaction ended** — Conversation closed
-- **Enhancement started** — Post-interaction processing begins
-- **Enhancement completed** — All post-processing finished
+## Usage
 
-## Post-Interaction Enhancement
+- **Design lifecycles** explicitly when building agents: decide how long interactions may run, when to escalate, and what happens on timeouts.  
+- **Instrument interactions** with tags and call tags to make lifecycle transitions visible in monitoring and dashboards.  
+- **Use enhancement outputs** (summaries, ratings, sentiment) to power QA workflows and issue detection.  
+- **Analyze states and transitions** (for example `active → escalated → completed`) to improve routing and agent behavior.
 
-After an interaction ends, it goes through an enhancement process:
+## FAQ's
 
-1. **Clarification** — Transcript may be clarified/corrected
-2. **Tagging** — LLM tags are applied based on conversation analysis
-3. **Sentiment** — Customer sentiment is analyzed
-4. **Automated Issues** — System detects potential issues automatically
-5. **Rating** — Call is rated and call tags are applied
-6. **Summary** — Summaries may be generated
+- **What happens if enhancement fails?**  
+  The interaction remains completed, but enhancement-derived fields (tags, summaries, sentiment, ratings) may be missing or partial; failures are logged and can be alerted on via metrics.
 
-This enhancement happens asynchronously and doesn't block the interaction completion.
+- **Are interactions always tied to a recording?**  
+  No. Voice interactions usually have recordings (with processed and masked variants), but chat and some email interactions will not.
 
-## Monitoring the Lifecycle
+- **Can an interaction be resumed after completion?**  
+  New interactions are typically created for follow-ups; existing communications remain immutable records for analytics and compliance.
 
-Track interactions through their lifecycle to:
-- Understand where interactions get stuck
-- Identify common failure points
-- Optimize agent behavior
-- Improve user experience
-- Measure success rates
+## Related
 
+- [What Interactions Are](/understanding-the-platform/interactions/what-interactions-are)
+- [Events, Tags, Metrics](/understanding-the-platform/interactions/events-tags-metrics)
+- [What Agents Are](/understanding-the-platform/agents/what-agents-are)
+- [LLM Tags](/understanding-the-platform/tags/llm-tags)
+- [Deterministic Tags](/understanding-the-platform/tags/deterministic-tags)

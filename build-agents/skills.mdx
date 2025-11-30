@@ -1,39 +1,93 @@
 ---
 title: Skills
+description: "How to attach and manage skills when building agents"
 ---
 
 # Skills
 
-Placeholder for documenting how skills attach to agents.
+Skills are modular capabilities that agents use to handle specific tasks or domains. This page focuses on how to attach, organize, and manage skills in the Build experience, complementing the conceptual view of skills.
 
 ## Overview
 
-Summarize what skills are and how they provide modular capabilities.
+In the data model, a `Skill` is a tenant-scoped entity with a name, display name, description, active flag, tools, tags, and a many-to-many relationship to agents.
+
+In Build, you use skills to:
+
+- Break a large problem into focused capabilities (for example “Authenticate user”, “Check balance”, “Update address”).  
+- Reuse capabilities across multiple agents.  
+- Limit which tools and tags are active at a given time (especially in multi-skill mode).
 
 ## How It Works
 
-Explain how skills are loaded, invoked, and combined at runtime.
+At runtime:
+
+1. **Skills are attached to agents**  
+   - Agents and skills are connected via a many-to-many mapping (`agents_skills`).
+2. **Skills expose tools and tags**  
+   - Each skill owns a list of tools and associated tags; when the skill is active, its tools and tags become available.
+3. **Multi-skill vs always-loaded**  
+   - In default mode, all attached skills are loaded at the start of an interaction.  
+   - In multi-skill mode (`IsMultiSkill` on the agent), only one skill is active at a time and the agent can switch between skills as needed.
+4. **Skill activity and status**  
+   - The `Active` flag controls whether a skill is available for agents to use.  
+   - Disabling a skill removes its tools and tags from the active set without deleting the skill.
+
+This behavior lets you design agents as compositions of skills while keeping each skill focused and testable.
 
 ## Components
-- Skill definitions
-- Triggers
-- Outputs
+
+- **Skill model**  
+  - `Name`, `DisplayName`, `Description`: identify the skill and explain what it does.  
+  - `Active`: whether the skill is currently enabled.  
+  - `Tools`: tools owned by the skill, defining deterministic actions and integrations.  
+  - `Tags`: tags associated with the skill for analytics, routing, and QA.  
+  - `Agents`: agents that use this skill via the `agents_skills` mapping.
+
+- **Agent–skill mapping**  
+  - Many-to-many relationship that attaches skills to agents.  
+  - Determines which skills (and therefore which tools and tags) are available for a given agent.
+
+- **Multi-skill mode**  
+  - Agent-level setting (`IsMultiSkill`) that changes how skills are loaded and switched at runtime.
 
 ## Usage
 
-Outline how to add, remove, and configure skills for an agent.
+1. **Plan your skill breakdown**  
+   - Identify natural boundaries in your use case (for example authentication vs account management vs ticketing).  
+   - Aim for skills that represent complete tasks or domains, not single fields or trivial steps.
+2. **Create or reuse skills**  
+   - For common behaviors (like ticket creation or FAQ handling), reuse existing skills where possible.  
+   - Create new skills when you introduce a new domain or workflow.
+3. **Attach skills to an agent**  
+   - In the Build UI, add skills to your agent based on its purpose and channel mix.  
+   - Confirm that each attached skill is Active and correctly configured with tools and tags.
+4. **Choose a loading mode**  
+   - Use default (always-loaded) mode for simple agents with a small number of closely related skills.  
+   - Use multi-skill mode when agents span multiple distinct workflows or domains and you want tighter control over tool availability.
+5. **Iterate with evals and monitoring**  
+   - Run evals targeting specific skills to ensure their behavior is correct and stable.  
+   - Use tags and metrics to observe how often each skill is used and how it performs.
 
-## Examples
+## FAQ's
 
-Add example skills and usage patterns here.
+<AccordionGroup>
+  <Accordion title="How many skills should an agent have?">
+    Start with a small number of well-defined skills. If a skill grows too large or handles too many domains, consider splitting it.
+  </Accordion>
 
-## Best Practices
+  <Accordion title="Can a skill be shared across agents?">
+    Yes. Skills are designed to be reusable via the many-to-many relationship with agents.
+  </Accordion>
 
-Summarize guidance for decomposing behavior into skills.
+  <Accordion title="What happens if I disable a skill on a live agent?">
+    The skill’s tools and tags will no longer be available for that agent. Test in non-production environments before disabling skills that handle critical workflows.
+  </Accordion>
+</AccordionGroup>
 
 ## Related
 
-- /core-concepts/skills
-- /build-agents/overview
-
-
+- [Build overview](/build-agents/overview)
+- [What Skills Are](/understanding-the-platform/skills/what-skills-are)
+- [Dynamic Loading](/understanding-the-platform/skills/dynamic-loading)
+- [Skill Prompts & Tools](/understanding-the-platform/skills/skill-prompts-tools)
+- [Tool Types](/understanding-the-platform/tools/tool-types)

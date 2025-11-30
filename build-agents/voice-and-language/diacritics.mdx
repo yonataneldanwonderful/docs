@@ -1,39 +1,77 @@
 ---
 title: Diacritics
+description: "Configuring diacritics rules to improve pronunciation and recognition"
 ---
 
 # Diacritics
 
-Placeholder for documenting diacritics handling in voice and language.
+Diacritics (accent marks and similar modifiers) matter for both recognition and synthesis, especially in languages where small changes in spelling change meaning or pronunciation. Wonderful lets you define diacritics rules per skill to correct and normalize text before it reaches TTS or other downstream components.
 
 ## Overview
 
-Summarize why diacritics matter for pronunciation and accuracy.
+Diacritics rules are modeled using `SimpleDiacritic`, `RegexRule`, and `GenderRule` records:
+
+- **Simple diacritics** map patterns to replacements.  
+- **Regex rules** define pattern contexts where replacements should apply.  
+- **Gender rules** allow gender-specific prefixes/suffixes when needed.
+
+These rules are scoped to skills and tenants, so you can tune pronunciation for specific languages, brands, or use cases without affecting others.
 
 ## How It Works
 
-Explain how Wonderful processes and preserves diacritics across the pipeline.
+1. **Pattern definitions**  
+   - `SimpleDiacritic` records specify `PatternOptions` (patterns built from `RegexableDTO` values) and a `Replacement` string.  
+   - Patterns describe what text to match; the replacement describes how it should be transformed (for example adding or removing diacritics).
+2. **Contextual rules**  
+   - `RegexRule` records define `PreRegex` and `PostRegex` pattern sets to control where a diacritic rule applies, helping avoid overcorrections.  
+   - `GenderRule` records define gender-specific prefixes and suffixes that can be applied when pronouncing names or roles.
+3. **Skill scoping**  
+   - All of these models reference a `SkillId`, so diacritics behavior is attached to the skill, not globally to the agent or tenant.
+4. **Runtime application**  
+   - When generating or processing text for a skill, diacritics rules are applied to adjust the text before sending it to TTS or other components.  
+   - This helps ensure consistent pronunciation and display across languages.
+
+NOTE: The exact placement of diacritics processing within the voice pipeline depends on deployment details and may vary. Clarification required for the full end-to-end pipeline order.
 
 ## Components
-- Text normalization
-- Rendering and TTS
-- ASR handling
+
+- **SimpleDiacritic**  
+  - Pattern-based mapping from text patterns to replacements, with optional links to gender and regex rules.
+
+- **RegexRule**  
+  - Contextual rules using `PreRegex` and `PostRegex` patterns to control where diacritics changes apply.
+
+- **GenderRule**  
+  - Rules specifying gendered prefixes and suffixes to adjust text differently for male/female forms.
+
+- **Skill association**  
+  - All diacritics rules reference a `SkillId`, so they apply only when that skill is active.
 
 ## Usage
 
-Outline configuration points for diacritics behavior.
+1. **Identify pronunciation issues**  
+   - Review interactions and recordings to find words or phrases that are consistently mispronounced or misrecognized due to missing or incorrect diacritics.
+2. **Create diacritics rules per skill**  
+   - For the relevant skill, define simple diacritics and, if necessary, regex and gender rules that correct these cases.  
+   - Keep rules as narrow as possible to avoid unintended changes.
+3. **Test in voice flows**  
+   - Run test calls through the affected skill and confirm that pronunciation and recognition improve.  
+   - Iterate on patterns and replacements as needed.
+4. **Document and share patterns**  
+   - Capture successful diacritics patterns for reuse across similar skills or tenants where appropriate.
 
-## Examples
+## FAQ's
 
-Add language-specific examples here.
+- **Do diacritics rules apply across all agents?**  
+  No. Rules are scoped to skills via `SkillId`, and skills are attached to agents, so behavior is controlled at the skill level.
 
-## Best Practices
+- **Can a single skill have many diacritics rules?**  
+  Yes. You can define multiple simple diacritics, regex rules, and gender rules per skill as needed.
 
-Summarize guidance for multi-language deployments with diacritics.
+- **Will diacritics rules affect non-voice channels?**  
+  They primarily target text used in voice flows, but may also influence any pipeline that uses the same normalization steps.
 
 ## Related
 
-- /build-agents/voice-and-language/language
-- /build-agents/overview
-
-
+- [Language](/build-agents/voice-and-language/language)
+- [Build overview](/build-agents/overview)

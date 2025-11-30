@@ -1,39 +1,86 @@
 ---
 title: RAG
+description: "How to attach retrieval-augmented generation to skills and tools"
 ---
 
 # RAG
 
-Placeholder for documenting retrieval-augmented generation (RAG) tooling.
+Retrieval-augmented generation (RAG) lets agents ground their answers in tenant-specific documents, knowledge bases, and files. In Wonderful, RAG is configured per skill through `Rag` objects and used by tools of type `rag`.
 
 ## Overview
 
-Summarize how RAG fits into Wonderful agent behavior.
+Use RAG when:
+
+- Agents must answer from **up-to-date, tenant-specific content** (for example help centers, policies, internal docs).  
+-.You need **auditable, source-based answers** instead of purely model-generated ones.  
+- You want to reuse the same knowledge across multiple skills and agents.
+
+RAG lives at the skill level and is referenced by tools, keeping knowledge scoped to relevant capabilities.
 
 ## How It Works
 
-Explain retrieval, chunking, indexing, and grounding flows at a high level.
+1. **RAG configuration per skill**  
+   - Each `Rag` is associated with a `SkillId`, has a `Name`, `Description`, `LLMModel`, and a collection of `Files` (via `rag_files`).  
+   - RAGs can compose other RAGs via `SubRags`, allowing hierarchical or modular knowledge sets.
+2. **Indexing and file management**  
+   - Files associated with a RAG are ingested and indexed (details depend on the deployment and indexing service).  
+   - RAGs can be updated by adding, removing, or re-indexing files.
+3. **Tool integration**  
+   - Tools of type `rag` reference a RAG and use it to retrieve relevant context at call time.  
+   - Retrieved context is passed to the LLM so the agent can answer with grounded information.
+4. **Runtime behavior**  
+   - When the LLM chooses a RAG tool, the platform:
+     - Runs retrieval against the RAG’s index.  
+     - Supplies the retrieved snippets and metadata to the model.  
+     - Logs tool usage and downstream behavior for observability.
+
+NOTE: Exact retrieval algorithms and chunking strategies depend on the indexing backend and may vary across deployments.
 
 ## Components
-- Data sources
-- Indexing
-- Retrieval and ranking
+
+- **Rag model**  
+  - `Name`, `Description`: describe the knowledge source.  
+  - `LLMModel`: which LLM variant is used for summarization/grounding.  
+  - `SkillId`: which skill owns this RAG.  
+  - `Files`: the set of files included in the RAG.  
+  - `SubRags`: optional composition of multiple RAGs.
+
+- **RAG tools**  
+  - Tools configured with type `rag` that reference a RAG and expose it to the LLM.
+
+- **Files and sub-RAGs**  
+  - Relationships (`rag_files`, `subrags`) that define how documents and composed knowledge are organized.
 
 ## Usage
 
-Outline how to attach RAG to agents and skills.
+1. **Identify knowledge you want to ground**  
+   - For example: help center articles, policy documents, runbooks, or internal wikis.
+2. **Create a RAG for a skill**  
+   - In the UI, create a RAG under the relevant skill and upload or link the files that should be included.  
+   - Choose an appropriate `LLMModel` for summarization/grounded answers.
+3. **Configure a RAG tool**  
+   - Add a tool of type `rag` to the skill and point it at the RAG.  
+   - Define parameters that let the LLM express what it needs (for example query, filters).
+4. **Attach the skill to agents**  
+   - Attach the RAG-enabled skill to one or more agents that need access to this knowledge.  
+   - Confirm that RAG tools appear in tool traces when the agent answers from documents.
+5. **Monitor and iterate**  
+   - Use interactions, tags, and evals to see when RAG is used, how often it fails, and whether answers are high quality.  
+   - Update RAG files and structure over time as content changes.
 
-## Examples
+## FAQ's
 
-Add example RAG setups for support, knowledge base, and workflow use cases.
+- **Can multiple skills share the same RAG?**  
+  RAGs are currently associated with a single `SkillId`. For shared knowledge, use composition (`SubRags`) or create a shared skill that owns the RAG and is attached to multiple agents.
 
-## Best Practices
+- **Which model should I choose for `LLMModel` on RAG?**  
+  Choose a model variant optimized for retrieval and summarization; see deployment-specific recommendations for supported RAG models.
 
-Summarize guidance for quality, latency, and observability.
+- **How is RAG different from normal tools that call APIs?**  
+  RAG tools are specialized for document retrieval and grounded answering, while other tools are arbitrary API or programmable actions.
 
 ## Related
 
-- /build-agents/tools/agent-tools-and-skill-tools
-- /build-agents/overview
-
-
+- [Agent tools and skill tools](/build-agents/tools/agent-tools-and-skill-tools)
+- [Build overview](/build-agents/overview)
+- [Tool Types](/understanding-the-platform/tools/tool-types)

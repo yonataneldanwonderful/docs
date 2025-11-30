@@ -3,33 +3,53 @@ title: "Glossary"
 description: "Definitions of key terms in Wonderful"
 ---
 
-## A
+# Glossary
 
-**Agent** — A complete AI entity that can converse, call tools, load skills, and run across channels. Each agent is customized for a specific purpose.
+This glossary defines the core terms used throughout the Wonderful platform and codebase. Each definition is aligned with the underlying models and services.
 
-**Agent Prompt** — Defines the persona, goals, and constraints specific to an agent. Shapes how the agent presents itself and what it prioritizes.
+## Overview
 
-**Agent Tools** — Always-available tools that an agent can call regardless of which skills are loaded. Typically include core APIs like CRM integrations and payment processors.
+Wonderful is built around a small set of primitives—agents, skills, tools, channels, interactions, tags, evals, and tenants. The glossary provides concise definitions so product, CX, and engineering teams can use the same language when designing, configuring, and debugging agents.
 
-## B
+If you ever encounter ambiguous behavior, the source of truth is the code (primarily under `common/models` and `wonderful-controller`), with this glossary acting as the human-readable map.
+
+## How It Works
+
+- Terms are grouped alphabetically.
+- Each entry summarizes the concept and how it appears in the product and codebase.
+- Many terms link directly to deeper documentation pages where you can see configuration options, examples, and API behavior.
+
+Use this page as a reference when you see a term in the UI, logs, or models and want a quick reminder of what it means.
+
+## Components
+
+### A
+
+**Agent** — A complete AI entity that can converse, call tools, load skills, and run across channels. Each agent is customized for a specific purpose and is represented by the `Agent` model.
+
+**Agent Prompt** — Instructions that define the persona, goals, and constraints specific to an agent. Shapes how the agent presents itself and what it prioritizes.
+
+**Agent Tools** — Tools that are always available to an agent, regardless of which skills are active. Typically include core APIs like CRM integrations and payment processors.
+
+### B
 
 **Base Skills** — Optional always-loaded skills for scenarios where a capability must always be available or a tool must never require dynamic loading.
 
 **Batch Evals** — Eval tests that run multiple scenarios with iterations to test agent behavior across a range of cases.
 
-## C
+### C
 
 **Channels** — How agents interact with users. Wonderful supports voice, chat, email, WhatsApp, and embed. All channels share the same agent logic.
 
 **Chat** — Web chat and widget-based interactions with agents.
 
-## D
+### D
 
 **Deterministic Tags** — Tags applied based on rules that evaluate events. They provide 100% consistency, real-time application, and reliable metrics.
 
-**Dynamic Loading** — The process by which agents load skills only when needed, based on conversation context, deterministic rules, or tool requirements.
+**Dynamic Loading** — The process by which agents load skills only when needed, based on conversation context, deterministic rules, or tool requirements (multi-skill mode).
 
-## E
+### E
 
 **Email** — Email-based agent interactions.
 
@@ -37,23 +57,23 @@ description: "Definitions of key terms in Wonderful"
 
 **Evals** — Structured test scenarios that measure agent behavior. Include single scenarios, batch tests, voice-specific tests, and human feedback.
 
-**Events** — System events that track all activity for deterministic behavior and tagging.
+**Events** — System events that track activity for deterministic behavior, auditability, and tagging.
 
-## I
+### I
 
 **Inbound** — Interactions where the customer contacts the agent.
 
 **Interactions** — A single conversation between an agent and a real user. Includes conversation transcripts, tool calls, skill loads, events, tags, and metrics.
 
-## L
+### L
 
 **LLM Tags** — Tags generated through prompt-based inference. The agent analyzes conversation context and applies tags based on its understanding.
 
-## O
+### O
 
 **Outbound** — Interactions where the agent contacts the customer.
 
-## S
+### S
 
 **Skill Prompt** — Defines a skill's specific behavior, constraints, and goals. Guides how the skill interprets context and responds to user requests.
 
@@ -61,11 +81,7 @@ description: "Definitions of key terms in Wonderful"
 
 **Skills** — Self-contained sub-agents that encode specific capabilities. Load dynamically based on context to keep agent context small and focused.
 
-**System Prompt** — A hidden scaffold that defines the core operating rules. Establishes fundamental behavior and constraints that govern all agent interactions.
-
-**System Tools** — Internal tools used for engine-level behavior. Examples include `skip_turn` and `escalate`.
-
-## T
+### T
 
 **Tags** — Yes/no markers applied to a conversation or turn. Used for analytics, routing, behavior tracking, and product logic.
 
@@ -73,17 +89,48 @@ description: "Definitions of key terms in Wonderful"
 
 **Tenant Tools** — Tools shared across all agents within a tenant. Provide common capabilities that multiple agents can use.
 
-**Tools** — APIs or internal actions the agent can call. Represent capabilities available to agents, skills, and the system.
+**Tenants** — Logical isolation boundary for all data and configuration in the codebase. All core models embed `TenantBase` to ensure strict tenant-level separation.
 
-## V
+**Tools** — Deterministic capabilities the agent can call. Represented by the `Tool` and `Func` models, they include types such as API, RAG, programmable, and mock, with structured parameters and triggers.
+
+### V
 
 **Versioning** — The workflow for agents: Draft → Versioned → Published. Enables safe iteration, testing, and rollback.
 
-**Voice** — Voice-based interactions via SIP, phone numbers, TTS/ASR.
+**Voice** — Voice-based interactions via SIP, phone numbers, TTS/ASR, and related telephony infrastructure.
 
 **Voice Evals** — Eval tests specifically for voice channel interactions, accounting for timing, latency, barge-in behavior, and audio quality.
 
-## W
+### W
 
 **WhatsApp** — WhatsApp messaging-based agent interactions.
 
+## Usage
+
+- Use the glossary when designing agents, skills, and tools to keep naming consistent.
+- Refer back here when interpreting logs, metrics, or configuration fields that reuse these terms.
+- Align internal documentation and runbooks to the same terms to avoid ambiguity between teams.
+
+If a term appears in the product but is missing here, treat that as a documentation gap to be filled.
+
+## FAQ's
+
+- **What if a glossary definition disagrees with the code?**  
+  The code is the final source of truth. Update the glossary to match the behavior implemented in `common/models` and the services.
+
+- **How often is the glossary updated?**  
+  It should be updated whenever new primitives are added, or existing ones change semantics in a meaningful way.
+
+- **Where can I propose new terms?**  
+  Add them here alongside the relevant docs page and ensure they are backed by real models or product concepts.
+
+## Related
+
+- [What is Wonderful?](/introduction-to-wonderful/what-is-wonderful)
+- [Core Concepts Overview](/introduction-to-wonderful/core-concepts-overview)
+- [What Agents Are](/understanding-the-platform/agents/what-agents-are)
+- [What Skills Are](/understanding-the-platform/skills/what-skills-are)
+- [Tool Types](/understanding-the-platform/tools/tool-types)
+- [What Evals Are](/understanding-the-platform/evals/what-evals-are)
+- [LLM Tags](/understanding-the-platform/tags/llm-tags)
+- [Deterministic Tags](/understanding-the-platform/tags/deterministic-tags)

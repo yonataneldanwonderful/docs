@@ -3,54 +3,80 @@ title: "What Evals Are"
 description: "Understanding evals - structured testing for agent behavior"
 ---
 
-## What Evals Are
+# What Evals Are
 
-Evals are structured test scenarios that measure agent behavior. They provide a systematic way to validate that agents perform correctly across different situations and use cases.
+Evals are structured tests that measure how well an agent behaves against defined scenarios, metrics, and expectations. They turn subjective “does this feel good?” judgments into repeatable checks you can run on every change.
 
-## Purpose of Evals
+## Overview
 
-Evals enable you to:
-- **Validate behavior** — Ensure agents work as expected
-- **Test changes** — Verify improvements before deployment
-- **Compare versions** — Evaluate different agent configurations
-- **Track performance** — Monitor agent effectiveness over time
-- **Catch regressions** — Identify when changes break functionality
+In Wonderful, evals are built around tests, scenarios, categories, and metrics:
 
-## Eval Components
+- A **Test Scenario** describes the situation, initial message(s), and communication type.
+- A **Test Category** groups related scenarios for a particular agent.
+- A **Test** represents a single run of a scenario, with status, score, and explanations.
+- **Metrics** (for example correctness, safety, politeness) are scored for each test.
 
-Evals include several key components:
+The `wonderful-evaluator` service and related controller components orchestrate conversations against real agents and compute metrics using LLMs and deterministic checks.
 
-- **Scenario text** — The input or situation being tested
-- **Expected answers** — What the agent should say or do
-- **Tool/behavior checks** — Validation that correct tools were called
-- **Metrics** — Quantitative measures of performance
-- **Output comparison** — How actual behavior compares to expected behavior
+## How It Works
 
-## Eval Types
+1. You define **test scenarios** (stored as `TestScenario` models) with prompt text, channel, and metadata.
+2. Scenarios are grouped into **categories** (`TestCategory`) mapped to a specific agent.
+3. When you run evals, the system creates **tests** (`Test` records) for the selected scenarios and agent version.
+4. The `Evaluator` component:
+   - Loads the scenario, category, and agent from the database.
+   - Spins up a chat orchestrator with a test context (`TestMode` enabled).
+   - Drives a full interaction through the real runtime (tools, skills, tags, events).
+   - Records the resulting communication ID on the test.
+5. The evaluator computes **metric scores** (`MultiMetricEvaluationResult` keyed by `EvalMetric`) and explanations for each test.
+6. Tests are marked as `running`, then `passed` / `failed` (or similar statuses) with score explanations stored for later review.
 
-### Single Scenario
+Batch evals repeat this process across many scenarios and agent versions, making it easy to compare releases.
 
-Test one specific interaction pattern to validate agent handles a particular case correctly.
+## Components
 
-### Batch
+- **Test Scenario**  
+  Defines the situation being tested: input text, channel, starting conditions, and expected behavior.
 
-Run multiple scenarios with iterations to test agent behavior across a range of cases.
+- **Test Category**  
+  Groups scenarios for a specific agent or use case (for example “Billing”, “Cancellation”, “Onboarding”).
 
-### Voice
+- **Test**  
+  Individual run of a scenario, including status, scores, explanations, and a link to the underlying communication/interaction.
 
-Test voice channel interactions, accounting for timing, latency, and audio quality.
+- **Metrics**  
+  Criteria such as correctness, safety, adherence to policy, or tool usage, represented as `EvalMetric` values scored with `MetricResult`.
 
-### Human Feedback
+- **Evaluator Service**  
+  The `wonderful-evaluator` service that executes tests against the live runtime and calculates scores.
 
-Incorporate human judgment to improve agent behavior.
+## Usage
 
-## Eval Lifecycle
+1. **Model scenarios**: For each important behavior, write a scenario that represents a realistic user conversation or prompt.
+2. **Define metrics**: Decide what “good” means (for example, correct outcome, safe behavior, escalation rules) and configure metrics accordingly.
+3. **Attach to agents**: Group scenarios into categories per agent and version.
+4. **Run tests**: Execute single scenarios, categories, or full batches using the eval UI or API.
+5. **Review results**: Inspect scores, explanations, and linked interactions to understand failures.
+6. **Iterate and compare**: Adjust prompts, skills, tools, or configuration, re-run evals, and compare performance across versions.
 
-1. **Create** — Define test scenarios
-2. **Run** — Execute evals against agents
-3. **Analyze** — Review results and metrics
-4. **Iterate** — Improve agents based on results
-5. **Compare** — Evaluate different versions
+Evals should be part of your standard workflow before publishing new agent versions or major configuration changes.
 
-Evals are essential for building reliable, production-ready agents.
+## FAQ's
 
+- **Do evals run against real agents?**  
+  Yes. The evaluator uses the same orchestrator and services as production, but in a test context (`TestMode`) so tests are isolated.
+
+- **Can I test voice behavior?**  
+  Yes. Scenarios include a communication type, so you can create voice-specific scenarios and metrics, then analyze timing and behavior through recorded interactions.
+
+- **How do evals relate to monitoring?**  
+  Evals are proactive checks run on-demand or in CI, while monitoring analyzes real interactions in production. Both rely on the same underlying interaction and tagging data.
+
+## Related
+
+- [What Agents Are](/understanding-the-platform/agents/what-agents-are)
+- [What Skills Are](/understanding-the-platform/skills/what-skills-are)
+- [Tool Types](/understanding-the-platform/tools/tool-types)
+- [Test Scenarios](/monitor/evals/test-scenarios)
+- [Batch Evals](/monitor/evals/batch-evals)
+- [Human Feedback Improvements](/monitor/evals/human-feedback-improvements)

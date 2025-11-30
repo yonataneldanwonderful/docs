@@ -3,100 +3,73 @@ title: "Events, Tags, Metrics"
 description: "Understanding interaction data and analytics"
 ---
 
-## Events
+# Events, Tags, Metrics
 
-Events are system occurrences that happen during an interaction. They track:
-- Skill loading and unloading
-- Tool calls and their outcomes
-- Error conditions
-- Escalations
-- State changes
-- User actions
-- Transcription events
-- Agent responses
-- System actions
+Events, tags, and metrics describe everything that happens during an interaction and make agent behavior observable. They power dashboards, alerts, governance, and debugging across all channels.
 
-Events enable deterministic behavior and provide a complete audit trail of what happened during an interaction.
+## Overview
 
-### Event Bus Architecture
+Every interaction is represented by a `Communication` record that captures status, timing, token usage, recordings, tags, call tags, ratings, and metadata. Events are emitted throughout the interaction lifecycle, tags annotate important states and outcomes, and metrics aggregate these signals over time.
 
-The platform uses an event bus system for event propagation:
+Together, these primitives allow you to answer questions like “How many calls escalated today?”, “Which tools are failing?”, and “Where are customers getting stuck?” without manually inspecting transcripts.
 
-- **Event Types** — Different event types for different system occurrences
-- **Event Groups** — Events are organized into groups (e.g., by tenant, by interaction)
-- **Publish/Subscribe** — Components can publish events and subscribe to event types
-- **Asynchronous Processing** — Events can be published asynchronously for performance
-- **Event Handlers** — Handlers process events and trigger actions (e.g., tag application)
+## How It Works
 
-### Event Structure
+1. When an interaction starts, a `Communication` is created with fields such as `Type`, `Direction`, `AgentId`, `Status`, and `StartTime`.
+2. As the conversation progresses, services emit **events** for skill loads, tool calls, errors, escalations, timeouts, and enhancement steps.
+3. **Deterministic tag rules** and call-tag logic react to these events to attach tags and call tags to the communication.
+4. After the interaction ends, enhancement steps compute **sentiment**, **ratings**, **summaries**, and finalize tags and call tags.
+5. Background jobs and metric extractors read `Communication`, `Tags`, `CallTags`, and related data to compute **metrics** that feed dashboards and alerts (for example `MetricDuration`, `MetricToolFailure`).
 
-Events contain:
-- **Type** — The event type identifier
-- **Data** — Event-specific data payload
-- **Metadata** — Additional context and metadata
-- **Source Worker ID** — Which worker/component generated the event
+All of this is scoped to a tenant through `TenantBase` so analytics and alerts are always tenant-isolated.
 
-Events are published to the event bus and can trigger deterministic tag rules, logging, analytics, and other downstream processes.
+## Components
 
-## Tags
+- **Communication (`Communication`)**  
+  - Fields such as `Status`, `StartTime`, `EndTime`, `Duration`, `TokensUsage`, `QAScore`, `Summary`, `Tags`, `CallTags`, `Rating`, and `Metadata` hold the core interaction record.  
+  - DTOs (`CommunicationDTO`) add derived URLs and related entities like transcriptions and human feedback.
 
-Tags are yes/no markers applied to interactions or individual turns. They come from two sources:
+- **Events**  
+  - Internal runtime events for skill loading/unloading, tool executions and results, error conditions, escalations, timeouts, and enhancement milestones.  
+  - Drive deterministic rules, logging, metrics, and downstream processing.
 
-### LLM Tags
+- **Tags (`Tag`)**  
+  - Tenant-scoped tags with `Name`, `Description`, and relations to `Skills` and `Communications`.  
+  - `ExposeToEnhancer` controls whether a tag is available for LLM-based tagging.
 
-Generated through prompt-based inference. The agent analyzes conversation context and applies tags based on its understanding.
+- **Call Tags (`CallTag`)**  
+  - System-level tags for call characteristics (for example system error, early hang-up, human requested).  
+  - Applied automatically based on deterministic rules.
 
-### Deterministic Tags
+- **Metrics (`Metric`)**  
+  - Enumerated metrics such as `ActiveInteractions`, `TotalInteractions`, `Duration`, `ForwardAmount`, `ForwardPercentage`, `ToolFailure`, and `ToolApplicationFailure` in the `Alert` model.  
+  - Computed over windows (`TimeUnit`, `WindowValue`) with estimators (`Estimator`) like Average or 95th percentile.
 
-Applied based on rules that evaluate events. They provide 100% consistency and real-time application.
+## Usage
 
-Tags enable:
-- **Analytics** — Track patterns and outcomes
-- **Routing** — Direct conversations based on characteristics
-- **Behavior tracking** — Monitor how agents handle scenarios
-- **Product logic** — Trigger downstream actions
+1. **Design tags and call tags** that reflect the outcomes you care about (for example “escalated”, “payment_issue”, “customer_not_understood”).  
+2. **Configure deterministic rules and enhancement prompts** so tags are applied either via events or LLM analysis.  
+3. **Instrument tools and skills** so important events (failures, retries, escalations) are emitted with enough context for metrics and alerts.  
+4. **Build dashboards** around the core metrics (volume, duration, escalations, tool failures, ratings) to monitor agent health.  
+5. **Use alerts** that watch key metrics (for example `MetricToolFailure` or `MetricForwardPercentage`) and trigger incidents when thresholds are crossed.  
+6. **Loop back into design** by reading tagged interactions and metrics to refine agents, skills, and tools.
 
-## Metrics
+## FAQ's
 
-Metrics provide quantitative measures of interaction performance:
+- **What’s the difference between tags and call tags?**  
+  Tags are general-purpose labels attached to communications and skills; call tags are a specific set of system-generated labels for call characteristics (for example early hang-up or system error).
 
-- **Duration** — How long the interaction lasted (in milliseconds)
-- **Escalations** — Whether and when escalation occurred
-- **Outcomes** — Success, failure, or other outcomes
-- **Tool usage** — Which tools were called and how often
-- **Skill usage** — Which skills were loaded
-- **Tag distribution** — Which tags were applied
-- **User satisfaction** — Feedback and ratings
-- **Token usage** — LLM token consumption (input and output tokens)
-- **QA Score** — Quality assurance score
-- **Active interactions** — Count of currently active interactions
-- **Total interactions** — Count of all interactions in a time window
-- **Forward amount** — Number of escalations/forwards
-- **Forward percentage** — Percentage of interactions that were escalated
-- **Tool failures** — Count of tool execution failures
-- **Tool application failures** — Count of tool application/validation failures
+- **Where do metrics come from?**  
+  Metrics are computed from `Communication` records, tags, call tags, and tool failure logs, then aggregated over windows using the metric and estimator definitions in the alerting system.
 
-### Metric Extraction
+- **Can I create custom metrics?**  
+  Today metrics are based on the predefined `Metric` enum; to add new metrics you extend the metrics pipeline and `Metric` values in the codebase.
 
-Metrics are extracted from interactions using metric extractors:
+## Related
 
-- **Time Windows** — Metrics can be calculated over different time windows (e.g., last 10 minutes, last 10 hours)
-- **Filtering** — Metrics can be filtered by tenant, agent, time range, and other criteria
-- **Aggregation** — Metrics are aggregated and can be used for dashboards, alerts, and analytics
-
-### Metric Types
-
-- **Counter Metrics** — Count occurrences (e.g., total interactions, tool failures)
-- **Continuous Metrics** — Measure continuous values (e.g., duration, token usage)
-- **Distribution Metrics** — Track distributions (e.g., tag distribution, sentiment distribution)
-
-## Using Interaction Data
-
-Interaction data enables:
-
-- **Performance analysis** — Understand agent effectiveness
-- **Pattern recognition** — Identify common issues or requests
-- **Optimization** — Improve agent behavior based on data
-- **Reporting** — Generate insights for stakeholders
-- **Debugging** — Troubleshoot specific issues
-
+- [What Interactions Are](/understanding-the-platform/interactions/what-interactions-are)
+- [Interaction Lifecycle](/understanding-the-platform/interactions/interaction-lifecycle)
+- [LLM Tags](/understanding-the-platform/tags/llm-tags)
+- [Deterministic Tags](/understanding-the-platform/tags/deterministic-tags)
+- [Tag Libraries](/understanding-the-platform/tags/tag-libraries)
+- [Alerts (Concepts)](/understanding-the-platform/alerts/what-alerts-are)

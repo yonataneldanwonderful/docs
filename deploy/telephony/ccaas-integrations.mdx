@@ -1,38 +1,72 @@
 ---
 title: CCaaS integrations
+description: "Integrating Wonderful with existing contact center platforms"
 ---
 
 # CCaaS integrations
 
-Placeholder for documenting CCaaS integrations (e.g., contact center platforms).
+CCaaS integrations let Wonderful agents coexist with human agents on existing contact center platforms, sharing numbers, queues, and reporting.
 
 ## Overview
 
-Summarize how Wonderful connects to CCaaS systems for hybrid agent workflows.
+With CCaaS integrations you can:
+
+- Route calls between Wonderful agents and human agents.  
+- Use existing CCaaS routing, skills, and reporting while offloading suitable traffic to Wonderful.  
+- Gradually roll out automation without replacing your contact center stack.
+
+This page focuses on high-level patterns; details vary by CCaaS vendor.
 
 ## How It Works
 
-Explain the integration model for routing, transfers, and reporting.
+1. **Telephony interop**  
+   - Calls flow between CCaaS and Wonderful via SIP, PSTN forwarding, or provider-specific integrations (for example Twilio).  
+   - Metadata such as call IDs, queue names, and customer identifiers can be passed in headers or parameters.
+2. **Routing patterns**  
+   - **Front-door automation**: calls first hit Wonderful; only escalations are sent to CCaaS queues.  
+   - **Backstop automation**: CCaaS routes certain queues or overflow traffic to Wonderful.  
+   - **Hybrid flows**: calls move between Wonderful and CCaaS based on business rules (for example hours, language, or segment).
+3. **Transfers and forwarding**  
+   - The call orchestrator can forward calls back to CCaaS numbers or SIP endpoints using configured forwarding logic.  
+   - SIP headers and metadata are preserved where possible to maintain context.
+4. **Reporting and analytics**  
+   - CCaaS continues to provide queue-level reporting, while Wonderful tracks interaction-level metrics and tags; you can correlate via shared IDs.
 
 ## Components
-- CCaaS connectors
-- Routing logic
-- Data sync
+
+- **Telephony integration**  
+  - SIP trunks, numbers, and routing rules linking CCaaS and Wonderful.
+
+- **Forwarding & transfer logic**  
+  - Orchestrator logic that decides when and where to forward or transfer calls.
+
+- **Metadata & identifiers**  
+  - Shared identifiers (for example call IDs, queue IDs) that enable reporting across systems.
 
 ## Usage
 
-Outline how to integrate a new CCaaS platform.
+1. **Choose an integration pattern**  
+   - Decide whether Wonderful should sit in front of, behind, or alongside your CCaaS for each use case.
+2. **Configure telephony paths**  
+   - Set up SIP or PSTN routing so calls can move between CCaaS and Wonderful in both directions where required.
+3. **Define escalation rules**  
+   - Implement rules in agents and telephony configuration for when to transfer or forward calls to human agents or specific queues.
+4. **Align reporting**  
+   - Ensure IDs and metadata are passed between systems so you can correlate CCaaS and Wonderful metrics.
 
-## Examples
+## FAQ's
 
-Add examples for common CCaaS vendors here.
+- **Do I need a dedicated number per integration?**  
+  Not necessarily; you can share numbers as long as routing rules are well defined and metadata is preserved.
 
-## Best Practices
+- **Can Wonderful participate in existing call flows?**  
+  Yes. Use SIP or provider-specific features to insert Wonderful at appropriate points in your existing flows.
 
-Summarize guidance for coexisting with human contact centers.
+- **How do I handle failover?**  
+  Design routes so calls fall back to CCaaS if Wonderful is unavailable, and configure Wonderful forwarding for high-traffic or error conditions.
 
 ## Related
 
-- /deploy/overview
-
-
+- [Telephony](/deploy/telephony/telephony)
+- [SIP trunk](/deploy/telephony/sip-trunk)
+- [Manage overview](/deploy/overview)

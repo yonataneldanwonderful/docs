@@ -1,39 +1,106 @@
 ---
 title: Dashboard
+description: "Understanding and using the main Wonderful monitoring dashboard"
 ---
 
 # Dashboard
 
-Placeholder for documenting the main monitoring dashboard.
+The monitoring dashboard gives you a real-time and historical view of how agents, interactions, and tools are performing across tenants.
 
 ## Overview
 
-Summarize what the dashboard shows and who uses it.
+The dashboard is designed for:
+
+- **Operations and support teams** monitoring live traffic and health.  
+- **Product and CX teams** tracking trends in behavior, sentiment, and outcomes.  
+- **Engineering and platform teams** watching tool failures, latency, and alerts.
+
+It pulls from interaction records (`Communication`), alerts, issues, and evals to give a consolidated picture of system health.
+
+<Info>
+  Use the dashboard to answer “How are we doing **right now**?” and “Where did things go wrong **recently**?” before diving into detailed interaction or issue views.
+</Info>
 
 ## How It Works
 
-Explain how data flows into the dashboard and how it is refreshed.
+1. **Data sources**  
+   - The dashboard aggregates:
+     - Interaction statistics (`CommunicationStatistics`) including duration, status, sentiment, tokens, QA score, and tags.  
+     - Alert and incident data for active and recent alerts.  
+     - Issue counts and statuses for operational follow-up.
+2. **Aggregation and refresh**  
+   - Data is aggregated by tenant, agent, channel, and time window.  
+   - Dashboards are refreshed periodically and can be filtered to focus on recent activity or specific segments.
+3. **Drill-down flows**  
+   - From high-level KPIs you can drill into:
+     - Interactions for a given segment (for example a specific agent, channel, tag).  
+     - Issues created from alerts or QA workflows.  
+     - Evals linked to recent configuration changes.
 
 ## Components
-- KPIs
-- Filters
-- Drill-downs
+
+- **KPI tiles**  
+  - High-level metrics such as total interactions, active interactions, average duration, QA score, sentiment distribution, and forwarding rate.
+
+- **Filters**  
+  - Filters by tenant, agent, channel, timeframe, status, sentiment, tags, and more.
+
+- **Charts and time-series views**  
+  - Trends over time for key metrics like volume, duration, failures, and alerts.
+
+- **Drill-down links**  
+  - Links into Interactions, Issues, and Alerts views for deeper investigation.
 
 ## Usage
 
-Outline how teams should use the dashboard day-to-day.
+<Steps>
+<Step title="Set your default view">
+  Choose filters (tenant, channel, agents, timeframe) that reflect your core use case and save or reuse them as your starting point.
+</Step>
 
-## Examples
+<Step title="Monitor live KPIs">
+  During operations, watch active interactions, error rates, and alert counts to spot incidents early.
+</Step>
 
-Add examples of dashboard views for different roles.
+<Step title="Investigate anomalies">
+  When you see unusual spikes or drops, drill into Interactions and Issues to understand root causes.
+</Step>
 
-## Best Practices
+<Step title="Review historical performance">
+  Use longer time windows to assess trends in QA scores, sentiment, durations, and tool failures, and feed that back into Build and governance changes.
+</Step>
+</Steps>
 
-Summarize guidance for interpreting and acting on dashboard data.
+## FAQ's
+
+<AccordionGroup>
+  <Accordion title="Where does the dashboard data come from?">
+    Dashboard metrics are derived from interaction records (<code>Communication</code> and <code>CommunicationStatistics</code>), alerts, and issues, aggregated by tenant and agent.
+  </Accordion>
+
+  <Accordion title="How often is the dashboard updated?">
+    Dashboards are refreshed periodically based on recent data; exact refresh intervals depend on deployment configuration.
+  </Accordion>
+
+  <Accordion title="Can I customize dashboard views per team?">
+    Yes. Teams can use filters, saved views (where supported), and drill-downs to create views aligned with their responsibilities.
+  </Accordion>
+</AccordionGroup>
 
 ## Related
 
-- /monitor/alerts
-- /monitor/interactions
+<CardGroup cols={2}>
 
+<Card title="Alerts" href="/monitor/alerts">
+  Configure alerts that feed into the dashboard’s health indicators.
+</Card>
 
+<Card title="Interactions" href="/monitor/interactions">
+  Inspect individual interactions and their tags, metrics, and recordings.
+</Card>
+
+<Card title="Issues" href="/monitor/issues">
+  Track and resolve operational issues surfaced from dashboard and alerts.
+</Card>
+
+</CardGroup>

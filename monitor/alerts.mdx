@@ -1,38 +1,114 @@
 ---
 title: Alerts
+description: "Configuring alerts on interactions, tools, and platform behavior"
 ---
 
 # Alerts
 
-Placeholder for documenting alerting on agent and platform behavior.
+Alerts notify you when agent behavior, interactions, or platform metrics cross thresholds you care about, so you can react before issues impact customers.
 
 ## Overview
 
-Summarize what types of alerts Wonderful supports.
+Wonderful’s alerting system is built around:
+
+- **Alert definitions** (`Alert` model) that specify metrics, conditions, and scope (agent, tool, tenant).  
+- **Conditions and schedules** that control when an alert should fire.  
+- **Actions and incidents** that route notifications and track alert history.
+
+Use Alerts to monitor error rates, tool failures, call forwarding, and other key signals across tenants and agents.
+
+<Info>
+  Alerts are **tenant-scoped** and support both platform-wide and agent- or tool-specific conditions, with severity, reminders, and schedules.
+</Info>
 
 ## How It Works
 
-Explain how alert conditions, thresholds, and notifications work.
+1. **Alert definitions**  
+   - Each `Alert` includes:
+     - `Name`, `Description`.  
+     - `Metric`: what to measure (for example `ActiveInteractions`, `Duration`, `ToolFailure`).  
+     - `Estimator`: how to aggregate (average, minimum, maximum, 95th percentile, last value).  
+     - `WindowValue` + `TimeUnit`: how far back in time to evaluate (for example last 15 minutes, 1 hour).  
+     - `Interval`: how often to evaluate the condition.  
+     - Optional `ToolName` and `AgentID` to scope the alert.
+2. **Conditions and thresholds**  
+   - `TriggerConditions` is a `ConditionNode` tree supporting logical operators (`And`, `Or`) and comparison operators (`GreaterThan`, `LessThan`, `EqualTo`, `NoData`) with a `value`.  
+   - This lets you express simple or nested conditions over metrics.
+3. **Severity and schedules**  
+   - `Severity` indicates importance (`High`, `Medium`, `Low`).  
+   - `ActiveSchedule` (a list of weekday/time ranges) defines when the alert should be evaluated.  
+   - `ReminderFrequencyMinutes` and `NotifyOnResolvedIncidents` control how often to remind and whether to notify on resolution.
+4. **Actions and incidents**  
+   - `AlertActions` define notification channels and behaviors.  
+   - `AlertIncidents` track each time an alert condition is triggered, including open/closed state and timestamps.
 
 ## Components
-- Metrics and events
-- Conditions
-- Destinations
+
+- **Alert (definition)**  
+  - Encodes metric, estimator, window, time unit, interval, scope, severity, schedule, and conditions.
+
+- **Metrics**  
+  - Built-in metrics like `ActiveInteractions`, `ToolFailure`, `Duration`, and forwarding-related metrics.
+
+- **ConditionNode**  
+  - Tree structure combining logical operators and comparison operators for thresholds.
+
+- **AlertSchedule**  
+  - Weekday and time range entries controlling when alerts are active.
+
+- **AlertActions & AlertIncidents**  
+  - Actions define where alerts go; incidents track each occurrence over time.
 
 ## Usage
 
-Outline how to configure alerts for a new deployment.
+<Steps>
+<Step title="Identify key metrics">
+  Decide which metrics matter most for your deployment (for example active interactions, tool failure rate, call forwarding percentage).
+</Step>
 
-## Examples
+<Step title="Create alert definitions">
+  In the Alerts UI, create alerts with clear names, choose metrics and estimators, set window and interval, and scope them to specific agents or tools if needed.
+</Step>
 
-Add example alert configurations here.
+<Step title="Define conditions and severity">
+  Configure trigger conditions (for example duration &gt; 600 seconds, tool failure &gt; 1%) and assign appropriate severity and schedules.
+</Step>
 
-## Best Practices
+<Step title="Configure actions and recipients">
+  Set up AlertActions so the right teams receive notifications via their preferred channels.
+</Step>
 
-Summarize guidance for actionable, low-noise alerts.
+<Step title="Review incidents and tune">
+  Use alert incidents and dashboards to see how alerts behave, then adjust thresholds, windows, or severity to reduce noise and increase usefulness.
+</Step>
+</Steps>
+
+## FAQ's
+
+<AccordionGroup>
+  <Accordion title="What kinds of metrics can I alert on?">
+    Alerts support metrics like active and total interactions, interaction duration, forwarding amount/percentage, and tool- and application-level failure metrics.
+  </Accordion>
+
+  <Accordion title="How do I prevent noisy alerts?">
+    Use appropriate window sizes, estimators (for example 95th percentile instead of max), and schedules, and tune thresholds based on real data before rolling out widely.
+  </Accordion>
+
+  <Accordion title="Can I scope alerts to a single agent or tool?">
+    Yes. Use <code>AgentID</code> and <code>ToolName</code> fields to scope alerts to specific agents or tools.
+  </Accordion>
+</AccordionGroup>
 
 ## Related
 
-- /monitor/dashboard
+<CardGroup cols={2}>
 
+<Card title="Dashboard" href="/monitor/dashboard">
+  See how alerts and metrics surface on the main monitoring dashboard.
+</Card>
 
+<Card title="Issues" href="/monitor/issues">
+  Learn how alerts relate to issues and operational workflows.
+</Card>
+
+</CardGroup>

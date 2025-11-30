@@ -1,38 +1,77 @@
 ---
 title: Authentication
+description: "How Wonderful authenticates users, operators, and integrations"
 ---
 
 # Authentication
 
-Placeholder for documenting authentication models used by the platform and agents.
+Authentication in Wonderful covers three main surfaces: end users interacting with agents, operators using the dashboard, and external systems calling APIs or tools. This page focuses on the concepts relevant when building agents and connecting integrations.
 
 ## Overview
 
-Summarize how authentication works for end users, operators, and integrations.
+At a high level:
+
+- **Dashboard and API auth** ensure that only authorized users and services can manage agents, skills, tools, and tenant settings.  
+- **Channel auth** covers how end users are identified or authenticated in voice, chat, email, or messaging channels.  
+- **Integration auth** (for example OAuth) covers how tools securely call third-party APIs on behalf of a tenant or user.
+
+As a builder, you mainly interact with integration auth and any customer-facing auth flows your agents rely on.
 
 ## How It Works
 
-Explain auth flows across channels, tools, and the dashboard.
+1. **Operator and API authentication**  
+   - The Wonderful dashboard and APIs require authenticated users with roles and permissions.  
+   - Authentication is typically backed by identity providers and token-based sessions (details depend on deployment).
+2. **Integration authentication (OAuth and secrets)**  
+   - Tools that call third-party APIs use:
+     - OAuth integrations (`OAuthIntegration` and `oauth.Provider` abstractions), or  
+     - Secrets stored in secret manager.  
+   - The OAuth layer manages token exchange, refresh, revocation, and user info retrieval.
+3. **End-user and channel-level identification**  
+   - In many cases, end users are known by channel identifiers (for example phone number, email, messaging ID) rather than explicit logins.  
+   - Agents can still implement authentication flows via tools (for example OTP, account lookup) if required by the use case.
+4. **Tenant scoping**  
+   - All authentication flows (operators, APIs, integrations) are scoped to tenants so data and capabilities are isolated per tenant.
 
 ## Components
-- Identity providers
-- Tokens and sessions
-- Permissions and scopes
+
+- **Identity providers and OAuth**  
+  - Interfaces for OAuth providers (`Provider`), token and user info types (`TokenInfo`, `UserInfo`), and integrations with third-party services.
+
+- **Tokens and sessions**  
+  - Access tokens, refresh tokens, and ID tokens used to authorize API calls and dashboard sessions.
+
+- **Permissions and scopes**  
+  - Role- and permission-based access controls in the dashboard and APIs that determine what actions a user or integration can perform.
+
+- **Tool-level auth**  
+  - Tools configured to use OAuth tokens or secrets when calling external systems.
 
 ## Usage
 
-Outline how to configure authentication for new deployments.
+1. **Configure identity and SSO (operators)**  
+   - Set up identity providers and SSO for dashboard users according to your organization’s standards.
+2. **Register integrations for tools**  
+   - For each external system a tool needs to call, configure OAuth or secrets in the appropriate settings.  
+   - Ensure tokens and scopes are limited to required capabilities.
+3. **Design customer-facing auth flows**  
+   - For agents that must authenticate end users (for example banking or account management), use tools to implement identity verification and account linking flows.
+4. **Scope everything to tenants**  
+   - Keep integrations and credentials tenant-scoped so that multiple tenants remain isolated.
 
-## Examples
+## FAQ's
 
-Add examples for SSO, API auth, and customer-facing auth flows.
+- **How do tools authenticate to external APIs?**  
+  Tools either use OAuth tokens (managed via `OAuthIntegration` and provider-specific clients) or secrets from secret manager, depending on integration type.
 
-## Best Practices
+- **How is access to agent configuration controlled?**  
+  Dashboard APIs are protected by user authentication and role-based permissions; only authorized roles can edit agents, skills, tools, and tenant settings.
 
-Summarize guidance for secure, scalable authentication setups.
+- **Can agents enforce their own authentication with end users?**  
+  Yes. You can build explicit authentication steps into agent flows using tools (for example OTP, account lookup) while still relying on underlying channel identifiers.
 
 ## Related
 
-- /build-agents/overview
-
-
+- [Build overview](/build-agents/overview)
+- [Tool Types](/understanding-the-platform/tools/tool-types)
+- [What Agents Are](/understanding-the-platform/agents/what-agents-are)

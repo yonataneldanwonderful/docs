@@ -1,39 +1,74 @@
 ---
 title: MCP tools
+description: "Connecting Model Context Protocol (MCP) tools to agents"
 ---
 
 # MCP tools
 
-Placeholder for documenting MCP-based tools in Wonderful.
+MCP tools let agents call tools exposed by Model Context Protocol (MCP) servers, such as external services, data sources, or internal utilities. They provide a standardized way to integrate rich tool ecosystems into Wonderful.
 
 ## Overview
 
-Summarize what MCP tools are and why they matter.
+MCP defines a protocol for:
+
+- Discovering tools from MCP servers.  
+- Describing tool schemas and parameters.  
+- Invoking tools over a standardized interface.
+
+In Wonderful, MCP tools are surfaced as tools agents can call through skills, similar to other tool types.
 
 ## How It Works
 
-Explain how MCP tools are discovered, registered, and invoked.
+1. **MCP server registration**  
+   - MCP servers are configured so Wonderful can connect to them and list available tools.
+2. **Tool discovery**  
+   - The platform queries MCP servers to discover tool definitions (names, parameters, descriptions).
+3. **Tool mapping**  
+   - Discovered MCP tools are mapped into Wonderful tool definitions, so they can be attached to skills and used by agents.
+4. **Invocation at runtime**  
+   - When the LLM chooses an MCP-backed tool, Wonderful:
+     - Validates and prepares parameters.  
+     - Invokes the MCP server’s tool endpoint.  
+     - Returns results to the agent and logs usage for observability.
+
+NOTE: Exact MCP server configuration and admin flows depend on deployment. Clarification required for full MCP server registration and management UX.
 
 ## Components
-- MCP servers
-- Tool definitions
-- Permissions
+
+- **MCP servers**  
+  - External or internal servers implementing the Model Context Protocol.
+
+- **MCP tool definitions**  
+  - Tool schemas describing name, parameters, and behavior as exposed by MCP servers.
+
+- **Mapped tools in Wonderful**  
+  - Tool records that wrap MCP tools, attached to skills and agents like any other tool.
 
 ## Usage
 
-Outline how to connect MCP tools to agents and skills.
+1. **Configure MCP servers**  
+   - Register MCP servers that expose tools you want agents to use.
+2. **Discover and map tools**  
+   - Use the appropriate UI or API to import MCP tool definitions into Wonderful and map them to internal tools.
+3. **Attach MCP tools to skills and agents**  
+   - Place mapped MCP tools into skills and attach those skills to agents that should use them.
+4. **Test and monitor**  
+   - Run evals and test interactions that exercise MCP tools.  
+   - Monitor tool performance, errors, and latency.
 
-## Examples
+## FAQ's
 
-Add examples of integrating MCP tools for real workflows.
+- **How are MCP tools different from regular API tools?**  
+  MCP tools are discovered and invoked via a standard protocol and server, while regular API tools are defined directly in Wonderful.
 
-## Best Practices
+- **Can I restrict which agents can use MCP tools?**  
+  Yes. Only skills and agents you attach MCP-backed tools to will be able to use them.
 
-Summarize guidance for safe and observable MCP usage.
+- **How are permissions handled?**  
+  Permissions depend on MCP server configuration and any additional access control applied when mapping tools into Wonderful.
 
 ## Related
 
-- /build-agents/tools/agent-tools-and-skill-tools
-- /build-agents/overview
-
-
+- [Agent tools and skill tools](/build-agents/tools/agent-tools-and-skill-tools)
+- [Low code](/build-agents/tools/low-code)
+- [Build overview](/build-agents/overview)

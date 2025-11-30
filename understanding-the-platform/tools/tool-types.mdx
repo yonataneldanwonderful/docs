@@ -3,122 +3,94 @@ title: "Tool Types"
 description: "Understanding different types of tools in Wonderful"
 ---
 
-## Tool Types
+# Tool Types
 
-Tools come in different types, each serving a specific purpose and scope. Tools are associated with skills and can be triggered in different ways based on their configuration.
+Tools are deterministic capabilities that agents can call to perform work: call APIs, run workflows, query knowledge bases, or simulate behavior in tests. In the codebase they are represented by the `Tool` model, which embeds a `Func` definition plus configuration such as type, triggers, and channel availability.
 
-## System Tools
+## Overview
 
-System tools provide engine-level behavior. These are internal tools that manage conversation flow, handle escalations, and control core agent functionality.
+Every tool in Wonderful is:
 
-Examples:
-- `skip_turn` — Skip the current turn in conversation
-- `escalate` — Escalate to human agent
+- Scoped to a **skill** (and therefore to the agents that use that skill).
+- Typed via the `Type` field (`ToolType`) to indicate how it executes (API, RAG, programmable, mock, internal).
+- Triggered according to the `Trigger` field (`TriggerType`) which defines when it runs.
+- Restricted to specific channels via the `AvailableIn` list.
 
-System tools are always available and handle fundamental agent operations.
+This section explains how to think about tool scope, function types, and triggers when designing agents.
 
-## Agent Tools
+## How It Works
 
-Agent tools are always accessible to an agent, regardless of which skills are loaded. These typically include:
-- CRM APIs for customer data
-- Payment processors for transactions
-- RPA actions for automation
-- Core integrations essential to the agent's purpose
+The `Tool` model in `common/models/tool.go` combines:
 
-Agent tools provide persistent capabilities that are available throughout the conversation.
+- **Tenant & identity**: `TenantBase`, `Name`, and `SkillId`.
+- **Function definition** (`Func`):  
+  - `Description`: short description shown to the LLM.  
+  - `Config` (`FuncConfig`): behavior such as announcements, long-action notices, and permission prompts.  
+  - `Parameters` (`ParameterList`): typed parameters with names, descriptions, types, values, enum values, and `IsExposedToLLM` / `Required` flags.  
+  - `Notes`: internal agent notes.
+- **Execution configuration**:  
+  - `Type` (`ToolType`): `internal`, `api`, `rag`, `programmable`, or `mock`.  
+  - `Trigger` (`TriggerType`): when the tool should run (for example `agent`, `on_start`, `on_user_transcription`).  
+  - `AvailableIn`: which communication types (voice, chat, email) can use the tool.  
+  - Optional `RagId` / `FlowId` links to RAG or flow definitions.
 
-## Skill Tools
+At runtime, the LLM chooses tools based on their descriptions and parameters, while the runtime enforces scope, triggers, and channel restrictions.
 
-Skill tools are available only when a specific skill is active. They provide domain-specific capabilities that are scoped to the skill's functionality.
+## Components
 
-When a skill is unloaded (in multi-skill mode), its tools are no longer accessible. In default mode, all skill tools are always available. This scoping ensures tools are only available when relevant.
+- **Scope (Agent, Skill, Tenant)**  
+  - **Skill Tools**: All tools are attached to a skill (`SkillId`). When a skill is active, its tools are available.  
+  - **Agent Tools**: Tools that are effectively always available to an agent because the associated skill is always active for that agent.  
+  - **Tenant Tools**: Tools defined in shared skills or toolkits that multiple agents within a tenant use, promoting reuse and consistency.
 
-**Note**: All tools must be associated with a skill. Tools without a skill association are not supported.
+- **Function Types (`ToolType`)**  
+  - **API (`FuncTypeAPI`)** — Call external REST APIs, handle HTTP requests/responses, and support authentication.  
+  - **RAG (`FuncTypeRAG`)** — Query document stores or knowledge bases and return retrieved context for generation.  
+  - **Programmable (`FuncTypeProgrammable`)** — Run custom logic or workflows; often backed by flows or orchestrators.  
+  - **Mock (`FuncTypeMock`)** — Simulate real tools during development, testing, or evals.  
+  - **Internal (`FuncTypeInternal`)** — Internal platform tools used by the runtime; not typically configured directly in the UI.
 
-## Tenant Tools
+- **Triggers (`TriggerType`)**  
+  Tools can run:
+  - **`agent`** — Chosen by the agent during conversation.  
+  - **`on_start` / `on_end` / `on_enhanced_finished`** — Lifecycle hooks around interactions and enhancement.  
+  - **Streaming-related** — `on_user_transcription`, `on_agent_transcription`, `on_user_finished_hearing`, `on_user_interruption`.  
+  - **First-message hooks** — `on_before_first_message`, `on_after_first_message`.  
+  - **Tool chaining** — `on_tool_call` (triggered when another tool is called).
 
-Tenant tools are shared across all agents within a tenant. They provide common capabilities that multiple agents can use, promoting:
-- Consistency across agents
-- Reduced duplication
-- Centralized maintenance
-- Shared functionality
+- **Parameters & Config**  
+  - **Parameters**: typed inputs (string, number, boolean, array, JSON, enum) with defaults, required flags, and `IsExposedToLLM` for hiding non-LLM parameters.  
+  - **Config**: announcements, delay messages, long-action handling, and permissions that shape what users hear/see when tools run.
 
-Tenant tools enable reuse and standardization across your organization.
+## Usage
 
-## Choosing Tool Types
+1. **Decide scope**: Determine whether a capability belongs in a dedicated skill (skill tool), should be always-on for an agent (agent-level skill), or should be shared across agents (tenant-level tooling).
+2. **Choose function type**:  
+   - Use **API** for external systems.  
+   - Use **RAG** for knowledge retrieval.  
+   - Use **Programmable** for complex orchestration or transformations.  
+   - Use **Mock** for tests and pre-integration development.
+3. **Design parameters**: Keep parameter sets small, typed, and explicit. Prefer enums and booleans for branching behavior rather than encoding logic in free text.
+4. **Configure triggers**: Use lifecycle triggers for observability and automation (for example, `on_start` to fetch context, `on_end` to log or sync results).
+5. **Restrict channels**: Use `AvailableIn` to limit tools to the channels where they make sense (for example, SMS-only, voice-only).
+6. **Document behavior**: Keep `Description`, config, and agent notes accurate so LLMs and humans both understand how and when to use a tool.
 
-**Use System Tools for:**
-- Core engine functionality
-- Fundamental operations
-- Platform-level behavior
+## FAQ's
 
-**Use Agent Tools for:**
-- Core agent capabilities
-- Always-needed integrations
-- Persistent functionality
+- **Do tools always need a skill?**  
+  Yes. In the data model, every tool is attached to a skill via `SkillId`. Agent- and tenant-level patterns are modeled by which skills are attached to which agents and how those skills are used.
 
-**Use Skill Tools for:**
-- Domain-specific actions
-- Task-specific capabilities
-- Scoped functionality
+- **When should I use RAG tools instead of API tools?**  
+  Use RAG when the answer comes from semi-structured documents or knowledge bases; use API tools when you are manipulating state or calling transactional systems.
 
-**Use Tenant Tools for:**
-- Shared capabilities
-- Common integrations
-- Organization-wide functionality
+- **How do I prevent tools from running on certain channels?**  
+  Configure the `AvailableIn` list so tools are only available where they are valid (for example, avoid email-only tools being called in voice interactions).
 
-## Tool Function Types
+## Related
 
-Beyond scope (system, agent, skill, tenant), tools also have function types that define how they execute:
-
-### API Tools (`FuncTypeAPI`)
-- Connect to external REST APIs
-- Handle HTTP requests and responses
-- Support authentication (API keys, OAuth, etc.)
-- Transform request/response data
-
-### RAG Tools (`FuncTypeRAG`)
-- Query knowledge bases and document stores
-- Perform semantic search
-- Retrieve context from uploaded documents
-- Support retrieval-augmented generation
-
-### Programmable Tools (`FuncTypeProgrammable`)
-- Execute custom JavaScript/TypeScript code
-- Handle complex business logic
-- Perform data transformations
-- Integrate with custom workflows
-
-### Mock Tools (`FuncTypeMock`)
-- Testing and development tools
-- Simulate API responses
-- Prototype without external dependencies
-
-## Tool Triggers
-
-Tools can be triggered in different ways based on their `Trigger` configuration:
-
-- **`agent`** (default) — Called by the agent during conversation based on context
-- **`on_start`** — Executed automatically when interaction starts
-- **`on_end`** — Executed automatically when interaction ends
-- **`on_enhanced_finished`** — Executed after enhancement/processing completes
-- **`on_user_transcription`** — Triggered when user transcription is received
-- **`on_agent_transcription`** — Triggered when agent transcription is generated
-- **`on_before_first_message`** — Executed before the first agent message
-- **`on_after_first_message`** — Executed after the first agent message
-- **`on_user_finished_hearing`** — Triggered when user finishes hearing agent response
-- **`on_user_interruption`** — Triggered when user interrupts the agent
-- **`on_tool_call`** — Triggered when another tool is called
-
-## Tool Configuration
-
-Tools support extensive configuration options:
-
-- **Available In** — Restrict which channels the tool is available on (voice, chat, email)
-- **Parameters** — Define input parameters with types, descriptions, defaults, and validation
-- **Non-exposed Parameters** — Parameters that are not shown to the LLM but have default values
-- **Required Parameters** — Parameters that must be provided
-- **Enum Values** — Predefined options for parameters
-- **Function Config** — Channel-specific behavior, announcements, delays, and permissions
-- **Agent Notes** — Internal notes about tool usage (not shown to LLM)
-
+- [What Agents Are](/understanding-the-platform/agents/what-agents-are)
+- [What Skills Are](/understanding-the-platform/skills/what-skills-are)
+- [Skill Prompts & Tools](/understanding-the-platform/skills/skill-prompts-tools)
+- [RAG](/build-agents/tools/rag)
+- [Low-Code Tools](/build-agents/tools/low-code)
+- [Integrations](/build-agents/tools/integrations)

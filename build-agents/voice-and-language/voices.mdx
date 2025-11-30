@@ -1,39 +1,79 @@
 ---
 title: Voices
+description: "Selecting and configuring voices for agents"
 ---
 
 # Voices
 
-Placeholder for documenting voice selection and configuration.
+Voices define how your agents sound in voice interactions: accent, gender, style, and overall character. Wonderful supports multiple voice providers and a tenant-level voice catalog so you can choose consistent, on-brand voices for each use case.
 
 ## Overview
 
-Summarize available voice types and key properties.
+Voices are represented by:
+
+- A **voice catalog** (`Voice` model) with `Id`, `Name`, `Locale`, `Gender`, and available `Styles`.  
+- **Agent voice configuration** that chooses which provider and voice to use for each agent.  
+- Provider-specific configuration for DeepDub, ElevenLabs, Cartesia, PlayAI, and Azure OpenAI.
+
+Use this page when you want to pick appropriate voices for agents and understand how they relate to providers and styles.
 
 ## How It Works
 
-Explain how voices are provisioned, selected, and switched at runtime.
+1. **Voice catalog**  
+   - `Voice` records capture voice identity: `Id`, `Name`, `Locale`, `Gender`, and available `VoiceStyles`.  
+   - Styles are name/id pairs that represent different speaking modes or presets for a given voice.
+2. **Agent voice configuration**  
+   - `AgentVoiceConfiguration` references provider-specific voice settings (DeepDub, ElevenLabs, Cartesia, PlayAI, Azure OpenAI) and global flags like `AutomaticSpeed`, `SlowReading`, and `EmotionalAgent`.  
+   - Each provider configuration includes its own voice identifiers and parameters (for example `VoiceId`, `ModelId`, speed, style).
+3. **Provider selection**  
+   - Runtime selects the appropriate provider configuration based on agent and tenant settings, then uses the configured voice for TTS.  
+   - Some tenants may enable extended voice configuration features via tenant feature flags.
+4. **Runtime usage**  
+   - During calls, the chosen voice and style are used for all agent speech in that interaction unless explicitly changed.
 
 ## Components
-- Voice libraries
-- Attributes (gender, tone, style)
-- Region and language coverage
+
+- **Voice model (`Voice`)**  
+  - `Id`, `Name`: internal and human-readable identifiers.  
+  - `Locale`: language/region.  
+  - `Gender`: voice gender.  
+  - `Styles`: list of available `VoiceStyle` options.
+
+- **AgentVoiceConfiguration**  
+  - Provider-specific configurations: DeepDub, ElevenLabs, Cartesia, PlayAI, Azure OpenAI.  
+  - Flags for automatic speed, slow reading, and emotional agent behavior.
+
+- **Tenant voice features**  
+  - Tenant feature flags that enable extended voice configuration for certain tenants.
 
 ## Usage
 
-Outline how to pick voices per agent, per channel, or per use case.
+1. **Define your voice strategy**  
+   - Decide how many distinct voices you need (for example one per brand line, region, or use case).  
+   - Choose whether support, sales, and back-office agents should sound the same or different.
+2. **Select voices from the catalog**  
+   - For each agent, choose a voice whose locale and tone match the target users.  
+   - Use styles to adjust mood and delivery without changing the base voice.
+3. **Configure provider-specific settings**  
+   - Set model and voice IDs, speed, style, and other provider parameters under `AgentVoiceConfiguration`.  
+   - Use previews to validate how the voice sounds with real phrases.
+4. **Test across scenarios**  
+   - Listen to interactions in different contexts (greetings, problem explanation, escalations) to ensure the voice still feels appropriate.
 
-## Examples
+## FAQ's
 
-Add examples of mapping voices to segments (e.g., sales vs. support).
+- **Can I use different voices for different agents?**  
+  Yes. Each agent has its own voice configuration, so you can pick voices per agent or per group of agents.
 
-## Best Practices
+- **Can an agent change voice during a call?**  
+  Voice changes at runtime depend on provider capabilities and configuration; most setups use a single voice per agent per interaction.
 
-Summarize guidance for consistent and on-brand voice selection.
+- **How do I ensure consistency across regions and languages?**  
+  Use locale-aware voice choices and ensure that voices and styles are aligned with your brand guidelines for each market.
 
 ## Related
 
-- /build-agents/voice-and-language/voice-style
-- /build-agents/overview
-
-
+- [Voice style](/build-agents/voice-and-language/voice-style)
+- [Speed control](/build-agents/voice-and-language/speed-control)
+- [Language](/build-agents/voice-and-language/language)
+- [Build overview](/build-agents/overview)

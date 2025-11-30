@@ -1,38 +1,79 @@
 ---
 title: Dynamic variables
+description: "Using global variables and runtime context to personalize agents"
 ---
 
 # Dynamic variables
 
-Placeholder for documenting dynamic variables and personalization.
+Dynamic variables let you inject tenant- and context-specific data into prompts, messages, and flows without hard-coding values. In Wonderful, these are represented by global variables and other runtime metadata that can be referenced across agents and tools.
 
 ## Overview
 
-Summarize how dynamic variables personalize agent behavior and messaging.
+Use dynamic variables when you need:
+
+- Tenant-specific data (for example brand names, URLs, phone numbers).  
+- Reusable configuration shared across agents and skills.  
+- Safer personalization than hard-coding values into prompts or code.
+
+Dynamic variables are typically stored as `GlobalVariable` records and combined with interaction context at runtime.
 
 ## How It Works
 
-Explain where variables come from (context, data, tools) and how they are injected.
+1. **Global variable definition**  
+   - Each `GlobalVariable` is tenant-scoped and contains:
+     - `Name`, `Description`.  
+     - `Type` (string, number, boolean, JSON, enum).  
+     - `Value` (stored as JSON) and optional enum options.
+2. **Variable resolution**  
+   - At runtime, the platform resolves global variables for the current tenant and makes them available to prompts and tools.  
+   - Additional context (for example interaction metadata, tool outputs) can also be exposed as variables.
+3. **Prompt and template substitution**  
+   - Instruction blocks, tool prompts, and messages can reference variables by name.  
+   - When building prompts, these placeholders are replaced with actual values for the current tenant and interaction.
+4. **Safety and governance**  
+   - Since variables are data, not code, they can be updated centrally for a tenant.  
+   - Access can be controlled via roles and permissions in the UI.
 
 ## Components
-- Variable sources
-- Scopes
-- Safety and fallbacks
+
+- **GlobalVariable model**  
+  - `Name`, `Description`: what the variable represents.  
+  - `Type`: the value type.  
+  - `Value`: the current value (JSON-encoded).  
+  - `EnumOptions`: allowed values for enum-type variables.
+
+- **Context variables**  
+  - Interaction-level data (for example customer name, account ID) made available at runtime to prompts and tools.
+
+- **Variable references**  
+  - References inside instructions, templates, or tool configs that are resolved at runtime.
 
 ## Usage
 
-Outline how to define and reference variables in prompts and flows.
+1. **Define global variables for tenant-wide data**  
+   - For example: support email, callback URL, brand tagline, default locale.
+2. **Reference variables in instructions and messages**  
+   - Use variable placeholders (as supported by the instruction/prompt system) instead of hard-coding values.  
+   - Keep naming consistent across agents and skills.
+3. **Use variables in tools**  
+   - Pass global or context variables into tool parameters instead of literal values.  
+   - This allows you to change behavior without editing tool definitions.
+4. **Update values centrally**  
+   - When tenant configuration changes (for example new callback URL), update the corresponding global variable rather than editing multiple prompts or tools.
 
-## Examples
+## FAQ's
 
-Add examples of personalization patterns for different verticals.
+- **Are dynamic variables code?**  
+  No. They’re data that can be read and injected into prompts and parameters, making behavior configurable instead of hard-coded.
 
-## Best Practices
+- **Where are variables stored?**  
+  Global variables are stored per tenant as `GlobalVariable` records; other variables come from interaction context and tool results.
 
-Summarize guidance for safe and effective personalization.
+- **How do I prevent leaking sensitive data via variables?**  
+  Avoid storing secrets or PII directly in variables that are exposed to prompts; use secret management for credentials and follow PII logging rules for any user data.
 
 ## Related
 
-- /build-agents/overview
-
-
+- [Build overview](/build-agents/overview)
+- [Agent instructions](/build-agents/agent-instructions)
+- [Tool Types](/understanding-the-platform/tools/tool-types)

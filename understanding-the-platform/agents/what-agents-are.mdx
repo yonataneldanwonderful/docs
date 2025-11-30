@@ -3,72 +3,83 @@ title: "What Agents Are"
 description: "Understanding agents - the core AI entities in Wonderful"
 ---
 
-## What an Agent Is
+# What Agents Are
 
-An agent is a complete AI entity that can converse, call tools, load skills, and run across channels. Each agent is customized for a specific purpose and defines how the AI thinks and behaves.
+Agents are the core AI entities in Wonderful. Each agent is a configured, multi-channel AI that can converse with users, load skills, call tools, and apply governance rules for a specific business purpose.
 
-Agents are the primary building blocks of Wonderful. They orchestrate conversations, make decisions, and coordinate the use of skills and tools to accomplish tasks.
+## Overview
 
-## Agent Capabilities
+An agent defines how the AI should behave: its goals, tone, allowed tools, skills, channels, and guardrails. In the codebase this is represented by the `Agent` model, which embeds `TenantBase` for multi-tenancy and stores configuration such as voice, LLM, PII, end-of-turn behavior, and settings.
 
-Agents can:
-- **Converse** with users through natural dialogue across multiple channels
-- **Call tools** to perform actions and interact with external systems
-- **Load skills** dynamically based on conversation context (in multi-skill mode) or have all skills available simultaneously (default mode)
-- **Run across channels** with the same logic (voice, chat, email, WhatsApp)
-- **Track events** and apply tags for analytics and routing
-- **Version and publish** safely with comprehensive testing
-- **Operate in different modes**: Active mode for real-time conversations or Passive mode for analysis and processing
-- **Handle timeouts and escalations** with configurable behavior
-- **Apply governance and automated issue detection** when enabled
+Agents orchestrate conversations across channels, decide which skills and tools to use, and produce the events and tags that power monitoring, analytics, and governance.
 
-## Agent Examples
+## How It Works
 
-Agents can be built for various purposes:
+At runtime:
 
-- **Customer Support** — Handle support requests, escalate issues, create tickets
-- **Appointment Scheduling** — Book appointments, manage calendars, send confirmations
-- **Account Management** — Update addresses, cancel cards, manage subscriptions
-- **Lead Capture** — Qualify leads, collect information, route to sales
-- **Technical Diagnosis** — Troubleshoot issues, provide solutions, document problems
+1. A user interaction starts on a channel (voice, chat, email, WhatsApp, embed) and is assigned to a specific agent.
+2. The agent’s configuration (prompt, skills, tools, voice, LLM, PII, end-of-turn) is loaded from the `Agent` model.
+3. If `IsMultiSkill` is `false`, all attached skills are available from the start. If `IsMultiSkill` is `true`, the runtime activates one skill at a time based on context.
+4. The agent uses the LLM configuration to reason about the current turn and decide whether to answer directly or call tools.
+5. Tools execute deterministic work and return structured responses; events and tags are recorded on the interaction.
+6. Timeouts, idle checks, and forwarding behavior follow the timeout and idle configuration fields on the agent (for example `OverrideIdleCheckInterval`, `TimeoutAfterDurationSeconds`, and forwarding targets).
+7. Governance and automated issues are enforced based on flags like `GovernanceEnabled` and `AutomatedIssuesEnabled`.
 
-## Agent Lifecycle
+Agents can run in **Active** mode (real-time conversations) or **Passive** mode (background analysis and processing) via the `Mode` field.
 
-1. **Creation** — Define agent prompt, tools, and initial skills
-2. **Configuration** — Set up channels, voice settings, initial messages, LLM configuration, and behavior settings
-3. **Testing** — Run evals to validate behavior
-4. **Versioning** — Create versions for safe iteration
-5. **Publishing** — Deploy to production
-6. **Monitoring** — Track performance, tags, and metrics
-7. **Iteration** — Improve based on feedback and analytics
+## Components
 
-## Agent Modes
+- **Identity & Description**  
+  `Name`, `DisplayName`, and `Description` define how the agent is identified in the UI and logs.
 
-Agents can operate in two distinct modes:
+- **Channel & Greeting Configuration**  
+  `ChannelInitialMessages` and related helpers (`GetChannelInitialMessages`) define initial messages for voice, chat, and email by locale and gender.
 
-### Active Mode (Default)
-- **Real-time conversations** with users
-- Handles live interactions across all channels
-- Processes user input and generates responses immediately
-- Used for customer-facing interactions
+- **Voice, LLM, Transcriber, and End-of-Turn**  
+  `VoiceConfiguration`, `AgentLLMConfiguration`, `AgentTranscriberConfiguration`, and `AgentEndOfTurnConfiguration` control synthesis, recognition, model provider, and turn-taking behavior.
 
-### Passive Mode
-- **Analysis and processing** of existing data
-- No real-time user interaction
-- Useful for batch processing, analysis, and background tasks
-- Can process transcripts, analyze interactions, or perform automated tasks
+- **Skills & Tools**  
+  The `Skills` relationship (`many2many:agents_skills`) connects agents to skills, which in turn own tools. `IsMultiSkill` controls whether skills are loaded all at once or one at a time.
 
-## Key Configuration Options
+- **Timeouts & Idle Behavior**  
+  Fields like `OverrideIdleCheckInterval`, `OverrideIdleHangUpCheck`, `TimeoutAfterDurationSeconds`, and `TimeoutEndMessage` define when conversations should be checked for idleness or ended.
 
-Agents support extensive configuration:
+- **Governance & Issues**  
+  Flags like `AutomatedIssuesEnabled` and `GovernanceEnabled` turn on automated issue detection and governance flows.
 
-- **Multi-Skill Mode** (`IsMultiSkill`): Enable dynamic skill loading where only one skill is active at a time, or use default mode where all skills are loaded simultaneously
-- **LLM Configuration**: Customize language model, provider, temperature, and other model parameters
-- **Voice Configuration**: Text-to-speech settings including voice selection, speed, and style
-- **Transcriber Configuration**: Speech-to-text settings for voice interactions
-- **PII Configuration**: Privacy controls for masking sensitive data in text and voice
-- **End-of-Turn Configuration**: Control how agents handle conversation turns
-- **Timeout Settings**: Configure idle detection, hang-up behavior, and timeout messages
-- **Governance**: Enable guardrails and automated issue detection
-- **Automated Issues**: Enable automatic detection and flagging of conversation issues
+- **PII & Translation**  
+  `AgentPIIConfiguration`, `UsePIITextMasking`, `UsePIIVoiceMasking`, `EnableTranscriptionTranslation`, and `TranslationLanguage` configure privacy and language behavior.
 
+- **Settings & Attachments**  
+  `AgentSettings` (including high-traffic forwarding and SIP header settings) and `AttachmentsConfig` control additional runtime behavior.
+
+## Usage
+
+1. **Design the agent**: Define the use case, channels, and KPIs. Decide which skills and tools are in scope.
+2. **Create the agent**: Set `Name`, `DisplayName`, locale, voice, LLM configuration, and end-of-turn rules.
+3. **Attach skills**: Link skills via the agents–skills many-to-many relationship and decide whether to enable multi-skill mode.
+4. **Configure tools**: Ensure each skill has the right tools with parameters and triggers; exclude unsafe tools via `ExcludedTools` if needed.
+5. **Wire channels**: Attach phone numbers, chat widgets, email addresses, or WhatsApp senders, using the telephony and channel configuration docs.
+6. **Enable governance**: Turn on automated issues, tagging, and evals before publishing.
+7. **Version, test, and publish**: Use evals and monitoring to validate behavior before and after publishing changes.
+
+## FAQ's
+
+- **What’s the difference between an agent and a skill?**  
+  An agent owns the overall behavior and channels; skills are focused capabilities that can be shared across agents and loaded dynamically.
+
+- **When should I use multi-skill mode?**  
+  Use `IsMultiSkill = true` when an agent has many distinct skills (for example, support + sales + billing) and you want tighter control over which tools are active at each point in the conversation.
+
+- **How do I support multiple languages?**  
+  Configure `Locale`, `VoiceConfiguration`, and optional translation settings (`EnableTranscriptionTranslation`, `TranslationLanguage`) on the agent, and localize initial messages via `ChannelInitialMessages`.
+
+## Related
+
+- [What is Wonderful?](/introduction-to-wonderful/what-is-wonderful)
+- [Core Concepts Overview](/introduction-to-wonderful/core-concepts-overview)
+- [What Skills Are](/understanding-the-platform/skills/what-skills-are)
+- [Tool Types](/understanding-the-platform/tools/tool-types)
+- [What Interactions Are](/understanding-the-platform/interactions/what-interactions-are)
+- [LLM Tags](/understanding-the-platform/tags/llm-tags)
+- [Deterministic Tags](/understanding-the-platform/tags/deterministic-tags)

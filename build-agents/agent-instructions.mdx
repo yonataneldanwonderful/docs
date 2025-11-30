@@ -1,38 +1,115 @@
 ---
 title: Agent instructions
+description: "How to write, version, and manage agent-level instructions"
 ---
 
 # Agent instructions
 
-Placeholder for documenting how to write and manage agent instructions.
+Agent instructions are the top-level prompts that define how an agent should think, act, and coordinate skills and tools across channels. They set the agent’s persona, goals, and guardrails, and are distinct from skill prompts and tool descriptions.
 
 ## Overview
 
-Explain what agent instructions are and how they shape behavior.
+Instructions are stored as structured blocks and versions in the Wonderful backend and are pulled into the prompt builder at runtime. Good instructions make agents predictable, controllable, and easy to evolve without changing code.
+
+Use this page when you want to shape an agent’s overall behavior, not just a single skill or tool.
+
+<Info>
+  Strong agent instructions focus on **persona, goals, and guardrails**, while leaving domain-specific workflows to skills and tools. This keeps prompts maintainable as agents grow.
+</Info>
 
 ## How It Works
 
-Describe how instructions are stored, versioned, and applied at runtime.
+Under the hood:
+
+1. **Instruction blocks**  
+   - Instructions are represented as `InstructionBlocks`: typed blocks (`section`, headings, rows, text areas) with text, metadata, and nested child blocks.  
+   - Blocks can be disabled, associated with skills, and limited to specific channels.
+2. **Instruction versions**  
+   - Blocks are grouped into `InstructionVersion` records, which track:
+     - `EntityId` (agent, skill, or other entity)  
+     - `EntityType` (agent, skill, governance, tags, etc.)  
+     - `Version`, `Active` flag, and `Commit` message  
+     - The full `Blocks` tree  
+   - Versions can be cloned for agents or other entities and activated independently.
+3. **Prompt building at runtime**  
+   - When an interaction starts, the runtime builds a prompt configuration using:
+     - The active instruction version for the agent.  
+     - Any relevant governance, tag, or feature instructions.  
+     - Skill- and tool-specific instructions.  
+   - Disabled blocks are stripped and nested blocks are assembled into the final prompt.
+
+This structure lets you edit instructions safely, track versions, and roll changes out agent by agent.
 
 ## Components
-- System behavior guidelines
-- Task definitions
-- Guardrails
+
+- **Agent-level instructions**  
+  Blocks that define overall persona, goals, do/don't rules, and tone for the agent.
+
+- **Skill-specific instructions**  
+  Blocks linked to specific skills via metadata, used to refine behavior when certain skills are active.
+
+- **Governance instructions**  
+  Templates that specify compliance rules, escalation behavior, and forbidden actions, often applied across multiple agents.
+
+- **Tag and summary instructions**  
+  Prompts that define how LLM tags, summaries, and automated issues should be generated after interactions.
+
+- **Instruction versions**  
+  Versioned snapshots of blocks for each entity (`InstructionVersion`), with commit messages and active flags.
 
 ## Usage
 
-Outline how to create, edit, and test instructions.
+<Steps>
+<Step title="Design the instruction structure">
+  Start with sections for persona, goals, capabilities, constraints, and channel notes. Keep each section focused and concise.
+</Step>
 
-## Examples
+<Step title="Create or edit instructions in the UI">
+  Use the instruction editor to add, edit, disable, or reorder blocks. Group related content into sections and use headings for readability.
+</Step>
 
-Add example instruction blocks and anti-patterns here.
+<Step title="Use versions for safe changes">
+  When making significant changes, create a new instruction version for the agent rather than overwriting the active one. Use commit messages to explain why a change was made.
+</Step>
 
-## Best Practices
+<Step title="Test changes before rollout">
+  Run evals and ad-hoc tests against agents that use the updated instructions. Compare behavior across versions before promoting a new version to active.
+</Step>
 
-Summarize guidance for clear, controllable instructions.
+<Step title="Factor responsibilities">
+  Keep agent-level instructions focused on global behavior, and move domain-specific logic into skill prompts and tool descriptions to keep the agent prompt maintainable.
+</Step>
+</Steps>
+
+## FAQ's
+
+- **What belongs in agent instructions vs skill prompts?**  
+  Agent instructions define global behavior and priorities; skill prompts define how to handle specific tasks or domains. If a rule only applies when a particular skill is active, keep it in the skill’s instructions.
+
+- **How long can instructions be?**  
+  Longer instructions increase token usage and can dilute focus. Prefer concise, well-factored blocks and move detailed workflows into skills and tools.
+
+- **Can I share instructions across agents?**  
+  Yes. Use templates and `InstructionVersion` cloning to share base instructions across agents, then layer agent-specific blocks on top.
 
 ## Related
 
-- /build-agents/overview
+<CardGroup cols={2}>
 
+<Card title="Build overview" href="/build-agents/overview">
+  See where instructions fit in the overall Build workflow.
+</Card>
 
+<Card title="Skills (Build)" href="/build-agents/skills">
+  Learn how skills attach to agents and contribute their own prompts.
+</Card>
+
+<Card title="What Agents Are" href="/understanding-the-platform/agents/what-agents-are">
+  Ground instructions in the underlying agent model.
+</Card>
+
+<Card title="Skill Prompts & Tools" href="/understanding-the-platform/skills/skill-prompts-tools">
+  Understand how skill-level prompts and tools interact with agent instructions.
+</Card>
+
+</CardGroup>

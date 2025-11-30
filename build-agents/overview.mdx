@@ -1,39 +1,188 @@
 ---
 title: Build
+description: "Design, configure, and prepare agents for production"
 ---
 
 # Build
 
-High-level overview of how to design and configure agents on the Wonderful platform.
+The Build section is where you design agents, wire up skills and tools, choose models and voice settings, and prepare configurations for production.
 
 ## Overview
 
-Summarize the agent lifecycle from definition, configuration, testing, and deployment.
+<Info>
+  Use **Build** when you want to change what an agent can do and how it behaves, before you focus on routing, monitoring, or governance surfaces.
+</Info>
+
+Building on the core concepts (agents, skills, tools, interactions), the Build area guides you through:
+
+- **Designing agents**: choosing the right agent type, prompts, and capabilities.
+- **Composing behavior**: attaching skills and tools, and deciding how they load at runtime.
+- **Configuring runtime**: selecting models, voice & language, timeouts, PII, and governance options.
+- **Connecting channels & auth**: wiring telephony, chat, email, WhatsApp, and integrations.
+- **Preparing for launch**: setting up versioning, evals, and safe rollout patterns.
+
+Use this section when you want to change **what an agent can do** and **how it behaves**, before you focus on routing and monitoring.
 
 ## How It Works
 
-Explain how agents interact with skills, tools, channels, and runtime events.
+At a high level, the build workflow looks like this:
+
+<Steps>
+<Step title="Define the agent">
+  Create an agent with a clear purpose, display name, and basic configuration (locale, voice, mode).
+</Step>
+
+<Step title="Write agent instructions">
+  Define how the agent should think and act across channels, separate from skill prompts and tool descriptions.
+</Step>
+
+<Step title="Attach skills and tools">
+  Reuse or create skills, attach them to the agent, and configure the tools that implement each capability.
+</Step>
+
+<Step title="Configure models, voice & language">
+  Choose LLM providers and models, voice providers, and language/translation options appropriate for your use case.
+</Step>
+
+<Step title="Connect channels and authentication">
+  Attach phone numbers, chat widgets, email routing, WhatsApp, and integrations so the agent can talk to real users and systems.
+</Step>
+
+<Step title="Version, test, and prepare for rollout">
+  Use drafts, agent versions, and evals to validate behavior before publishing to production and handing off to Monitor.
+</Step>
+</Steps>
+
+Build is tightly coupled to the underlying Go services (controller, runner, processor) and shared models, but exposes them through a workflow-oriented UI.
 
 ## Components
-- Agent definitions
-- Prompts and instructions
-- Skills and tools
+
+- **Agent types**  
+  Decide what kind of agent you are building (for example support, sales, back-office) and which defaults it should inherit.
+
+- **Agent instructions**  
+  Author the agent-level prompt that defines persona, goals, and cross-skill behavior.
+
+- **Models**  
+  Configure LLM providers and models via `AgentLLMConfiguration`, including provider selection and model choice.
+
+- **Skills**  
+  Attach and manage skills that decompose behavior into focused capabilities, each with its own prompts and tools.
+
+- **Agents (components & settings)**  
+  Configure voice, transcriber, timeouts, PII, governance, and advanced settings that control runtime behavior.
+
+- **Voice & language**  
+  Choose voice providers, speed, style, denoiser models, and multi-language/translation options.
+
+- **Tools**  
+  Configure tools (API, RAG, programmable, mock) and how they are exposed to agents and skills, including low-code flows and integrations.
+
+- **Personalization & authentication**  
+  Set up dynamic variables and authentication/config to safely call external systems from tools.
 
 ## Usage
 
-Describe when to create new agents vs. reuse or version existing ones.
+When working in Build, you typically:
 
-## Examples
+<Steps>
+<Step title="Start from a use case">
+  Pick a concrete use case (for example “inbound support”, “renewals”, “collections”) and create an initial agent with type and instructions that match it.
+</Step>
 
-Outline example agent configurations to be detailed later.
+<Step title="Model capabilities as skills">
+  Decompose the use case into skills and attach tools that implement those capabilities.
+</Step>
 
-## Best Practices
+<Step title="Tune models and voice">
+  Choose models and voice settings for latency, accuracy, and language coverage appropriate for your region and channel mix.
+</Step>
 
-Collect guidance on structuring agents for maintainability and control.
+<Step title="Wire channels">
+  Attach phone numbers, widgets, email addresses, or WhatsApp senders to the agent.
+</Step>
+
+<Step title="Configure PII, governance, and timeouts">
+  Set PII, governance, and timeout settings to meet your compliance and CX requirements.
+</Step>
+
+<Step title="Validate before publishing">
+  Run evals and manual tests on draft or versioned agents until you are satisfied, then publish and move to Monitor.
+</Step>
+</Steps>
+
+As your catalog grows, reuse skills, tools, and patterns across agents rather than rebuilding from scratch.
+
+## Example: Build an inbound support agent
+
+<Info>
+  This example walks through building a **voice + chat inbound support agent** using the main Build pages, mirroring how you’d structure an agent in Agent Studio–style flows.
+</Info>
+
+<Steps>
+<Step title="Create the agent">
+  In the Agents area, create a new agent (for example <code>Support - Inbound</code>) with the correct tenant, locale, and default mode.
+</Step>
+
+<Step title="Pick an agent type and instructions">
+  Use <code>Agent types</code> to frame this as an inbound support agent, then author clear agent instructions that define scope (what this agent can and cannot do), escalation rules, and tone.
+</Step>
+
+<Step title="Attach core skills and tools">
+  Create or reuse skills such as authentication, FAQ/help, ticket creation, and account updates, and attach them to the agent with the appropriate tools (CRM, ticketing, knowledge base, payment providers).
+</Step>
+
+<Step title="Configure models, voice & language">
+  Choose a model suitable for real-time support, configure voice (provider, voice, speed, style) and language/translation options for your primary markets.
+</Step>
+
+<Step title="Wire channels">
+  Attach at least one phone number and one chat widget to the agent so customers can reach it over voice and web chat; verify routing via the Manage/Deploy docs.
+</Step>
+
+<Step title="Enable governance and PII, then test">
+  Turn on appropriate PII and governance settings, run evals and manual tests across typical support scenarios, then publish once you’re satisfied with behavior.
+</Step>
+</Steps>
+
+## FAQ's
+
+<AccordionGroup>
+  <Accordion title="Where should I start when building my first agent?">
+    Begin with a single agent, define its instructions and a small set of skills and tools, then add channels and evals once basic behavior is solid.
+  </Accordion>
+
+  <Accordion title="When should I create a new agent vs a new skill?">
+    Create a new agent when the purpose, governance, or channel mix is meaningfully different; add a new skill when you’re expanding capabilities within the same domain.
+  </Accordion>
+
+  <Accordion title="Do I have to finish all Build steps before going live?">
+    No. You can launch with a minimal configuration (one channel, few skills, default model) and layer in more skills, tools, channels, and governance as you iterate.
+  </Accordion>
+</AccordionGroup>
 
 ## Related
 
-- /core-concepts/agents
-- /platform/get-started/overview
+<CardGroup cols={2}>
 
+<Card title="What Agents Are" href="/understanding-the-platform/agents/what-agents-are">
+  Learn the core agent model before you start configuring builds.
+</Card>
 
+<Card title="What Skills Are" href="/understanding-the-platform/skills/what-skills-are">
+  Understand how skills decompose behavior and attach to agents.
+</Card>
+
+<Card title="Tool Types" href="/understanding-the-platform/tools/tool-types">
+  Explore the different tool types you can attach to skills and agents.
+</Card>
+
+<Card title="What Evals Are" href="/understanding-the-platform/evals/what-evals-are">
+  See how evals validate agent behavior before and after launch.
+</Card>
+
+<Card title="Getting Started" href="/platform/get-started/overview">
+  Walk through the initial setup before designing production agents.
+</Card>
+
+</CardGroup>

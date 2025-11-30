@@ -1,39 +1,77 @@
 ---
 title: Speed control
+description: "Configuring speech rate for different agents, languages, and scenarios"
 ---
 
 # Speed control
 
-Placeholder for documenting speech rate and timing controls.
+Speed control lets you adjust how fast agents speak in voice interactions, affecting comprehensibility, perceived politeness, and call duration. Wonderful exposes both global agent-level toggles and provider-specific speed settings.
 
 ## Overview
 
-Summarize how speed control affects user experience.
+Speed is configured through:
+
+- Agent-level flags such as `AutomaticSpeed` and `SlowReading`.  
+- Provider-specific voice speed fields in voice configurations (for example `voice_speed` or `Speed`).  
+- First-message speed overrides in some providers.
+
+Use speed control to balance natural pacing, user comfort, and efficiency across languages and use cases.
 
 ## How It Works
 
-Explain how speed settings propagate through TTS and playback.
+1. **Agent voice configuration**  
+   - `AgentVoiceConfiguration` includes:
+     - `AutomaticSpeed`: whether to automatically adjust speed based on context.  
+     - `SlowReading`: whether to prefer slower delivery (for example for complex or compliance-critical content).
+2. **Provider-specific speed**  
+   - DeepDub: `VoiceSpeed` and `FirstMessageSpeed` on `DeepDubVoiceConfiguration` control baseline and first-message speed.  
+   - ElevenLabs: `Speed` on `ElevenLabsVoiceConfiguration`.  
+   - Cartesia, PlayAI, Azure OpenAI: provider-specific speed fields (`VoiceSpeed` or similar).
+3. **First-message overrides**  
+   - Some providers (for example DeepDub) support `FirstMessageSpeed` so you can speak faster or slower on the greeting and then switch to a different rate for the rest of the interaction.
+4. **Runtime behavior**  
+   - When generating speech, the runtime reads the agent’s voice configuration and provider-specific settings to set the output speed for each chunk or utterance.
 
 ## Components
-- Global defaults
-- Per-agent overrides
-- Per-utterance adjustments
+
+- **AgentVoiceConfiguration**  
+  - `AutomaticSpeed`, `SlowReading`: high-level agent preferences for speed.  
+  - Provider-specific sections for DeepDub, ElevenLabs, Cartesia, PlayAI, Azure OpenAI.
+
+- **Provider voice configurations**  
+  - DeepDub: `VoiceSpeed`, `FirstMessageSpeed`, and directive configurations.  
+  - ElevenLabs: `Speed` parameter.  
+  - Others: provider-specific speed knobs.
+
+- **Chunk-aware behavior**  
+  - Some providers adjust speed differently for the first chunk vs subsequent chunks.
 
 ## Usage
 
-Outline how to configure speed for different use cases.
+1. **Set sensible defaults per agent**  
+   - For support agents, choose moderate speeds and consider `SlowReading` for complex instructions.  
+   - For transactional or IVR-like flows, you may increase speed slightly to reduce call time while staying understandable.
+2. **Fine-tune provider settings**  
+   - Adjust provider-specific `voice_speed` or `Speed` values and test them with real voice previews.  
+   - Use `FirstMessageSpeed` where available to greet faster or slower than the rest of the call.
+3. **Test across languages and segments**  
+   - Listen to calls in different languages and for different user segments (for example seniors vs general population) to validate pacing.
+4. **Monitor impact**  
+   - Observe call duration, user sentiment, and escalation rates when adjusting speed settings.
 
-## Examples
+## FAQ's
 
-Add example configurations for fast/slow modes here.
+- **Should I always enable automatic speed?**  
+  Not necessarily. Automatic speed can help in some cases, but you should test with your content and user base; explicit speed settings often provide more control.
 
-## Best Practices
+- **Can I change speed mid-call?**  
+  Speed is configured at the agent and provider level; dynamic mid-call adjustment may require changing configuration between utterances or using provider-specific APIs.
 
-Summarize guidance for speed by region, language, or segment.
+- **Does speed affect transcription accuracy?**  
+  Indirectly. Very fast speech can be harder for ASR; keep speeds within ranges recommended by providers for your languages.
 
 ## Related
 
-- /build-agents/voice-and-language/voices
-- /build-agents/overview
-
-
+- [Voices](/build-agents/voice-and-language/voices)
+- [Language](/build-agents/voice-and-language/language)
+- [Build overview](/build-agents/overview)

@@ -1,39 +1,106 @@
 ---
 title: Telephony
+description: "End-to-end telephony setup for Wonderful voice agents"
 ---
 
 # Telephony
 
-Placeholder for documenting telephony deployment for Wonderful voice agents.
+Telephony configuration connects your phone numbers, carriers, and CCaaS platforms to Wonderful so voice calls can be handled by agents.
 
 ## Overview
 
-Summarize the end-to-end telephony flow from inbound call to agent behavior.
+Telephony covers:
+
+- **Phone numbers & routing**: how inbound calls reach Wonderful.  
+- **Media pipeline**: how audio is streamed to the voice orchestrator and back.  
+- **Forwarding & failover**: how calls are forwarded or handed off when needed.
+
+Use this page as the high-level guide to deploying voice agents; see subpages for SIP trunking and CCaaS integrations.
+
+<Info>
+  Start with a **single test number and agent** to validate end-to-end behavior before wiring production numbers or CCaaS flows.
+</Info>
 
 ## How It Works
 
-Explain high-level call routing, media handling, and integration with agents.
+1. **Inbound call handling**  
+   - Calls arrive via SIP trunks or hosted telephony (for example Twilio) at `/telephony` endpoints.  
+   - Telephony APIs parse call details, map numbers to agents, and create `CallDetails` and `Communication` records.
+2. **Routing to agents**  
+   - The controller uses `CallDetails` and routing configuration to resolve the right agent (and tenant) for the call.  
+   - High-traffic and forwarding settings can redirect calls if concurrency limits are exceeded.
+3. **Voice orchestration**  
+   - The call orchestrator connects media streams to the agent’s voice and transcription configuration, running ASR/TTS and conversation logic in real time.
+4. **Recording & metadata**  
+   - Call recording and metadata collection are handled by telephony and recording services, using tenant and agent settings for retention and governance.
 
 ## Components
-- Numbers and routing
-- Media pipeline
-- Failover
+
+- **Telephony APIs**  
+  - Endpoints under `/telephony` for carriers and providers (for example Twilio) to send webhooks and media events.
+
+- **CallDetails & Communication**  
+  - Models that represent call-level metadata and the interaction record.
+
+- **Call orchestrator**  
+  - Manages call state, media, and integration with the agent runtime.
+
+- **Tenant telephony settings**  
+  - Per-tenant configuration for call forwarding, available phone countries, and related features.
 
 ## Usage
 
-Outline how to configure telephony settings for a new project.
+<Steps>
+<Step title="Configure SIP trunks or provider webhooks">
+  Set up carriers or providers to send calls to Wonderful’s telephony endpoints (see **SIP trunk**).
+</Step>
 
-## Examples
+<Step title="Assign phone numbers">
+  Map phone numbers to agents and tenants using phone number and routing configuration.
+</Step>
 
-Add examples of common telephony topologies here.
+<Step title="Configure agent voice & transcription">
+  Ensure agents have appropriate voice, transcriber, and language settings for the target markets.
+</Step>
 
-## Best Practices
+<Step title="Set forwarding and failover policies">
+  Configure high-traffic forwarding and CCaaS integration so calls can fall back to human agents when needed.
+</Step>
 
-Summarize guidance for quality, redundancy, and observability.
+<Step title="Test with real calls">
+  Place test calls through the full path and validate routing, audio quality, and behavior.
+</Step>
+</Steps>
+
+## FAQ's
+
+- **Can I mix hosted telephony and SIP trunks?**  
+  Yes. You can integrate both, as long as routing to Wonderful’s `/telephony` endpoints is configured correctly.
+
+- **How do I route calls to different agents?**  
+  Use phone number and routing configuration (potentially including SIP metadata) to map numbers or services to specific agents.
+
+- **Where do I control call recording?**  
+  Recording behavior is governed by tenant and agent settings and telephony services; see monitoring and privacy docs for details.
 
 ## Related
 
-- /deploy/telephony/sip-trunk
-- /deploy/overview
+<CardGroup cols={2}>
 
+<Card title="SIP trunk" href="/deploy/telephony/sip-trunk">
+  Configure carrier connectivity and routing into Wonderful.
+</Card>
 
+<Card title="CCaaS integrations" href="/deploy/telephony/ccaas-integrations">
+  Learn how to share numbers and flows with existing contact center platforms.
+</Card>
+
+<Card title="Manage overview" href="/deploy/overview">
+  See how telephony fits into the broader Manage surface.
+</Card>
+
+<Card title="Voice Channel" href="/understanding-the-platform/channels/voice">
+  Understand voice channel behavior and configuration details.
+</Card>
+
+</CardGroup>
