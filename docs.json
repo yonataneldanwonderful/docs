@@ -182,6 +182,17 @@
             ]
           }
         ]
+      },
+      {
+        "tab": "Release notes",
+        "groups": [
+          {
+            "group": "2025",
+            "pages": [
+              "release-notes/november-2025"
+            ]
+          }
+        ]
       }
     ]
   },

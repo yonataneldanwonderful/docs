@@ -1,0 +1,98 @@
+---
+title: November 2025
+description: New features, improvements, and updates released in November 2025
+---
+
+## Agent Studio enhancements
+
+### RAG management in Agent Studio
+You can now create and manage RAGs directly within Agent Studio. Attach and detach RAGs from tools, and manage your knowledge bases without leaving the agent configuration interface.
+
+### Version comparison
+Compare different versions of your agent instructions side-by-side with the new version comparison modal. This makes it easier to review changes before publishing.
+
+### Improved layout and responsiveness
+Agent Studio now features an enhanced layout with better responsiveness across different screen sizes, smoother panel transitions, and improved navigation.
+
+## MCP tools support
+
+Integrate Model Context Protocol (MCP) tools with your agents. Connect to external MCP servers like Salesforce and use their tools directly in your agent workflows. Features include:
+
+- OAuth-based authentication for MCP connections
+- Tool discovery and selection from connected MCP servers
+- Automatic token refresh for seamless operation
+
+## Voice and speech improvements
+
+### Deepgram TTS and STT support
+Added support for Deepgram as a text-to-speech and speech-to-text provider, giving you more options for voice interactions.
+
+### Transcriber high availability
+Configure backup transcribers for your agents to ensure continuous operation if the primary transcriber experiences issues.
+
+### Configurable denoiser models
+Choose from different denoiser models in the Internal Settings tab to optimize audio quality for your specific use case.
+
+### TTS settings refinement
+Fine-tune your text-to-speech settings with smaller increments (0.01) for more precise voice control.
+
+## Multi-language support
+
+### Lithuanian language support
+Full Lithuanian language support including system messages, gendered messages, backchannel patterns, and forward keywords.
+
+## Evaluation system updates
+
+### Improved batch evaluations
+The evaluation system now features a redesigned UI with better scenario management, search functionality, and support for different channels.
+
+### Schema validation for judges
+Added schema validation to evaluation judges to reduce errors and improve reliability.
+
+## Dashboard and monitoring
+
+### Enhanced date filtering
+New date filter component with predefined and custom date range options for more flexible dashboard filtering.
+
+### Tag filtering improvements
+Filter interactions using AND/OR logic for more precise tag-based queries.
+
+### Metadata field filtering
+Filter interactions by metadata fields for more granular analysis.
+
+## Tools and integrations
+
+### Low-code tool improvements
+- Fixed issues with committing tools from the agent builder
+- Tool versioning now exposed in the UI with rollback functionality
+- Improved tool parameter validation
+
+### Wonderful CLI
+New command-line interface for managing tools locally:
+- Deploy tools directly from your development environment
+- Import tools from the controller
+- Interactive run mode for testing
+- Shell completion support
+
+## Platform improvements
+
+### Shadow login for support
+Support team members can now access tenant accounts through a secure shadow login system for faster issue resolution.
+
+### Twilio sub-accounts
+Improved telephony management with Twilio sub-account support for better isolation and organization.
+
+### Custom storage configuration
+Support for custom SQS queues in storage configuration for enterprise deployments.
+
+### Rate limiting and caching
+Added rate limiting and in-memory caching for improved API performance and reliability.
+
+## Bug fixes and stability
+
+- Fixed race conditions in chat orchestrator
+- Fixed autoscroll issues in live transcripts
+- Fixed memory leaks in Deepgram TTS synthesizer
+- Improved error handling for function calls with empty arguments
+- Fixed dashboard logic conditions
+- Resolved issues with agent messages not appearing in interaction view
