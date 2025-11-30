@@ -7,7 +7,7 @@ description: "How interactions progress from start to finish"
 
 Interactions follow a lifecycle from initiation to completion, backed by the `Communication` model and enhancement pipeline. Understanding this flow helps when you design timeouts, escalation rules, and monitoring.
 
-## Overview
+## Overview / Why it matters
 
 An interaction starts when a customer and agent first connect on a channel, continues through a series of turns, tools, and events, and ends when the task is resolved or the conversation is terminated. The lifecycle is encoded in `Communication` fields like `Status`, `StartTime`, `EndTime`, `Duration`, `TokensUsage`, `Sentiment`, `Summary`, `Rating`, `CallTags`, and `Metadata`.
 
@@ -80,7 +80,7 @@ After the active part ends:
 
 The communication ends in a terminal state with tags, call tags, rating, and summaries finalized.
 
-## Components
+## Key ideas at a glance
 
 - **Communication model** — Holds lifecycle core fields (`Status`, `StartTime`, `EndTime`, `Duration`, `TokensUsage`, `Sentiment`, `Summary`, `CallTags`, `Rating`, `Metadata`).  
 - **Direction and participants** — `Direction`, `FromNumber`, `ToNumber`, and helpers like `GetCustomerNumber`/`GetAgentNumber`.  

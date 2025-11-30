@@ -7,7 +7,7 @@ description: "How to connect agents to voice, chat, email, and messaging channel
 
 Channels define how real users reach your agents: voice (telephony), chat widgets, email, WhatsApp, and other messaging surfaces. This page focuses on how to enable and wire channels when building agents.
 
-## Overview
+## Overview / Why it matters
 
 In the runtime, each interaction is tagged with a `CommunicationType` (`voice`, `chat`, or `email`) and corresponding channel-specific identifiers (for example phone numbers or email addresses). Channels determine:
 
@@ -38,7 +38,7 @@ At a high level:
 
 This design lets you build once and reuse the same agent behavior across multiple channels.
 
-## Components
+## Key ideas at a glance
 
 - **CommunicationType**  
   - Enumerated values (`voice`, `chat`, `email`) that describe how the interaction is delivered and rendered.

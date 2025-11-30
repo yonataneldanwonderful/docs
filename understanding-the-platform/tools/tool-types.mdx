@@ -7,7 +7,7 @@ description: "Understanding different types of tools in Wonderful"
 
 Tools are deterministic capabilities that agents can call to perform work: call APIs, run workflows, query knowledge bases, or simulate behavior in tests. In the codebase they are represented by the `Tool` model, which embeds a `Func` definition plus configuration such as type, triggers, and channel availability.
 
-## Overview
+## Overview / Why it matters
 
 Every tool in Wonderful is:
 
@@ -36,7 +36,7 @@ The `Tool` model in `common/models/tool.go` combines:
 
 At runtime, the LLM chooses tools based on their descriptions and parameters, while the runtime enforces scope, triggers, and channel restrictions.
 
-## Components
+## Key ideas at a glance
 
 - **Scope (Agent, Skill, Tenant)**  
   - **Skill Tools**: All tools are attached to a skill (`SkillId`). When a skill is active, its tools are available.  

@@ -7,7 +7,7 @@ description: "Choosing and configuring language models for agents"
 
 Models define which LLM provider and model an agent uses to reason, call tools, and generate responses. Wonderful lets you configure provider and model per agent through `AgentLLMConfiguration`, while shared LLM services handle retries, metrics, and provider-specific details.
 
-## Overview
+## Overview / Why it matters
 
 Use this page when you want to understand how to choose models, how they are wired into the runtime, and how those choices affect latency, quality, and cost.
 
@@ -38,7 +38,7 @@ At a high level:
 
 This separation lets you choose models per agent while centralizing sensitive provider configuration.
 
-## Components
+## Key ideas at a glance
 
 - **AgentLLMConfiguration (per agent)**  
   - `selected_provider`: which LLM provider to use (for example OpenAI or Azure).  

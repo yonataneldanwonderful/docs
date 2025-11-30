@@ -7,7 +7,7 @@ description: "Understanding agents - the core AI entities in Wonderful"
 
 Agents are the core AI entities in Wonderful. Each agent is a configured, multi-channel AI that can converse with users, load skills, call tools, and apply governance rules for a specific business purpose.
 
-## Overview
+## Overview / Why it matters
 
 An agent defines how the AI should behave: its goals, tone, allowed tools, skills, channels, and guardrails. In the codebase this is represented by the `Agent` model, which embeds `TenantBase` for multi-tenancy and stores configuration such as voice, LLM, PII, end-of-turn behavior, and settings.
 
@@ -27,7 +27,7 @@ At runtime:
 
 Agents can run in **Active** mode (real-time conversations) or **Passive** mode (background analysis and processing) via the `Mode` field.
 
-## Components
+## Key ideas at a glance
 
 - **Identity & Description**  
   `Name`, `DisplayName`, and `Description` define how the agent is identified in the UI and logs.

@@ -7,7 +7,7 @@ description: "Understanding interaction data and analytics"
 
 Events, tags, and metrics describe everything that happens during an interaction and make agent behavior observable. They power dashboards, alerts, governance, and debugging across all channels.
 
-## Overview
+## Overview / Why it matters
 
 Every interaction is represented by a `Communication` record that captures status, timing, token usage, recordings, tags, call tags, ratings, and metadata. Events are emitted throughout the interaction lifecycle, tags annotate important states and outcomes, and metrics aggregate these signals over time.
 
@@ -23,7 +23,7 @@ Together, these primitives allow you to answer questions like “How many calls 
 
 All of this is scoped to a tenant through `TenantBase` so analytics and alerts are always tenant-isolated.
 
-## Components
+## Key ideas at a glance
 
 - **Communication (`Communication`)**  
   - Fields such as `Status`, `StartTime`, `EndTime`, `Duration`, `TokensUsage`, `QAScore`, `Summary`, `Tags`, `CallTags`, `Rating`, and `Metadata` hold the core interaction record.  
