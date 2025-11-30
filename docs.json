@@ -77,14 +77,6 @@
             "pages": [
               "deploy/overview",
               {
-                "group": "Interactions",
-                "pages": [
-                  "understanding-the-platform/interactions/what-interactions-are",
-                  "understanding-the-platform/interactions/events-tags-metrics",
-                  "understanding-the-platform/interactions/interaction-lifecycle"
-                ]
-              },
-              {
                 "group": "Chat",
                 "pages": [
                   "deploy/chat/widget",
@@ -114,9 +106,28 @@
           {
             "group": "Monitor",
             "pages": [
-              "monitor/alerts",
+              {
+                "group": "Alerts",
+                "pages": [
+                  "monitor/alerts",
+                  "understanding-the-platform/alerts/what-alerts-are",
+                  "understanding-the-platform/alerts/alert-metrics",
+                  "understanding-the-platform/alerts/alert-conditions",
+                  "understanding-the-platform/alerts/alert-actions",
+                  "understanding-the-platform/alerts/alert-incidents",
+                  "understanding-the-platform/alerts/alert-schedules"
+                ]
+              },
               "monitor/governance",
-              "monitor/interactions",
+              {
+                "group": "Interactions",
+                "pages": [
+                  "monitor/interactions",
+                  "understanding-the-platform/interactions/what-interactions-are",
+                  "understanding-the-platform/interactions/events-tags-metrics",
+                  "understanding-the-platform/interactions/interaction-lifecycle"
+                ]
+              },
               "monitor/dashboard",
               "monitor/issues",
               {
@@ -133,17 +144,6 @@
                   "understanding-the-platform/tags/llm-tags",
                   "understanding-the-platform/tags/deterministic-tags",
                   "understanding-the-platform/tags/tag-libraries"
-                ]
-              },
-              {
-                "group": "Alerts (concepts)",
-                "pages": [
-                  "understanding-the-platform/alerts/what-alerts-are",
-                  "understanding-the-platform/alerts/alert-metrics",
-                  "understanding-the-platform/alerts/alert-conditions",
-                  "understanding-the-platform/alerts/alert-actions",
-                  "understanding-the-platform/alerts/alert-incidents",
-                  "understanding-the-platform/alerts/alert-schedules"
                 ]
               }
             ]

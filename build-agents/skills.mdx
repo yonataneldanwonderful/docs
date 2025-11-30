@@ -1,38 +1,83 @@
 ---
 title: Skills
-description: "How to attach and manage skills when building agents"
+description: "How to design, attach, and manage skills when building agents"
 ---
 
 # Skills
 
-Skills are modular capabilities that agents use to handle specific tasks or domains. This page focuses on how to attach, organize, and manage skills in the Build experience, complementing the conceptual view of skills.
+When you first build an agent, it’s tempting to pour everything into one big prompt: billing, support, verification, refunds, all crammed into a single “brain”. It works for a demo, then quietly turns into something nobody wants to touch.
+
+Skills are how you avoid that. A skill is a small, named capability — “Authenticate user”, “Answer billing questions”, “Create ticket” — with its own prompt, tools, and tags. Agents don’t know everything; they pick up the skills they need as the conversation unfolds.
 
 ## Overview / Why it matters
 
-In the data model, a `Skill` is a tenant-scoped entity with a name, display name, description, active flag, tools, tags, and a many-to-many relationship to agents.
+In Wonderful, a skill is the unit of behavior you can **reason about, reuse, and swap** without rewriting the whole agent. Instead of asking “What does this 4‑page prompt do?”, you ask:
+
+- What skills does this agent have?  
+- What does each one promise to handle?  
+- When should the agent move from one skill to another?
+
+Under the hood, a skill is a tenant-scoped object with a name, description, active flag, tools, and tags, and it can be attached to many agents. You rarely need to think about the struct names; what matters is that each skill is a focused playbook for a particular kind of work.
 
 In Build, you use skills to:
 
-- Break a large problem into focused capabilities (for example “Authenticate user”, “Check balance”, “Update address”).  
-- Reuse capabilities across multiple agents.  
-- Limit which tools and tags are active at a given time (especially in multi-skill mode).
+- Break a large journey into focused capabilities (for example “Authenticate user”, “Check balance”, “Update address”).  
+- Reuse the same capability across multiple agents (support, sales, collections) without duplicating prompts.  
+- Limit which tools and tags are active at any given moment, especially in multi-skill mode.  
+- Make it obvious to product, CX, and engineering teams where a behavior lives.
 
-## How It Works
+<Info>
+  A good test: if you can’t explain a skill in one sentence – <em>“This skill handles X for Y kind of request.”</em> – it’s probably trying to do too much.
+</Info>
 
-At runtime:
+## How skills behave at runtime
 
-1. **Skills are attached to agents**  
-   - Agents and skills are connected via a many-to-many mapping (`agents_skills`).
-2. **Skills expose tools and tags**  
-   - Each skill owns a list of tools and associated tags; when the skill is active, its tools and tags become available.
-3. **Multi-skill vs always-loaded**  
-   - In default mode, all attached skills are loaded at the start of an interaction.  
-   - In multi-skill mode (`IsMultiSkill` on the agent), only one skill is active at a time and the agent can switch between skills as needed.
-4. **Skill activity and status**  
-   - The `Active` flag controls whether a skill is available for agents to use.  
-   - Disabling a skill removes its tools and tags from the active set without deleting the skill.
+Think of a live call that wanders from **“Where’s my order?”** to **“While I have you, can I update my card?”** to **“Actually my device is broken.”** If you model that as one agent with one prompt, you either leave something out or you get a prompt nobody understands.
 
-This behavior lets you design agents as compositions of skills while keeping each skill focused and testable.
+With skills:
+
+1. You create a handful of specialist skills – for example `Delivery`, `Billing`, `Tech support`.  
+2. You attach them to the agent.  
+3. During the call, the agent starts in one skill and switches when the topic really changes.
+
+In default mode, all attached skills are “loaded” from the start. In **multi‑skill** mode, the agent only has one skill “in its head” at a time. When the LLM decides it needs a different playbook, it calls an internal `switch_skill` tool; the runtime quietly rebuilds the prompt around the new skill, and the next sentence comes from that perspective.
+
+Behind the scenes:
+
+- Each skill owns its **tools** and **tags**. When the skill is active, those tools are callable and those tags can fire.  
+- The agent configuration decides whether it runs with all skills loaded or in multi‑skill mode.  
+- An inactive or disabled skill is effectively invisible: its tools and tags are out of play.
+
+You can think of skills as **modular reasoning blocks**: the agent stays simple, while the catalogue of skills grows around it.
+
+## How skills connect to agents and tools (flow chart)
+
+Conceptually, skills sit between **agents** and **tools**:
+
+```text
+User request
+  ↓
+Agent (instructions, governance, channels)
+  ↓ decides which capability is needed
+Skill A / Skill B / Skill C
+  ↓ owns
+Tools (API, RAG, programmable, mock)
+  ↓ call
+Your systems (CRM, billing, ticketing, databases)
+```
+
+At the data-model level:
+
+```text
+Agent
+  ↕ many-to-many via agents_skills
+Skill
+  ↘ owns many
+    Tools
+      ↔ integrate with external systems
+  ↘ associated with many
+    Tags
+```
 
 ## Key ideas at a glance
 
@@ -50,23 +95,105 @@ This behavior lets you design agents as compositions of skills while keeping eac
 - **Multi-skill mode**  
   - Agent-level setting (`IsMultiSkill`) that changes how skills are loaded and switched at runtime.
 
-## Usage
+## Create & manage skills in Build
 
-1. **Plan your skill breakdown**  
-   - Identify natural boundaries in your use case (for example authentication vs account management vs ticketing).  
-   - Aim for skills that represent complete tasks or domains, not single fields or trivial steps.
-2. **Create or reuse skills**  
-   - For common behaviors (like ticket creation or FAQ handling), reuse existing skills where possible.  
-   - Create new skills when you introduce a new domain or workflow.
-3. **Attach skills to an agent**  
-   - In the Build UI, add skills to your agent based on its purpose and channel mix.  
-   - Confirm that each attached skill is Active and correctly configured with tools and tags.
-4. **Choose a loading mode**  
-   - Use default (always-loaded) mode for simple agents with a small number of closely related skills.  
-   - Use multi-skill mode when agents span multiple distinct workflows or domains and you want tighter control over tool availability.
-5. **Iterate with evals and monitoring**  
-   - Run evals targeting specific skills to ensure their behavior is correct and stable.  
-   - Use tags and metrics to observe how often each skill is used and how it performs.
+<Steps>
+  <Step title="Plan your skill breakdown">
+    Identify natural boundaries in your use case (for example authentication vs account management vs ticketing). Aim for skills that represent complete tasks or domains, not single fields or trivial steps.
+  </Step>
+
+  <Step title="Create or reuse skills">
+    In the Build UI, create new skills for new domains, and reuse existing skills for common behaviors (like ticket creation or FAQ handling) when behavior and governance match.
+  </Step>
+
+  <Step title="Attach skills to an agent">
+    Add skills to your agent based on its purpose and channel mix. Confirm that each attached skill is Active and correctly configured with tools and tags.
+  </Step>
+
+  <Step title="Choose a loading mode">
+    Use default (always-loaded) mode for simple agents with a small number of closely related skills, and multi-skill mode when agents span multiple distinct workflows or domains and you want tighter control over tool availability.
+  </Step>
+
+  <Step title="Iterate with evals and monitoring">
+    Run evals targeting specific skills to ensure their behavior is correct and stable, and use tags and metrics to observe how often each skill is used and how it performs.
+  </Step>
+</Steps>
+
+## Design principles for your skill catalog
+
+- **Start from journeys, not org charts**  
+  Map skills to end-to-end journeys users experience (“reset password”, “update card”, “schedule visit”), not to internal team names. This keeps skills stable even if your org structure changes.
+
+- **Name skills for outcomes, not mechanics**  
+  Prefer <code>Update Address</code> over <code>CRM Write</code>. The tools inside the skill can be technical; the skill name should be understandable to product and CX teams.
+
+- **Keep skills cohesive but not tiny**  
+  A good skill can usually be explained as “handles X for Y situation”. If a skill description lists many unrelated behaviors, split it; if it only wraps a single low-level API call, consider folding it into a broader skill.
+
+- **Align prompts, tools, and tags**  
+  For each skill, make sure:
+  - The **prompt** describes the same domain the name and description do.  
+  - The **tools** only cover that domain.  
+  - The **tags** you attach describe outcomes or states in that domain.
+
+- **Reuse skills deliberately**  
+  Reuse skills across agents when behavior and governance are truly the same. If two agents need different rules or guardrails for the “same” workflow, create separate skills rather than overloading one.
+
+- **Version and test skills like code**  
+  When changing a skill that many agents depend on, treat it like a code change: create a new version, run evals and focused testing, and only then roll it out.
+
+## Examples / Recipes
+
+### Example 1 – Inbound support agent
+
+For an inbound support agent that handles common account questions:
+
+- **Skills**
+  - <code>Authenticate User</code> — verifies identity using CRM or IdP tools; tagged with outcomes like <code>auth_success</code> / <code>auth_failed</code>.  
+  - <code>Account Information</code> — reads balances, plans, and entitlements; tags conversations that mention renewals or upgrades.  
+  - <code>Ticket Creation</code> — creates and updates tickets in your helpdesk, with tags for <code>ticket_created</code>, <code>ticket_updated</code>, and escalation reasons.
+
+- **Tools per skill**
+  - <code>Authenticate User</code>: API tools for customer lookup and verification.  
+  - <code>Account Information</code>: API/RAG tools for account data and knowledge base articles.  
+  - <code>Ticket Creation</code>: API tools for creating/updating tickets and adding internal notes.
+
+In multi-skill mode, the agent might:
+
+```text
+User asks a question
+  → Agent activates "Authenticate User"
+  → If successful, switches to "Account Information"
+  → If issue requires follow-up, switches to "Ticket Creation"
+```
+
+### Example 2 – Billing & collections agent
+
+For a billing-focused agent:
+
+- **Skills**
+  - <code>Billing Overview</code> — answers questions about invoices, due dates, and payment methods.  
+  - <code>Take Payment</code> — handles card payments or bank debits through PCI-compliant tools.  
+  - <code>Disputes & Adjustments</code> — captures disputes, applies credits (where allowed), and routes edge cases to humans.
+
+- **Tools per skill**
+  - Billing data APIs, payment processor APIs, dispute-management tools.  
+  - Deterministic tags like <code>payment_completed</code>, <code>high_risk_dispute</code>, <code>promise_to_pay</code> to drive dashboards and governance.
+
+Here, separating <code>Take Payment</code> and <code>Disputes & Adjustments</code> helps you attach stricter governance and evals to those higher-risk paths.
+
+### Example 3 – Internal operations assistant
+
+For an internal assistant used by employees:
+
+- **Skills**
+  - <code>IT Help</code> — password resets, VPN access, device issues.  
+  - <code>HR & Policies</code> — answers policy questions using RAG over your handbook.  
+  - <code>Approvals & Requests</code> — opens internal requests and routes for approval.
+
+- **Patterns**
+  - Use skills to separate **read-only** flows (HR & Policies) from **state-changing** flows (Approvals & Requests).  
+  - Attach stricter tools and tags to write paths, and design evals that focus on correct routing and compliance.
 
 ## Go deeper on skills
 
